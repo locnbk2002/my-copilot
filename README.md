@@ -95,6 +95,7 @@ copilot plugin list
 
 - [Getting Started](docs/getting-started.md)
 - [Architecture](docs/architecture.md)
+- [Flow Diagram](docs/my-copilot-flow.md)
 - [Code Standards](docs/code-standards.md)
 
 ## License

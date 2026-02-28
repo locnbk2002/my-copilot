@@ -1,0 +1,10 @@
+{
+  "version": 1,
+  "skills": {
+    "mermaidjs-v11": {
+      "source": "mrgoonie/claudekit-skills",
+      "sourceType": "github",
+      "computedHash": "a9532dadfcf269a3e4c80a8fe15b4d6ffa83dbc7ba9b70e78f6c72ba64c892bd"
+    }
+  }
+}
