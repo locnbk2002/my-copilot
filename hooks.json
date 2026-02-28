@@ -1,0 +1,71 @@
+{
+  "version": 1,
+  "hooks": {
+    "preToolUse": [
+      {
+        "type": "command",
+        "bash": "python3 .github/scripts/scout-block.py",
+        "powershell": "python .github/scripts/scout-block.py",
+        "cwd": ".",
+        "timeoutSec": 5
+      },
+      {
+        "type": "command",
+        "bash": "python3 .github/scripts/privacy-block.py",
+        "powershell": "python .github/scripts/privacy-block.py",
+        "cwd": ".",
+        "timeoutSec": 5
+      },
+      {
+        "type": "command",
+        "bash": "python3 .github/scripts/log-subagent-launch.py",
+        "powershell": "python .github/scripts/log-subagent-launch.py",
+        "cwd": ".",
+        "timeoutSec": 5
+      }
+    ],
+    "postToolUse": [
+      {
+        "type": "command",
+        "bash": "python3 .github/scripts/tool-tracker.py",
+        "powershell": "python .github/scripts/tool-tracker.py",
+        "cwd": ".",
+        "timeoutSec": 5
+      },
+      {
+        "type": "command",
+        "bash": "python3 .github/scripts/log-subagent-complete.py",
+        "powershell": "python .github/scripts/log-subagent-complete.py",
+        "cwd": ".",
+        "timeoutSec": 5
+      }
+    ],
+    "sessionStart": [
+      {
+        "type": "command",
+        "bash": "python3 .github/scripts/session-logger.py",
+        "powershell": "python .github/scripts/session-logger.py",
+        "cwd": ".",
+        "timeoutSec": 5
+      }
+    ],
+    "sessionEnd": [
+      {
+        "type": "command",
+        "bash": "python3 .github/scripts/session-logger.py",
+        "powershell": "python .github/scripts/session-logger.py",
+        "cwd": ".",
+        "timeoutSec": 5
+      }
+    ],
+    "errorOccurred": [
+      {
+        "type": "command",
+        "bash": "python3 .github/scripts/error-logger.py",
+        "powershell": "python .github/scripts/error-logger.py",
+        "cwd": ".",
+        "timeoutSec": 10
+      }
+    ]
+  }
+}

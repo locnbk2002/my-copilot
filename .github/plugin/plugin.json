@@ -1,0 +1,25 @@
+{
+  "name": "my-copilot",
+  "description": "A complete AI engineering workflow for GitHub Copilot CLI — 12 skills covering plan, execute, test, fix, review, docs, git, research, and more.",
+  "version": "0.0.1",
+  "author": {
+    "name": "locnbk2002"
+  },
+  "repository": "https://github.com/locnbk2002/my-copilot",
+  "license": "MIT",
+  "keywords": [
+    "engineering",
+    "workflow",
+    "planning",
+    "testing",
+    "code-review",
+    "documentation",
+    "git",
+    "multi-agent",
+    "orchestration"
+  ],
+  "agents": ".github/agents/",
+  "skills": ".github/skills/",
+  "hooks": "hooks.json",
+  "mcpServers": ".mcp.json"
+}

@@ -1,0 +1,41 @@
+{
+  "version": 1,
+  "hooks": {
+    "sessionStart": [
+      {
+        "type": "command",
+        "bash": "python3 .github/scripts/session-logger.py",
+        "powershell": "python .github/scripts/session-logger.py",
+        "cwd": ".",
+        "timeoutSec": 5
+      }
+    ],
+    "sessionEnd": [
+      {
+        "type": "command",
+        "bash": "python3 .github/scripts/session-logger.py",
+        "powershell": "python .github/scripts/session-logger.py",
+        "cwd": ".",
+        "timeoutSec": 5
+      }
+    ],
+    "postToolUse": [
+      {
+        "type": "command",
+        "bash": "python3 .github/scripts/tool-tracker.py",
+        "powershell": "python .github/scripts/tool-tracker.py",
+        "cwd": ".",
+        "timeoutSec": 5
+      }
+    ],
+    "errorOccurred": [
+      {
+        "type": "command",
+        "bash": "python3 .github/scripts/error-logger.py",
+        "powershell": "python .github/scripts/error-logger.py",
+        "cwd": ".",
+        "timeoutSec": 10
+      }
+    ]
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "version": 1,
+  "hooks": {
+    "preToolUse": [
+      {
+        "type": "command",
+        "bash": "python3 .github/scripts/scout-block.py",
+        "powershell": "python .github/scripts/scout-block.py",
+        "cwd": ".",
+        "timeoutSec": 5
+      },
+      {
+        "type": "command",
+        "bash": "python3 .github/scripts/privacy-block.py",
+        "powershell": "python .github/scripts/privacy-block.py",
+        "cwd": ".",
+        "timeoutSec": 5
+      }
+    ]
+  }
+}

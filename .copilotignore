@@ -1,0 +1,12 @@
+# Copilot ignore patterns - paths blocked from agent access
+node_modules/
+.git/
+dist/
+build/
+.next/
+__pycache__/
+*.pyc
+.DS_Store
+
+
+!.github/

@@ -1,0 +1,23 @@
+{
+  "version": 1,
+  "hooks": {
+    "preToolUse": [
+      {
+        "type": "command",
+        "bash": "python3 .github/scripts/log-subagent-launch.py",
+        "powershell": "python .github/scripts/log-subagent-launch.py",
+        "cwd": ".",
+        "timeoutSec": 5
+      }
+    ],
+    "postToolUse": [
+      {
+        "type": "command",
+        "bash": "python3 .github/scripts/log-subagent-complete.py",
+        "powershell": "python .github/scripts/log-subagent-complete.py",
+        "cwd": ".",
+        "timeoutSec": 5
+      }
+    ]
+  }
+}
