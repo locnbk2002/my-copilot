@@ -22,6 +22,20 @@
         "powershell": "python .github/scripts/log-subagent-launch.py",
         "cwd": ".",
         "timeoutSec": 5
+      },
+      {
+        "type": "command",
+        "bash": "python3 .github/scripts/comment-checker.py",
+        "powershell": "python .github/scripts/comment-checker.py",
+        "cwd": ".",
+        "timeoutSec": 5
+      },
+      {
+        "type": "command",
+        "bash": "python3 .github/scripts/todo-enforcer.py",
+        "powershell": "python .github/scripts/todo-enforcer.py",
+        "cwd": ".",
+        "timeoutSec": 5
       }
     ],
     "postToolUse": [
@@ -36,6 +50,27 @@
         "type": "command",
         "bash": "python3 .github/scripts/log-subagent-complete.py",
         "powershell": "python .github/scripts/log-subagent-complete.py",
+        "cwd": ".",
+        "timeoutSec": 5
+      },
+      {
+        "type": "command",
+        "bash": "python3 .github/scripts/edit-validator.py",
+        "powershell": "python .github/scripts/edit-validator.py",
+        "cwd": ".",
+        "timeoutSec": 5
+      },
+      {
+        "type": "command",
+        "bash": "python3 .github/scripts/agent-babysitter.py",
+        "powershell": "python .github/scripts/agent-babysitter.py",
+        "cwd": ".",
+        "timeoutSec": 5
+      },
+      {
+        "type": "command",
+        "bash": "python3 .github/scripts/auto-compact-reminder.py",
+        "powershell": "python .github/scripts/auto-compact-reminder.py",
         "cwd": ".",
         "timeoutSec": 5
       }
@@ -63,6 +98,13 @@
         "type": "command",
         "bash": "python3 .github/scripts/error-logger.py",
         "powershell": "python .github/scripts/error-logger.py",
+        "cwd": ".",
+        "timeoutSec": 10
+      },
+      {
+        "type": "command",
+        "bash": "python3 .github/scripts/context-recovery.py",
+        "powershell": "python .github/scripts/context-recovery.py",
         "cwd": ".",
         "timeoutSec": 10
       }

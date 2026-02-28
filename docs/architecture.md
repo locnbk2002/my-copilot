@@ -47,11 +47,17 @@ Python scripts triggered on Copilot CLI lifecycle events:
 | `preToolUse` | `scout-block.py` | Security control before tool execution |
 | `preToolUse` | `privacy-block.py` | Privacy enforcement before tool execution |
 | `preToolUse` | `log-subagent-launch.py` | Log sub-agent startup |
+| `preToolUse` | `comment-checker.py` | Block AI-generated comment anti-patterns |
+| `preToolUse` | `todo-enforcer.py` | Block git commit/push with pending plan phases |
 | `postToolUse` | `tool-tracker.py` | Track tool usage after execution |
 | `postToolUse` | `log-subagent-complete.py` | Log sub-agent completion |
+| `postToolUse` | `edit-validator.py` | Track edit/create results and file sizes |
+| `postToolUse` | `agent-babysitter.py` | Detect stuck/looping sub-agents |
+| `postToolUse` | `auto-compact-reminder.py` | Log compaction reminder every 100 tool calls |
 | `sessionStart` | `session-logger.py` | Session lifecycle logging |
 | `sessionEnd` | `session-logger.py` | Session lifecycle logging |
 | `errorOccurred` | `error-logger.py` | Error tracking |
+| `errorOccurred` | `context-recovery.py` | Log recovery data on context exhaustion |
 
 ### MCP Server (`.mcp.json`)
 
