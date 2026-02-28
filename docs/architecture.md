@@ -47,7 +47,7 @@ Python scripts triggered on Copilot CLI lifecycle events:
 | `preToolUse` | `scout-block.py` | Security control before tool execution |
 | `preToolUse` | `privacy-block.py` | Privacy enforcement before tool execution |
 | `preToolUse` | `log-subagent-launch.py` | Log sub-agent startup |
-| `preToolUse` | `comment-checker.py` | Block AI-generated comment anti-patterns |
+| `preToolUse` | `comment-checker.py` | Block code comments (uses `@code-yeongyu/comment-checker` AST binary with regex fallback) |
 | `preToolUse` | `todo-enforcer.py` | Block git commit/push with pending plan phases |
 | `postToolUse` | `tool-tracker.py` | Track tool usage after execution |
 | `postToolUse` | `log-subagent-complete.py` | Log sub-agent completion |
