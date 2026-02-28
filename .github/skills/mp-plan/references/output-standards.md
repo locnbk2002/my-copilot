@@ -40,6 +40,26 @@ Use these predefined tags for consistency:
 - **Domain**: `frontend`, `backend`, `database`, `api`, `auth`
 - **Scope**: `critical`, `tech-debt`, `experimental`
 
+## Phase Category Tagging
+
+Each phase file MUST include a `Category` field in its Overview section. Auto-select from:
+
+| Category | When to Use |
+|----------|-------------|
+| `visual-engineering` | Frontend, UI, CSS, components, design, styling, animation |
+| `deep` | Complex autonomous exploration, open-ended problem-solving |
+| `artistry` | Creative solutions, unconventional approaches |
+| `quick` | Trivial changes, typos, single-file edits, config tweaks |
+| `general` | Standard implementation, tests, API, database, build, lint |
+| `complex` | Substantial multi-system work, architecture decisions |
+| `writing` | Docs, README, changelogs, prose, technical writing |
+
+**Auto-tagging rules:**
+- Match phase title/description keywords against "When to Use" column
+- Default to `general` if uncertain
+- Multiple signals → pick most specific (e.g., "implement UI components" → `visual-engineering` not `general`)
+- Test/CI phases → `general`; architecture design phases → `complex`; doc update phases → `writing`
+
 ## Task Breakdown
 
 - Transform complex requirements into manageable, actionable tasks

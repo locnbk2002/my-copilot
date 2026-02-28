@@ -75,12 +75,12 @@ INSERT INTO todos (id, title, description, status) VALUES
 -- ... repeat for agents 4-6
 ```
 
-### External Scouting (SCALE=3, gemini-3-pro-preview)
+### External Scouting (SCALE=3, gpt-5.3-codex)
 
 ```sql
 INSERT INTO todos (id, title, description, status) VALUES
-  ('scout-1-of-3', 'Scout db/ for migrations via gemini-3-pro-preview model',
-   'Search db/, migrations/. agentType=explore model=gemini-3-pro-preview scale=3 agentIndex=1 totalAgents=3 toolMode=external effort=3m', 'pending');
+  ('scout-1-of-3', 'Scout db/ for migrations via gpt-5.3-codex model',
+   'Search db/, migrations/. agentType=explore model=gpt-5.3-codex scale=3 agentIndex=1 totalAgents=3 toolMode=external effort=3m', 'pending');
 ```
 
 ## Query Helpers

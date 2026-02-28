@@ -65,11 +65,11 @@ Brief description of what this plan accomplishes.
 
 ## Phases
 
-| # | Phase | Status | Effort | Link |
-|---|-------|--------|--------|------|
-| 1 | Setup | Pending | 2h | [phase-01](./phase-01-setup.md) |
-| 2 | Implementation | Pending | 4h | [phase-02](./phase-02-impl.md) |
-| 3 | Testing | Pending | 2h | [phase-03](./phase-03-test.md) |
+| # | Phase | Category | Status | Effort | Link |
+|---|-------|----------|--------|--------|------|
+| 1 | Setup | `quick` | Pending | 2h | [phase-01](./phase-01-setup.md) |
+| 2 | Implementation | `general` | Pending | 4h | [phase-02](./phase-02-impl.md) |
+| 3 | Testing | `general` | Pending | 2h | [phase-03](./phase-03-test.md) |
 
 ## Dependencies
 
@@ -92,6 +92,7 @@ Each phase file should contain:
 **Overview**
 - Priority
 - Current status
+- Category (one of: `visual-engineering`, `deep`, `artistry`, `quick`, `general`, `complex`, `writing`)
 - Brief description
 
 **Key Insights**

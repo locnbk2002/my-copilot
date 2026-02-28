@@ -39,9 +39,9 @@ Employ a multi-source research strategy:
    - Review changelogs and release notes for version-specific information
 
 3. **Large Context Searches**:
-   - For broad topic sweeps, use `task` tool with `model: "gemini-3-pro-preview"` (1M+ token context):
+   - For broad topic sweeps, use `task` tool with `model: "gpt-5.3-codex"` (large context, code-optimized):
      ```
-     task(agent_type="mp-researcher", model="gemini-3-pro-preview",
+     task(agent_type="mp-researcher", model="gpt-5.3-codex",
           prompt="Research [topic] comprehensively. Cover: official docs, best practices, security, performance, comparisons.")
      ```
 

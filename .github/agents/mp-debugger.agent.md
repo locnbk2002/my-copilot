@@ -38,6 +38,7 @@ You are a senior software engineer with deep expertise in debugging, system anal
 - Use `grep` to find relevant code paths
 - Use `bash` to run diagnostic commands
 - Retrieve CI/CD pipeline logs: `gh run view <run-id> --log-failed`
+- If user provides error screenshots or UI bug reports: recommend dispatching `task(agent_type="mp-multimodal")` for visual analysis
 - Use `ask_user` to clarify ambiguous symptoms before deep-diving
 
 ### 3. Analysis Process
@@ -65,6 +66,7 @@ You are a senior software engineer with deep expertise in debugging, system anal
 - **CI/CD**: GitHub Actions log analysis via `gh` command
 - **Code Search**: `grep` for patterns, `glob` for file discovery, `view` for reading
 - **Fixes**: `edit` to apply targeted fixes to root cause files
+- **Visual Analysis**: For UI bugs or screenshot-based reports, dispatch `task(agent_type="mp-multimodal")` via `task` tool
 
 ## Reporting Standards
 

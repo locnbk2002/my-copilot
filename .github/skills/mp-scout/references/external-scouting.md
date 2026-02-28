@@ -5,7 +5,7 @@ Use specific models with large context windows (1M+ tokens) for faster, broader 
 ## Model Selection
 
 ```
-SCALE <= 3  → gemini-3-pro-preview  (1M+ token context, fast for broad sweeps)
+SCALE <= 3  → gpt-5.3-codex          (large context, code-optimized, broad sweeps)
 SCALE 4-5   → gpt-5.3-codex         (large context, code-optimized)
 SCALE >= 6  → Use internal scouting instead
 ```
@@ -14,16 +14,16 @@ SCALE >= 6  → Use internal scouting instead
 
 Use the `task` tool with the `model` parameter to target a specific model — no CLI tools required.
 
-## Large Context Model — gemini-3-pro-preview (SCALE <= 3)
+## Large Context Model — gpt-5.3-codex (SCALE <= 3)
 
-Spawn parallel `explore` agents using `model: "gemini-3-pro-preview"`:
+Spawn parallel `explore` agents using `model: "gpt-5.3-codex"`:
 
 ```
-Agent 1: task(agent_type="explore", model="gemini-3-pro-preview",
+Agent 1: task(agent_type="explore", model="gpt-5.3-codex",
               prompt="Scout src/auth/, src/middleware/ for authentication files. List paths with brief descriptions.")
-Agent 2: task(agent_type="explore", model="gemini-3-pro-preview",
+Agent 2: task(agent_type="explore", model="gpt-5.3-codex",
               prompt="Scout src/api/, src/routes/ for authentication endpoints.")
-Agent 3: task(agent_type="explore", model="gemini-3-pro-preview",
+Agent 3: task(agent_type="explore", model="gpt-5.3-codex",
               prompt="Scout tests/ for authentication-related test files.")
 ```
 
@@ -53,13 +53,13 @@ Spawn all in a single response for parallel execution.
 
 ## Example Workflow
 
-User: "Find database migration files" (SCALE=3 → gemini-3-pro-preview)
+User: "Find database migration files" (SCALE=3 → gpt-5.3-codex)
 
 Spawn 3 parallel agents in one response:
 ```
-Agent 1: task(agent_type="explore", model="gemini-3-pro-preview", prompt="Scout db/, migrations/ for migration files")
-Agent 2: task(agent_type="explore", model="gemini-3-pro-preview", prompt="Scout lib/, src/ for database schema files")
-Agent 3: task(agent_type="explore", model="gemini-3-pro-preview", prompt="Scout config/ for database configuration")
+Agent 1: task(agent_type="explore", model="gpt-5.3-codex", prompt="Scout db/, migrations/ for migration files")
+Agent 2: task(agent_type="explore", model="gpt-5.3-codex", prompt="Scout lib/, src/ for database schema files")
+Agent 3: task(agent_type="explore", model="gpt-5.3-codex", prompt="Scout config/ for database configuration")
 ```
 
 ## Reading File Content
@@ -85,17 +85,17 @@ lines_per_chunk = ceil(total_lines / chunks)
 
 **Small files (<500 lines each):**
 ```
-Agent 1: task(agent_type="explore", model="gemini-3-pro-preview",
+Agent 1: task(agent_type="explore", model="gpt-5.3-codex",
               prompt="Read and summarize file1.ts and file2.ts")
-Agent 2: task(agent_type="explore", model="gemini-3-pro-preview",
+Agent 2: task(agent_type="explore", model="gpt-5.3-codex",
               prompt="Read and summarize file3.ts and file4.ts")
 ```
 
 **Large file (>500 lines) — use `view` with view_range:**
 ```
-Agent 1: task(agent_type="explore", model="gemini-3-pro-preview",
+Agent 1: task(agent_type="explore", model="gpt-5.3-codex",
               prompt="Read lines 1-500 of large-file.ts using view tool with view_range [1,500]")
-Agent 2: task(agent_type="explore", model="gemini-3-pro-preview",
+Agent 2: task(agent_type="explore", model="gpt-5.3-codex",
               prompt="Read lines 501-1000 of large-file.ts using view tool with view_range [501,1000]")
 ```
 

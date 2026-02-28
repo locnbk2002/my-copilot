@@ -6,7 +6,15 @@
 - Extract: objectives, tasks, acceptance criteria, estimated complexity
 - If the phase file contains code snippets/pseudocode, use them as implementation guidance
 
-### Step 2: Complexity Assessment
+### Step 2: Complexity Assessment / Category Check
+
+**If phase has `Category` field AND `--direct` not set:**
+- Skip Steps 2-3 below
+- Dispatch `task(agent_type="mp-worker")` with plan directory path and work context
+- mp-worker handles config resolution and sub-agent delegation
+- Resume at Step 4 (Verification Gate) when mp-worker returns
+
+**If no Category field OR `--direct` flag — use complexity-based approach:**
 
 - **Simple** (< 3 files, straightforward changes): Execute directly
 - **Medium** (3-10 files, requires analysis): Dispatch explore subagents first, then implement

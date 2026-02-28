@@ -68,6 +68,10 @@ Load: `references/plan-organization.md`
 ### 5. Task Breakdown & Output Standards
 Load: `references/output-standards.md`
 
+### 6. Category Tagging
+Load: `references/category-defaults.md` from `.github/skills/mp-execute/references/` for the full category list and auto-tagging rules.
+Auto-tag each phase with a category based on phase content and intent (see `output-standards.md` → Phase Category Tagging).
+
 ## Workflow Process
 
 1. **Mode Detection** → Auto-detect or use explicit flag (see `workflow-modes.md`)

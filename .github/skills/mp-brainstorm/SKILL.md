@@ -30,6 +30,7 @@ Default: Interactive brainstorming session
 ### 1. Context Gathering
 - Read project README, architecture docs
 - Dispatch `task(agent_type="explore")` to understand relevant codebase areas
+- If user provides mockups, wireframes, or diagrams: dispatch `task(agent_type="mp-multimodal")` to analyze visual inputs before ideation
 - Ask clarifying questions via `ask_user` (constraints, goals, non-goals)
 
 ### 2. Discovery
@@ -102,3 +103,4 @@ Generate 2-4 approaches for the topic. For each:
 - `mp-research` — Deep research on specific technologies
 - `mp-docs-seeker` — Look up library documentation
 - `mp-sequential-thinking` — Step-by-step analysis of complex tradeoffs
+- `mp-multimodal` agent — Analyze mockups, diagrams, and visual references

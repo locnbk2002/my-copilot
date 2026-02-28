@@ -96,6 +96,8 @@ Launch via the `task` tool with `agent_type`:
 | Researcher | `mp-researcher` | Deep technical research |
 | Code Reviewer | `mp-code-reviewer` | Review code changes |
 | Debugger | `mp-debugger` | Root cause analysis, debugging |
+| Multimodal | `mp-multimodal` | UI/screenshot analysis, visual debugging |
+| Worker | `mp-worker` | Category-aware phase orchestrator |
 | Explorer | `explore` | Fast codebase search |
 | Task Runner | `task` | Build/test/lint commands |
 
@@ -103,7 +105,8 @@ Launch via the `task` tool with `agent_type`:
 - Heavy reasoning / architecture: `claude-opus-4.6`
 - Standard implementation: `claude-sonnet-4.6`
 - Fast/cheap searches: `claude-haiku-4.5`
-- Alternative: `gemini-3-pro-preview`, `gpt-5.3-codex`
+- Large context / broad sweeps: `gpt-5.3-codex`
+- Multimodal / visual analysis: `gemini-3-pro-preview`
 
 ## Task Tracking
 

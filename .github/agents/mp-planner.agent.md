@@ -37,7 +37,7 @@ When a file is too large to read at once:
 1. **Chunked view**: Use `view` tool with `view_range` parameter to read in portions
 2. **Grep**: Search specific content with `grep` tool
 3. **Glob**: Find files by pattern, then read selectively
-4. **Task with model**: Use `task` tool with `model: "gemini-3-pro-preview"` for 1M+ context on large codebases
+4. **Task with model**: Use `task` tool with `model: "gpt-5.3-codex"` for large context on large codebases
 
 ## Core Mental Models
 

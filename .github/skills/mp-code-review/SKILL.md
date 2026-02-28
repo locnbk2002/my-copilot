@@ -43,6 +43,11 @@ Dispatch `task(agent_type="explore")` to scan for:
 - Security concerns (exposed secrets, injection vectors)
 - Callers/dependents of changed functions
 
+### 2.5. Visual Review (optional)
+If user provides screenshots or mentions UI/visual changes:
+- Dispatch `task(agent_type="mp-multimodal")` with the screenshot(s) + relevant component paths
+- Feed visual findings into Review Phase as additional context
+
 ### 3. Review Phase
 Dispatch `task(agent_type="mp-code-reviewer")` with:
 - The diff
@@ -78,6 +83,7 @@ Dispatch `task(agent_type="mp-code-reviewer")` with:
 
 ## Related Skills & Agents
 - `mp-code-reviewer` agent — Performs the actual code review
+- `mp-multimodal` agent — UI/screenshot analysis for visual review
 - `mp-fix` — Fixes Critical/High issues found during review
 - `mp-execute` — Invokes this skill as review gate
 - `mp-git` — Typically invoked after review passes

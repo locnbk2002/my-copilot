@@ -50,7 +50,7 @@ Launch via the `task` tool:
 
 ```python
 task(
-  agent_type="mp-planner",   # or explore, task, general-purpose, code-review, mp-researcher, mp-debugger
+  agent_type="mp-planner",   # or explore, task, general-purpose, mp-researcher, mp-debugger, mp-multimodal
   description="Plan auth feature",
   prompt="...",
   model="claude-sonnet-4.6"  # optional
@@ -63,6 +63,8 @@ task(
 | Researcher | `mp-researcher` | Deep technical research, library evaluation |
 | Code Reviewer | `mp-code-reviewer` | Reviewing diffs and PRs |
 | Debugger | `mp-debugger` | Root cause analysis, debugging |
+| Multimodal | `mp-multimodal` | UI/screenshot analysis, visual debugging |
+| Worker | `mp-worker` | Category-aware phase orchestrator |
 | Explorer | `explore` | Fast codebase search and questions |
 | Task Runner | `task` | Build, test, lint commands |
 | General Purpose | `general-purpose` | Complex multi-step tasks |
@@ -74,8 +76,8 @@ task(
 | Heavy reasoning, architecture | `claude-opus-4.6` |
 | Standard implementation | `claude-sonnet-4.6` |
 | Fast/cheap search | `claude-haiku-4.5` |
-| Alternative LLM | `gemini-3-pro-preview` |
-| Code generation | `gpt-5.3-codex` |
+| Large context / broad sweeps | `gpt-5.3-codex` |
+| Multimodal / visual analysis | `gemini-3-pro-preview` |
 
 ---
 

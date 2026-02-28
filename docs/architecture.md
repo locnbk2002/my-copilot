@@ -27,7 +27,7 @@
 
 ### Agents (`.github/agents/`)
 
-4 specialized sub-agents launched via the `task` tool:
+6 specialized sub-agents launched via the `task` tool:
 
 | Agent | Model | Purpose |
 |-------|-------|---------|
@@ -35,6 +35,8 @@
 | `mp-code-reviewer` | Claude Sonnet 4.6 | Code review (infer: true) |
 | `mp-debugger` | Claude Sonnet 4.6 | Root cause analysis (infer: true) |
 | `mp-researcher` | Claude Haiku 4.5 | Deep technical research (infer: true) |
+| `mp-multimodal` | Gemini 3 Pro | UI/screenshot analysis, visual debugging (infer: true) |
+| `mp-worker` | Claude Sonnet 4.6 | Category-aware phase orchestrator — delegates phases to sub-agents by category |
 
 ### Hooks (`.github/scripts/` + `hooks.json`)
 
@@ -94,5 +96,6 @@ Copilot CLI (main context)
 - **Configuration-only**: No compiled code — skills/agents are Markdown; hooks are Python scripts. Easy to extend without a build pipeline.
 - **Skill-based modularity**: Each concern is a separate skill directory with its own references, enabling independent evolution.
 - **Security-first hooks**: Privacy and security checks run on every tool call before execution.
-- **Model tiering**: Expensive Opus model reserved for planning; Haiku for fast research tasks; Sonnet for standard work.
+- **Model tiering**: Expensive Opus model reserved for planning; Haiku for fast research; Sonnet for standard work; `gpt-5.3-codex` for large context sweeps; Gemini for visual/multimodal.
+- **Category-based delegation**: Plan phases are tagged with work categories (visual-engineering, deep, artistry, quick, general, complex, writing). `mp-worker` reads `.github/my-copilot.jsonc` (or `~/.copilot/my-copilot.jsonc`) to resolve model+agent_type per category and dispatches each phase to the appropriate sub-agent.
 - **SQL task tracking**: Session-scoped SQLite (`todos` table) tracks work across sub-agent invocations.

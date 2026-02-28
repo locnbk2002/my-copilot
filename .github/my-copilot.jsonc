@@ -1,0 +1,59 @@
+// my-copilot configuration
+// Project-level config: .github/my-copilot.jsonc
+// User-level config:    ~/.copilot/my-copilot.jsonc  (project takes precedence)
+//
+// Category-to-model mapping for mp-worker phase delegation.
+// Override any category's model or agent_type here.
+// Custom categories can be added following the same structure.
+{
+  "categories": {
+    // Frontend, UI/UX, design, styling, animation
+    "visual-engineering": {
+      "description": "Frontend, UI/UX, design, styling, animation",
+      "model": "gemini-3-pro-preview",
+      "agent_type": "mp-multimodal"
+    },
+
+    // Goal-oriented autonomous problem-solving, complex multi-file work
+    "deep": {
+      "description": "Goal-oriented autonomous problem-solving",
+      "model": "gpt-5.3-codex",
+      "agent_type": "general-purpose"
+    },
+
+    // Highly creative, unconventional solutions
+    "artistry": {
+      "description": "Highly creative, unconventional solutions",
+      "model": "gemini-3-pro-preview",
+      "agent_type": "general-purpose"
+    },
+
+    // Trivial tasks: typo fixes, single-file edits, config tweaks
+    "quick": {
+      "description": "Trivial tasks, typo fixes, single-file changes",
+      "model": "claude-haiku-4.5",
+      "agent_type": "task"
+    },
+
+    // Standard moderate-effort implementation work
+    "general": {
+      "description": "General moderate-effort work",
+      "model": "claude-sonnet-4.6",
+      "agent_type": "general-purpose"
+    },
+
+    // Substantial effort, multi-system coordination, architecture decisions
+    "complex": {
+      "description": "Substantial effort, multi-system coordination",
+      "model": "claude-opus-4.6",
+      "agent_type": "general-purpose"
+    },
+
+    // Documentation, README, prose, technical writing
+    "writing": {
+      "description": "Documentation, prose, technical writing",
+      "model": "claude-sonnet-4.6",
+      "agent_type": "general-purpose"
+    }
+  }
+}

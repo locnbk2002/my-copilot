@@ -35,7 +35,7 @@ copilot plugin install ./my-copilot
 | `mp-research` | Comprehensive technical research and evaluation |
 | `mp-sequential-thinking` | Step-by-step analysis for complex problems |
 
-### Agents (4)
+### Agents (6)
 
 | Agent | Description |
 |-------|-------------|
@@ -43,15 +43,33 @@ copilot plugin install ./my-copilot
 | `mp-code-reviewer` | Review code changes and PRs (infer: true) |
 | `mp-debugger` | Root cause analysis and debugging (infer: true) |
 | `mp-researcher` | Deep technical research (infer: true, Haiku model) |
+| `mp-multimodal` | UI/screenshot analysis, visual debugging (infer: true, Gemini model) |
+| `mp-worker` | Category-aware phase orchestrator — delegates phases to sub-agents by category |
 
 ### Hooks
 
 All hooks merged in `hooks.json` (security, audit, subagent lifecycle monitoring).
 
+## Category System
+
+Plan phases are tagged with work categories that map to optimized models. `mp-worker` reads the category and dispatches to the right sub-agent automatically.
+
+| Category | Default Model | Agent | Use Case |
+|----------|---------------|-------|----------|
+| `visual-engineering` | `gemini-3-pro-preview` | `mp-multimodal` | Frontend, UI/UX, design |
+| `deep` | `gpt-5.3-codex` | `general-purpose` | Autonomous problem-solving |
+| `artistry` | `gemini-3-pro-preview` | `general-purpose` | Creative solutions |
+| `quick` | `claude-haiku-4.5` | `task` | Trivial tasks, single-file |
+| `general` | `claude-sonnet-4.6` | `general-purpose` | Standard work |
+| `complex` | `claude-opus-4.6` | `general-purpose` | Multi-system coordination |
+| `writing` | `claude-sonnet-4.6` | `general-purpose` | Documentation, prose |
+
+Customize via `.github/my-copilot.jsonc` (project) or `~/.copilot/my-copilot.jsonc` (global).
+
 ## Workflow
 
 ```
-mp-brainstorm → mp-plan → mp-execute → mp-test → mp-fix → mp-code-review → mp-docs → mp-git
+mp-brainstorm → mp-plan → mp-execute → mp-worker → [sub-agents by category] → mp-test → mp-fix → mp-code-review → mp-docs → mp-git
 ```
 
 ## MCP Setup (Context7)
