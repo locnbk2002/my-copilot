@@ -1,7 +1,7 @@
 {
-  "name": "my-copilot",
+  "name": "locnbk2002-marketplace",
   "version": "0.0.2",
-  "description": "my-copilot GitHub Copilot CLI plugin",
+  "description": "locnbk2002 marketplace — GitHub Copilot CLI plugins",
   "main": "index.js",
   "directories": {
     "doc": "docs"

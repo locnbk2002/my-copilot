@@ -25,6 +25,7 @@ copilot plugin install locnbk2002/my-copilot
 
 ```bash
 git clone https://github.com/locnbk2002/my-copilot
+cd my-copilot
 copilot plugin install ./my-copilot
 ```
 
