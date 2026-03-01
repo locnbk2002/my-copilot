@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Detect stuck/looping sub-agents by tracking consecutive task calls."""
 import json, os, sys
-
-os.makedirs("logs", exist_ok=True)
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import hook_utils
 
 try:
     d = json.load(sys.stdin)
@@ -25,17 +25,8 @@ if not isinstance(tool_args, dict):
 agent_type = tool_args.get("agent_type", "")
 prompt = (tool_args.get("prompt", "") or "")[:100]
 
-from collections import deque
-
-recent = []
-try:
-    with open("logs/subagents.jsonl", "r") as f:
-        for line in deque(f, maxlen=5):
-            try:
-                recent.append(json.loads(line.strip()))
-            except Exception:
-                pass
-except FileNotFoundError:
+recent = hook_utils.read_log_tail("subagents.jsonl", 5)
+if not recent:
     sys.exit(0)
 
 consecutive = 0
@@ -68,5 +59,4 @@ out = {
     "message": f"Possible agent loop: {similar}x consecutive {agent_type}",
 }
 
-with open("logs/agent-health.jsonl", "a") as f:
-    f.write(json.dumps(out, separators=(",", ":")) + "\n")
+hook_utils.append_log("agent-health.jsonl", out)

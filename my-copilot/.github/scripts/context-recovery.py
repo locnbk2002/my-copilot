@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Log recovery data on context window exhaustion errors."""
 import json, os, sys
-
-os.makedirs("logs", exist_ok=True)
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import hook_utils
 
 try:
     d = json.load(sys.stdin)
@@ -16,29 +16,10 @@ CONTEXT_KEYWORDS = ["context", "token", "limit", "capacity", "truncat", "window"
 if not any(kw in msg for kw in CONTEXT_KEYWORDS):
     sys.exit(0)
 
-from collections import deque
+recent_tools = hook_utils.read_log_tail("tools.jsonl", 10)
 
-recent_tools = []
-try:
-    with open("logs/tools.jsonl", "r") as f:
-        for line in deque(f, maxlen=10):
-            try:
-                recent_tools.append(json.loads(line.strip()))
-            except Exception:
-                pass
-except FileNotFoundError:
-    pass
-
-active_agent = None
-try:
-    with open("logs/subagents.jsonl", "r") as f:
-        for line in deque(f, maxlen=1):
-            try:
-                active_agent = json.loads(line.strip())
-            except Exception:
-                pass
-except FileNotFoundError:
-    pass
+_agent_list = hook_utils.read_log_tail("subagents.jsonl", 1)
+active_agent = _agent_list[0] if _agent_list else None
 
 out = {
     "timestamp": d.get("timestamp"),
@@ -48,5 +29,4 @@ out = {
     "activeAgent": active_agent,
 }
 
-with open("logs/context-recovery.jsonl", "a") as f:
-    f.write(json.dumps(out, separators=(",", ":")) + "\n")
+hook_utils.append_log("context-recovery.jsonl", out)
