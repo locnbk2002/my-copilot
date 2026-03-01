@@ -44,6 +44,7 @@ Python scripts triggered on Copilot CLI lifecycle events:
 
 | Hook | Script | Trigger |
 |------|--------|---------|
+| (shared utility) | `hook_utils.py` | Imported by all hook scripts — provides `get_log_dir()`, `log_path()`, `append_log()`, `read_log_tail()`, `count_log_lines()`, and session management |
 | `preToolUse` | `scout-block.py` | Security control before tool execution |
 | `preToolUse` | `privacy-block.py` | Privacy enforcement before tool execution |
 | `preToolUse` | `log-subagent-launch.py` | Log sub-agent startup |
@@ -58,6 +59,26 @@ Python scripts triggered on Copilot CLI lifecycle events:
 | `sessionEnd` | `session-logger.py` | Session lifecycle logging |
 | `errorOccurred` | `error-logger.py` | Error tracking |
 | `errorOccurred` | `context-recovery.py` | Log recovery data on context exhaustion |
+
+#### Logging
+
+All hook scripts write structured JSONL logs via `hook_utils.py`:
+
+- **Log location**: `~/.local/share/.copilot/my-copilot/logs/<project-hash>/<session-id>/`
+  - `<project-hash>` — 12-char SHA-256 of the project's absolute path
+  - `<session-id>` — UUID assigned per Copilot CLI session
+- **Session isolation**: each session's UUID is stored in a PPID-keyed file under `.sessions/` so concurrent sessions never share a log directory
+- **Override for testing**: set `HOOK_LOG_BASE` env var to redirect log writes to a temp directory
+- **Log files**:
+  - `sessions.jsonl` — session start/end lifecycle events
+  - `tools.jsonl` — per-tool-call tracking
+  - `errors.jsonl` — error events
+  - `subagents.jsonl` — sub-agent launch and completion events
+  - `edit-health.jsonl` — edit/create file size and health checks
+  - `model-fallback.jsonl` — model rate-limit fallback events
+  - `context-recovery.jsonl` — context exhaustion recovery data
+  - `compact-reminders.jsonl` — compaction reminder triggers
+  - `agent-health.jsonl` — stuck/looping sub-agent detections
 
 ### MCP Server (`.mcp.json`)
 
