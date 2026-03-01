@@ -2,7 +2,7 @@
 // Project-level config: .github/my-copilot.jsonc
 // User-level config:    ~/.copilot/my-copilot.jsonc  (project takes precedence)
 //
-// Category-to-model mapping for mp-worker phase delegation.
+// Category-to-model mapping for worker phase delegation.
 // Override any category's model or agent_type here.
 // Custom categories can be added following the same structure.
 {
@@ -11,7 +11,7 @@
     "visual-engineering": {
       "description": "Frontend, UI/UX, design, styling, animation",
       "model": "gemini-3-pro-preview",
-      "agent_type": "mp-multimodal"
+      "agent_type": "multimodal"
     },
 
     // Goal-oriented autonomous problem-solving, complex multi-file work

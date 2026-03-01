@@ -30,7 +30,7 @@ copilot plugin install ./my-copilot
 
 ## MCP Setup (Context7 — optional)
 
-Context7 enables the `mp-docs-seeker` skill to look up library/framework documentation.
+Context7 enables the `docs-seeker` skill to look up library/framework documentation.
 
 1. Get an API key from https://context7.com
 2. Find the installed plugin directory: `copilot plugin list`
@@ -41,8 +41,8 @@ Context7 enables the `mp-docs-seeker` skill to look up library/framework documen
 After installing, confirm skills and agents are available:
 
 ```bash
-copilot skill list        # Should show mp-* skills
-copilot agent list        # Should show mp-planner, mp-debugger, etc.
+copilot skill list        # Should show skills
+copilot agent list        # Should show planner, debugger, etc.
 ```
 
 ## Using Skills
@@ -50,7 +50,7 @@ copilot agent list        # Should show mp-planner, mp-debugger, etc.
 Invoke any skill via the Copilot CLI chat:
 
 ```
-Use the skill tool to invoke "mp-plan" skill, then help me plan: <feature description>
+Use the skill tool to invoke "plan" skill, then help me plan: <feature description>
 ```
 
 ## Using Agents
@@ -63,7 +63,7 @@ Hooks run automatically on tool use and session events. No configuration needed 
 
 ## Category Configuration
 
-Plan phases are tagged with work categories. `mp-worker` resolves each category to an optimized model and agent type. You can override the defaults via config files.
+Plan phases are tagged with work categories. `worker` resolves each category to an optimized model and agent type. You can override the defaults via config files.
 
 ### Config File Locations
 
@@ -95,7 +95,7 @@ Project config takes precedence over user config; user config takes precedence o
 
 | Category | Model | Agent | When to Use |
 |----------|-------|-------|-------------|
-| `visual-engineering` | `gemini-3-pro-preview` | `mp-multimodal` | Frontend, UI/UX, design |
+| `visual-engineering` | `gemini-3-pro-preview` | `multimodal` | Frontend, UI/UX, design |
 | `deep` | `gpt-5.3-codex` | `general-purpose` | Autonomous problem-solving |
 | `artistry` | `gemini-3-pro-preview` | `general-purpose` | Creative solutions |
 | `quick` | `claude-haiku-4.5` | `task` | Trivial, single-file changes |

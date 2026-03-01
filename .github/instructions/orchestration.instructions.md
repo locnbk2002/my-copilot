@@ -50,7 +50,7 @@ Launch via the `task` tool:
 
 ```python
 task(
-  agent_type="mp-planner",   # or explore, task, general-purpose, mp-researcher, mp-debugger, mp-multimodal
+  agent_type="planner",   # or explore, task, general-purpose, researcher, debugger, multimodal
   description="Plan auth feature",
   prompt="...",
   model="claude-sonnet-4.6"  # optional
@@ -59,12 +59,12 @@ task(
 
 | Agent | `agent_type` | Best For |
 |-------|-------------|----------|
-| Planner | `mp-planner` | Architecture, implementation plans |
-| Researcher | `mp-researcher` | Deep technical research, library evaluation |
-| Code Reviewer | `mp-code-reviewer` | Reviewing diffs and PRs |
-| Debugger | `mp-debugger` | Root cause analysis, debugging |
-| Multimodal | `mp-multimodal` | UI/screenshot analysis, visual debugging |
-| Worker | `mp-worker` | Category-aware phase orchestrator |
+| Planner | `planner` | Architecture, implementation plans |
+| Researcher | `researcher` | Deep technical research, library evaluation |
+| Code Reviewer | `code-reviewer` | Reviewing diffs and PRs |
+| Debugger | `debugger` | Root cause analysis, debugging |
+| Multimodal | `multimodal` | UI/screenshot analysis, visual debugging |
+| Worker | `worker` | Category-aware phase orchestrator |
 | Explorer | `explore` | Fast codebase search and questions |
 | Task Runner | `task` | Build, test, lint commands |
 | General Purpose | `general-purpose` | Complex multi-step tasks |

@@ -22,29 +22,29 @@ copilot plugin install ./my-copilot
 
 | Skill | Description |
 |-------|-------------|
-| `mp-plan` | Plan implementations with auto-brainstorm, research, red-team, and validation phases (`--skip-brainstorm` to skip brainstorm) |
-| `mp-execute` | Execute plans phase-by-phase with auto post-execution chain: test → fix → review → docs → commit (`--skip-post` to skip chain) |
-| `mp-test` | Auto-detect and run tests with structured reporting |
-| `mp-fix` | Diagnose and fix bugs with root cause analysis |
-| `mp-code-review` | Structured scout→review→fix pipeline |
-| `mp-docs` | Initialize, update, and summarize documentation |
-| `mp-docs-seeker` | Search library/framework documentation via Context7 |
-| `mp-git` | Conventional commits, security scanning, PR creation |
-| `mp-brainstorm` | Structured ideation with approach comparison |
-| `mp-scout` | Fast codebase exploration using parallel agents |
-| `mp-research` | Comprehensive technical research and evaluation |
-| `mp-sequential-thinking` | Step-by-step analysis for complex problems |
+| `plan` | Plan implementations with auto-brainstorm, research, red-team, and validation phases (`--skip-brainstorm` to skip brainstorm) |
+| `execute` | Execute plans phase-by-phase with auto post-execution chain: test → fix → review → docs → commit (`--skip-post` to skip chain) |
+| `test` | Auto-detect and run tests with structured reporting |
+| `fix` | Diagnose and fix bugs with root cause analysis |
+| `code-review` | Structured scout→review→fix pipeline |
+| `docs` | Initialize, update, and summarize documentation |
+| `docs-seeker` | Search library/framework documentation via Context7 |
+| `git` | Conventional commits, security scanning, PR creation |
+| `brainstorm` | Structured ideation with approach comparison |
+| `scout` | Fast codebase exploration using parallel agents |
+| `research` | Comprehensive technical research and evaluation |
+| `sequential-thinking` | Step-by-step analysis for complex problems |
 
 ### Agents (6)
 
 | Agent | Description |
 |-------|-------------|
-| `mp-planner` | Research + plan phases (Opus model) |
-| `mp-code-reviewer` | Review code changes and PRs (infer: true) |
-| `mp-debugger` | Root cause analysis and debugging (infer: true) |
-| `mp-researcher` | Deep technical research (infer: true, Haiku model) |
-| `mp-multimodal` | UI/screenshot analysis, visual debugging (infer: true, Gemini model) |
-| `mp-worker` | Category-aware phase orchestrator — delegates phases to sub-agents by category |
+| `planner` | Research + plan phases (Opus model) |
+| `code-reviewer` | Review code changes and PRs (infer: true) |
+| `debugger` | Root cause analysis and debugging (infer: true) |
+| `researcher` | Deep technical research (infer: true, Haiku model) |
+| `multimodal` | UI/screenshot analysis, visual debugging (infer: true, Gemini model) |
+| `worker` | Category-aware phase orchestrator — delegates phases to sub-agents by category |
 
 ### Hooks
 
@@ -52,11 +52,11 @@ All hooks merged in `hooks.json` (security, audit, subagent lifecycle monitoring
 
 ## Category System
 
-Plan phases are tagged with work categories that map to optimized models. `mp-worker` reads the category and dispatches to the right sub-agent automatically.
+Plan phases are tagged with work categories that map to optimized models. `worker` reads the category and dispatches to the right sub-agent automatically.
 
 | Category | Default Model | Agent | Use Case |
 |----------|---------------|-------|----------|
-| `visual-engineering` | `gemini-3-pro-preview` | `mp-multimodal` | Frontend, UI/UX, design |
+| `visual-engineering` | `gemini-3-pro-preview` | `multimodal` | Frontend, UI/UX, design |
 | `deep` | `gpt-5.3-codex` | `general-purpose` | Autonomous problem-solving |
 | `artistry` | `gemini-3-pro-preview` | `general-purpose` | Creative solutions |
 | `quick` | `claude-haiku-4.5` | `task` | Trivial tasks, single-file |
@@ -71,10 +71,10 @@ Customize via `.github/my-copilot.jsonc` (project) or `~/.copilot/my-copilot.jso
 Two-step automated workflow:
 
 ```
-User → mp-plan   (auto: brainstorm → research → plan → validate)
+User → plan   (auto: brainstorm → research → plan → validate)
          └── opt-out: --skip-brainstorm to skip brainstorm step
 
-User → mp-execute (auto: implement → test → fix → review → docs → commit)
+User → execute (auto: implement → test → fix → review → docs → commit)
          └── opt-out: --skip-post to skip post-execution chain
 ```
 

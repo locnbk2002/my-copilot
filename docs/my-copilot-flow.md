@@ -11,33 +11,33 @@ flowchart TD
 
     subgraph WF["📚 Primary Workflow  (skill chain)"]
         direction LR
-        WF1[mp-brainstorm] --> WF2[mp-plan]
-        WF2 --> WF3[mp-execute]
-        WF3 --> WF4[mp-test]
-        WF4 --> WF5[mp-fix]
-        WF5 --> WF6[mp-code-review]
-        WF6 --> WF7[mp-docs]
-        WF7 --> WF8[mp-git]
+        WF1[brainstorm] --> WF2[plan]
+        WF2 --> WF3[execute]
+        WF3 --> WF4[test]
+        WF4 --> WF5[fix]
+        WF5 --> WF6[code-review]
+        WF6 --> WF7[docs]
+        WF7 --> WF8[git]
     end
 
     subgraph SS["📚 Support Skills"]
         direction LR
-        SS1[mp-scout]
-        SS2[mp-research]
-        SS3[mp-docs-seeker]
-        SS4[mp-sequential-thinking]
-        SS5[mp-brainstorm]
+        SS1[scout]
+        SS2[research]
+        SS3[docs-seeker]
+        SS4[sequential-thinking]
+        SS5[brainstorm]
     end
 
-    %% mp-execute delegates to mp-worker when phases have Category tags
-    WF3 -->|"task · agent_type=mp-worker\n(phases with Category field)"| WORKER
+    %% execute delegates to worker when phases have Category tags
+    WF3 -->|"task · agent_type=worker\n(phases with Category field)"| WORKER
 
-    subgraph WORKER["🔄 mp-worker — Category Orchestrator"]
+    subgraph WORKER["🔄 worker — Category Orchestrator"]
         direction TB
         CFG["⚙️ Config Resolution\n.github/my-copilot.jsonc\n~/.copilot/my-copilot.jsonc"]
         CFG --> CAT{Phase Category?}
 
-        CAT -->|visual-engineering| C1["mp-multimodal\nGemini 3 Pro"]
+        CAT -->|visual-engineering| C1["multimodal\nGemini 3 Pro"]
         CAT -->|deep| C2["general-purpose\ngpt-5.3-codex"]
         CAT -->|complex| C3["general-purpose\nClaude Opus 4.6"]
         CAT -->|artistry| C4["general-purpose\nGemini 3 Pro"]
@@ -48,11 +48,11 @@ flowchart TD
     %% Specialist agents (infer:true = auto-dispatched by CLI)
     subgraph SA["🤖 Specialist Agents"]
         direction TB
-        SA1["mp-planner\nClaude Opus 4.6"]
-        SA2["mp-researcher\nClaude Haiku 4.5 · infer:true"]
-        SA3["mp-code-reviewer\nClaude Sonnet 4.6 · infer:true"]
-        SA4["mp-debugger\nClaude Sonnet 4.6 · infer:true"]
-        SA5["mp-multimodal\nGemini 3 Pro · infer:true"]
+        SA1["planner\nClaude Opus 4.6"]
+        SA2["researcher\nClaude Haiku 4.5 · infer:true"]
+        SA3["code-reviewer\nClaude Sonnet 4.6 · infer:true"]
+        SA4["debugger\nClaude Sonnet 4.6 · infer:true"]
+        SA5["multimodal\nGemini 3 Pro · infer:true"]
     end
 
     WF -->|task tool| SA

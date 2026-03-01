@@ -16,10 +16,10 @@ applyTo: "**/*"
   - Use composition over inheritance for complex widgets
   - Extract utility functions into separate modules
   - Create dedicated service classes for business logic
-- For docs/API lookup, activate the `mp-docs-seeker` skill (Context7)
+- For docs/API lookup, activate the `docs-seeker` skill (Context7)
 - Use `gh` bash command to interact with GitHub features
 - Use `psql` bash command to query Postgres for debugging
-- Use `mp-sequential-thinking` skill for step-by-step analysis, debugging, and complex reasoning
+- Use `sequential-thinking` skill for step-by-step analysis, debugging, and complex reasoning
 - **Follow** codebase structure and code standards in `./docs` during implementation
 - **Do not** simulate or mock implementations — always write real code
 

@@ -12,18 +12,18 @@
 
 | Skill | Purpose |
 |-------|---------|
-| `mp-plan` | Implementation planning with research & validation |
-| `mp-execute` | Phase-by-phase plan execution with test gates |
-| `mp-test` | Auto-detect & run tests with structured reporting |
-| `mp-fix` | Bug diagnosis & root cause analysis |
-| `mp-code-review` | Scout → review → fix pipeline |
-| `mp-docs` | Initialize, update, and summarize documentation |
-| `mp-docs-seeker` | Library/framework doc lookup via Context7 MCP |
-| `mp-git` | Conventional commits, security scanning, PR creation |
-| `mp-brainstorm` | Structured ideation with approach comparison |
-| `mp-scout` | Parallel codebase exploration |
-| `mp-research` | Technical research & evaluation |
-| `mp-sequential-thinking` | Step-by-step complex problem analysis |
+| `plan` | Implementation planning with research & validation |
+| `execute` | Phase-by-phase plan execution with test gates |
+| `test` | Auto-detect & run tests with structured reporting |
+| `fix` | Bug diagnosis & root cause analysis |
+| `code-review` | Scout → review → fix pipeline |
+| `docs` | Initialize, update, and summarize documentation |
+| `docs-seeker` | Library/framework doc lookup via Context7 MCP |
+| `git` | Conventional commits, security scanning, PR creation |
+| `brainstorm` | Structured ideation with approach comparison |
+| `scout` | Parallel codebase exploration |
+| `research` | Technical research & evaluation |
+| `sequential-thinking` | Step-by-step complex problem analysis |
 
 ### Agents (`.github/agents/`)
 
@@ -31,12 +31,12 @@
 
 | Agent | Model | Purpose |
 |-------|-------|---------|
-| `mp-planner` | Claude Opus 4.6 | Architecture & implementation planning |
-| `mp-code-reviewer` | Claude Sonnet 4.6 | Code review (infer: true) |
-| `mp-debugger` | Claude Sonnet 4.6 | Root cause analysis (infer: true) |
-| `mp-researcher` | Claude Haiku 4.5 | Deep technical research (infer: true) |
-| `mp-multimodal` | Gemini 3 Pro | UI/screenshot analysis, visual debugging (infer: true) |
-| `mp-worker` | Claude Sonnet 4.6 | Category-aware phase orchestrator — delegates phases to sub-agents by category |
+| `planner` | Claude Opus 4.6 | Architecture & implementation planning |
+| `code-reviewer` | Claude Sonnet 4.6 | Code review (infer: true) |
+| `debugger` | Claude Sonnet 4.6 | Root cause analysis (infer: true) |
+| `researcher` | Claude Haiku 4.5 | Deep technical research (infer: true) |
+| `multimodal` | Gemini 3 Pro | UI/screenshot analysis, visual debugging (infer: true) |
+| `worker` | Claude Sonnet 4.6 | Category-aware phase orchestrator — delegates phases to sub-agents by category |
 
 ### Hooks (`.github/scripts/` + `hooks.json`)
 
@@ -64,7 +64,7 @@ Python scripts triggered on Copilot CLI lifecycle events:
 Integrates Context7 for external documentation lookup:
 - Tool: `@upstash/context7-mcp` (via npx)
 - Exposes: `query-docs`, `resolve-library-id`
-- Required by: `mp-docs-seeker` skill
+- Required by: `docs-seeker` skill
 
 ### Plugin Metadata (`.github/plugin/`)
 
@@ -86,9 +86,9 @@ User prompt
     ▼
 Copilot CLI (main context)
     │
-    ├─► skill tool → mp-* skill (Markdown instructions loaded into context)
+    ├─► skill tool → skill (Markdown instructions loaded into context)
     │       │
-    │       └─► task tool → sub-agent (explore / mp-planner / mp-researcher / ...)
+    │       └─► task tool → sub-agent (explore / planner / researcher / ...)
     │                │
     │                └─► bash / grep / glob / edit / create / view tools
     │
@@ -103,5 +103,5 @@ Copilot CLI (main context)
 - **Skill-based modularity**: Each concern is a separate skill directory with its own references, enabling independent evolution.
 - **Security-first hooks**: Privacy and security checks run on every tool call before execution.
 - **Model tiering**: Expensive Opus model reserved for planning; Haiku for fast research; Sonnet for standard work; `gpt-5.3-codex` for large context sweeps; Gemini for visual/multimodal.
-- **Category-based delegation**: Plan phases are tagged with work categories (visual-engineering, deep, artistry, quick, general, complex, writing). `mp-worker` reads `.github/my-copilot.jsonc` (or `~/.copilot/my-copilot.jsonc`) to resolve model+agent_type per category and dispatches each phase to the appropriate sub-agent.
+- **Category-based delegation**: Plan phases are tagged with work categories (visual-engineering, deep, artistry, quick, general, complex, writing). `worker` reads `.github/my-copilot.jsonc` (or `~/.copilot/my-copilot.jsonc`) to resolve model+agent_type per category and dispatches each phase to the appropriate sub-agent.
 - **SQL task tracking**: Session-scoped SQLite (`todos` table) tracks work across sub-agent invocations.

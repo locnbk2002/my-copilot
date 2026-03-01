@@ -1,0 +1,184 @@
+# Workflow Modes
+
+## Auto-Detection (Default: `--auto`)
+
+When no flag specified, analyze task and pick mode:
+
+| Signal | Mode | Rationale |
+|--------|------|-----------|
+| Simple task, clear scope, no unknowns | fast | Skip research overhead |
+| Complex task, unfamiliar domain, new tech | hard | Research needed |
+| 3+ independent features/layers/modules | parallel | Enable concurrent agents |
+| Ambiguous approach, multiple valid paths | two | Compare alternatives |
+
+Use `ask_user` if detection is uncertain.
+
+## Fast Mode (`--fast`)
+
+No research. Analyze → Plan → Hydrate Todos.
+
+1. Read codebase docs (`codebase-summary.md`, `code-standards.md`, `system-architecture.md`)
+2. Use a `general-purpose` subagent to create plan
+3. Hydrate todos (unless `--no-tasks`)
+4. Output plan path summary
+
+**Why fast?** Simple tasks don't need research overhead.
+
+## Hard Mode (`--hard`)
+
+Research → Scout → Plan → Red Team → Validate → Hydrate Todos.
+
+0.5. **Pre-Research Brainstorm** (skip if `--skip-brainstorm` or explicit approach provided) — generate 2-3 approaches inline, ask user to pick, feed into research context
+1. Spawn max 2 `explore` agents in parallel (different aspects, max 5 searches each)
+2. Read codebase docs; run explore agents to search codebase if docs are stale/missing
+3. Gather research + scout findings → pass to `general-purpose` subagent for plan creation
+4. Post-plan red team review (see Red Team Review section below)
+5. Post-plan validation (see Validation section below)
+6. Hydrate todos (unless `--no-tasks`)
+
+**Why hard?** Thorough planning needs research and adversarial review.
+
+## Parallel Mode (`--parallel`)
+
+Research → Scout → Plan with file ownership → Red Team → Validate → Hydrate Todos with dependency graph.
+
+0.5. **Pre-Research Brainstorm** (skip if `--skip-brainstorm` or explicit approach provided) — generate 2-3 approaches inline, ask user to pick, feed into research context
+1. Same as Hard mode steps 1-3
+2. Planner creates phases with:
+   - **Exclusive file ownership** per phase (no overlap)
+   - **Dependency matrix** (which phases run concurrently vs sequentially)
+   - **Conflict prevention** strategy
+3. plan.md includes: dependency graph, execution strategy, file ownership matrix
+4. Hydrate todos: `todo_deps` for sequential deps, no blockers for parallel groups
+5. Post-plan red team review
+6. Post-plan validation
+
+### Parallel Phase Requirements
+- Each phase self-contained, no runtime deps on other phases
+- Clear file boundaries — each file modified in ONE phase only
+- Group by: architectural layer, feature domain, or technology stack
+- Example: Phases 1-3 parallel (DB/API/UI), Phase 4 sequential (integration tests)
+
+## Two-Approach Mode (`--two`)
+
+Research → Scout → Plan 2 approaches → Compare → Hydrate Todos.
+
+1. Same as Hard mode steps 1-3
+2. Planner creates 2 implementation approaches with:
+   - Clear trade-offs (pros/cons each)
+   - Recommended approach with rationale
+3. User selects approach via `ask_user`
+4. Post-plan red team review on selected approach
+5. Post-plan validation
+6. Hydrate todos for selected approach (unless `--no-tasks`)
+
+## Todo Hydration Per Mode
+
+| Mode | Todo Granularity | Dependency Pattern |
+|------|------------------|--------------------|
+| fast | Phase-level only | Sequential chain |
+| hard | Phase + critical steps | Sequential + step deps |
+| parallel | Phase + steps + ownership | Parallel groups + sequential deps |
+| two | After user selects approach | Sequential chain |
+
+All modes: See `task-management.md` for SQL insert patterns.
+
+## Post-Plan Red Team Review
+
+Adversarial review that spawns hostile reviewers to find flaws before validation.
+
+**Available in:** hard, parallel, two modes. **Skipped in:** fast mode.
+
+**Invocation:** Use the `skill` tool to invoke `plan:red-team` with the plan directory path:
+```
+skill("plan:red-team")  // then pass plan path as context
+```
+
+Or run inline using `task` tool with `agent_type: "code-review"` to review the plan documents.
+
+**Sequence:** Red team runs BEFORE validation because:
+1. Red team may change the plan
+2. Validation should confirm the FINAL plan
+
+## Post-Plan Validation
+
+| Mode | Behavior |
+|------|----------|
+| `prompt` | Use `ask_user`: "Validate this plan with interview?" → Yes (Recommended) / No |
+| `auto` | Automatically invoke `plan:validate` inline |
+| `off` | Skip validation |
+
+**Invocation:** Use the `skill` tool to invoke `plan:validate`, or run inline workflow from `references/validate-workflow.md`.
+
+**Available in:** hard, parallel, two modes. **Skipped in:** fast mode.
+
+## Summary Output (MANDATORY)
+
+After plan creation, MUST output:
+- Absolute path to plan directory
+- Brief summary of phases
+- Next steps for implementation
+
+> **Best Practice:** Start a fresh conversation before implementing.
+> Read `plan.md` to re-hydrate context, then proceed phase by phase.
+
+**Why absolute path?** Ensures the plan can be located in a new session.
+This reminder is **NON-NEGOTIABLE** — always output after presenting the plan.
+
+## Pre-Research Brainstorm (Default ON)
+
+Runs before research when user doesn't provide an explicit approach. Skip in `--fast`, `--two`, or with `--skip-brainstorm`.
+
+| Mode | Brainstorm Behavior |
+|------|-------------------|
+| `--fast` | ❌ Skip (no research overhead) |
+| `--hard` | ✅ Run before research |
+| `--parallel` | ✅ Run before research |
+| `--two` | ❌ Skip (inherently multi-approach) |
+| `--auto` | Follows detected mode |
+| `--skip-brainstorm` | ❌ Skip regardless of mode |
+
+**Ambiguity detection:** Skip brainstorm if user message contains solution-specific language (e.g., "use Redis for caching", "implement with JWT", "approach: microservices"). Otherwise, generate 2-3 inline approaches.
+
+**With `--discuss`:** Discuss → Brainstorm → Research. Preferences from discuss phase inform approach generation.
+
+**Format:** Generate approach table (approach | effort | risk | recommendation), then `ask_user` with choices. Feed chosen approach as context into research + plan creation.
+
+## Discuss Mode (`--discuss`)
+
+Modifier flag — combine with any planning mode. Runs preference interview *before* research.
+
+**Sequence:**
+1. Run discuss workflow (`references/discuss-workflow.md`)
+2. Save preferences to `{plan-dir}/preferences.md`
+3. Feed preference summary into all researcher agent prompts
+4. Continue with selected mode (fast/hard/parallel/two)
+
+**Combinable:** `--discuss --hard`, `--discuss --fast`, `--discuss --two`, `--discuss --parallel`
+
+**Skip if:** User answers fewer than 2 questions (not enough signal).
+
+## Pre-Creation Check
+
+Before creating a new plan, use `ask_user` to confirm:
+- "Continue with existing plan?" if one is detected in the plans directory
+- "Create new plan or activate existing?" if multiple plans exist
+
+## Analysis Paralysis Guard
+
+**Applies to:** hard, parallel, two modes. **Skipped in:** fast mode (no research → can't over-plan).
+
+### Trigger Conditions
+
+| Signal | Threshold | Message to User |
+|--------|-----------|-----------------|
+| Research rounds | 3+ researcher agents spawned | "Multiple research rounds detected — returning diminishing value" |
+| Phase count | 10+ phases in plan | "Plan has {N} phases — consider consolidating related phases" |
+| Approach comparisons | 3+ approaches compared | "Many approaches compared — time to commit to one" |
+| Plan size | plan.md > 150 lines | "Plan is very detailed — may be over-specified for first iteration" |
+
+### Response Actions
+
+- **Execute now:** Output absolute plan path, summarize phases, remind to use `execute`
+- **Continue:** Add `<!-- ⚠️ Complexity warning acknowledged -->` at top of plan.md, proceed
+- **Simplify:** Identify phases with P3 priority or smallest effort/value ratio → suggest merging or removing

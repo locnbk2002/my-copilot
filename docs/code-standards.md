@@ -43,7 +43,7 @@ Follow **YAGNI · KISS · DRY** on all changes.
 Use **conventional commit format**:
 
 ```
-feat: add mp-brainstorm skill
+feat: add brainstorm skill
 fix: correct timeout in hook scripts
 chore: update plugin metadata
 docs: initialize docs structure
