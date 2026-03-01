@@ -11,8 +11,8 @@
 ### Option 1: Marketplace (recommended)
 
 ```bash
-copilot plugin marketplace add locnbk2002/my-copilot
-copilot plugin install my-copilot@my-copilot
+copilot plugin marketplace add locnbk2002/locnbk2002-marketplace
+copilot plugin install locnbk2002-marketplace@my-copilot
 ```
 
 ### Option 2: Direct GitHub

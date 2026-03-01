@@ -6,8 +6,8 @@ A complete AI engineering workflow plugin for GitHub Copilot CLI — 12 skills, 
 
 ```bash
 # Option 1: Via marketplace (recommended)
-copilot plugin marketplace add locnbk2002/my-copilot
-copilot plugin install my-copilot@my-copilot
+copilot plugin marketplace add locnbk2002/locnbk2002-marketplace
+copilot plugin install locnbk2002-marketplace@my-copilot
 
 # Option 2: Direct GitHub install
 copilot plugin install locnbk2002/my-copilot
