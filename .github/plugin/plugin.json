@@ -1,7 +1,7 @@
 {
   "name": "my-copilot",
   "description": "A complete AI engineering workflow for GitHub Copilot CLI — 12 skills covering plan, execute, test, fix, review, docs, git, research, and more.",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "author": {
     "name": "locnbk2002"
   },

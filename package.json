@@ -1,6 +1,6 @@
 {
   "name": "my-copilot",
-  "version": "1.0.0",
+  "version": "0.0.2",
   "description": "my-copilot GitHub Copilot CLI plugin",
   "main": "index.js",
   "directories": {
@@ -15,7 +15,7 @@
     "url": "git+https://github.com/locnbk2002/my-copilot.git"
   },
   "keywords": [],
-  "author": "",
+  "author": "locnbk2002",
   "license": "ISC",
   "type": "commonjs",
   "bugs": {
