@@ -13,10 +13,29 @@ Follow **YAGNI · KISS · DRY** on all changes.
 
 ## File Size
 
-- Keep code files under **200 lines**
+- Keep code files under **200 LOC** (Lines of Code, not raw line count)
 - Split large files into focused modules
 - Extract utilities into separate files
 - Create dedicated service classes for business logic
+
+### How to Count LOC
+
+**Count** (actual logic):
+- Import statements
+- Variable/constant declarations
+- Function/class/type definitions
+- Control flow (`if`, `for`, `while`, `try/except`, `switch`, `match`)
+- Expressions, assignments, return statements
+- Decorators (`@decorator`)
+- Closing braces/brackets that belong to logic blocks
+
+**Exclude** (not logic):
+- Blank lines
+- Comment-only lines (`#`, `//`, `/* */`)
+- Docstring body lines (count opening/closing `"""` as 1 each)
+- Lines inside multi-line strings used as prompt/instruction content
+
+**Quick method**: raw line count − blank lines − comment-only lines − prompt string body lines = LOC.
 
 ## Markdown & Skill Files
 

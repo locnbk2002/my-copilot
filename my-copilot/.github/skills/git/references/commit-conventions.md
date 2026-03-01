@@ -89,3 +89,11 @@ Priority order:
 3. **File type** — separate: scripts/, skills/, agents/, config files
 
 Each group → one commit. All commits get Co-authored-by trailer.
+
+## Pre-commit / Pre-push Rules
+
+- **Pre-commit**: Run project linter before committing
+- **Pre-push**: Run tests — **DO NOT** ignore failing tests to pass builds or CI
+- **DO NOT** commit confidential information (`.env` files, API keys, database credentials)
+- Keep commits focused on actual code changes
+- Create clean, professional commit messages without AI references

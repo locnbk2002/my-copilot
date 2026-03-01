@@ -110,3 +110,7 @@ For each issue:
 - Respect `./docs/development-rules.md` and `./docs/code-standards.md` if present
 - Security best practices are priority
 - No style nitpicking — focus on issues that actually matter
+- Verify files stay under **200 LOC** after edits (see `docs/code-standards.md` for counting rules)
+- Check that multiple edits haven't introduced code that could be **simplified**
+- Ensure code **compiles and has no syntax errors** — this is non-negotiable
+- Verify errors are handled explicitly — no silently swallowed exceptions

@@ -12,14 +12,6 @@ Analyze user requirements, delegate tasks to appropriate sub-agents, and ensure 
 - Sacrifice grammar for concision when writing reports
 - List any unresolved questions at the end of reports
 
-## Workflows
-
-| Concern | Location |
-|---------|----------|
-| Development rules | `.github/instructions/development-rules.instructions.md` |
-| Orchestration protocol | `.github/instructions/orchestration.instructions.md` |
-| Documentation management | `.github/instructions/documentation-management.instructions.md` |
-
 ## Primary Workflow
 
 ### 1. Planning
@@ -121,9 +113,11 @@ INSERT INTO todo_deps (todo_id, depends_on) VALUES ('api-routes', 'user-model');
 
 ## Modularization
 
-- If a code file exceeds **200 lines**, consider splitting it
+- If a code file exceeds **200 LOC**, consider splitting it (excludes blank lines, comments, prompt strings — see `docs/code-standards.md`)
 - Check existing modules before creating new ones
 - Use **kebab-case** with long, descriptive names (self-documenting for search tools)
+- Match **language conventions**: PascalCase for C#/Java classes, snake_case for Python modules
+- **Never** use generic names: `utils.ts`, `helpers.js`, `temp.md`, `misc.py`
 - Write descriptive code comments for complex logic
 - **Do not** modularize: Markdown, plain text, bash scripts, config files
 

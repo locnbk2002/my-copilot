@@ -94,10 +94,7 @@ Integrates Context7 for external documentation lookup:
 
 ### Global Instructions (`.github/`)
 
-- `copilot-instructions.md` — Master workflow rules applied to all sessions
-- `instructions/development-rules.instructions.md` — YAGNI·KISS·DRY, file conventions
-- `instructions/orchestration.instructions.md` — Sub-agent delegation protocol
-- `instructions/documentation-management.instructions.md` — Docs workflow
+- `copilot-instructions.md` — Master workflow rules applied to all sessions (at project root)
 
 ## Data Flow
 
