@@ -1,0 +1,10 @@
+staged=$(git diff --cached --name-only | grep '^plans/')
+
+if [ -n "$staged" ]; then
+  echo "❌ Commit blocked: plans/ files are staged:"
+  echo "$staged" | sed 's/^/   /'
+  echo ""
+  echo "The plans/ directory is local-only. Unstage with:"
+  echo "   git restore --staged plans/"
+  exit 1
+fi

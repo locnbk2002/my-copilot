@@ -1,0 +1,29 @@
+{
+  "name": "my-copilot",
+  "version": "1.0.0",
+  "description": "my-copilot GitHub Copilot CLI plugin",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prepare": "husky"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/locnbk2002/my-copilot.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/locnbk2002/my-copilot/issues"
+  },
+  "homepage": "https://github.com/locnbk2002/my-copilot#readme",
+  "private": "true",
+  "devDependencies": {
+    "husky": "^9.1.7"
+  }
+}
