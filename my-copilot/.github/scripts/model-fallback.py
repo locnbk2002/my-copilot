@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Detect rate-limit errors and suggest model fallback."""
 import json, os, sys, datetime, re
-
-os.makedirs("logs", exist_ok=True)
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import hook_utils
 
 try:
     d = json.load(sys.stdin)
@@ -42,7 +42,7 @@ out = {
     "errorSnippet": msg[:200].strip(),
 }
 
-with open("logs/model-fallback.jsonl", "a") as f:
-    f.write(json.dumps(out, separators=(",", ":")) + "\n")
+hook_utils.append_log("model-fallback.jsonl", out)
 
+# Intentional stdout: surfaces fallback hint to the agent via hook runner
 print(f"⚠️ Rate limit hit on {model}. Try: --model {suggestion}")

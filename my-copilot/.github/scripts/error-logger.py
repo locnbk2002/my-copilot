@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-"""Log error events to logs/errors.jsonl."""
+"""Log error events to errors.jsonl."""
 import json, os, sys
-
-os.makedirs("logs", exist_ok=True)
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import hook_utils
 
 try:
     d = json.load(sys.stdin)
@@ -16,5 +16,4 @@ out = {
     "errorMessage": (err.get("message") or "")[:200],
 }
 
-with open("logs/errors.jsonl", "a") as f:
-    f.write(json.dumps(out, separators=(",", ":")) + "\n")
+hook_utils.append_log("errors.jsonl", out)

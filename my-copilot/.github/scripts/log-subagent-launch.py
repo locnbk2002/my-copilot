@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-"""Log subagent launch events to logs/subagents.jsonl."""
+"""Log subagent launch events to subagents.jsonl."""
 import json, os, sys
 from datetime import datetime, timezone
-
-os.makedirs("logs", exist_ok=True)
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import hook_utils
 
 try:
     data = json.load(sys.stdin)
@@ -20,13 +20,12 @@ try:
 except Exception:
     tool_args = {}
 
-entry = json.dumps({
+entry = {
     "timestamp": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
     "event": "launch",
     "agent_type": tool_args.get("agent_type", "unknown"),
     "model": tool_args.get("model", "default"),
     "prompt_preview": (tool_args.get("prompt") or "")[:200],
-}, separators=(",", ":"))
+}
 
-with open("logs/subagents.jsonl", "a") as f:
-    f.write(entry + "\n")
+hook_utils.append_log("subagents.jsonl", entry)

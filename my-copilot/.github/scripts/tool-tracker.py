@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-"""Log tool usage events to logs/tools.jsonl."""
+"""Log tool usage events to tools.jsonl."""
 import json, os, sys
-
-os.makedirs("logs", exist_ok=True)
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import hook_utils
 
 try:
     d = json.load(sys.stdin)
@@ -15,5 +15,4 @@ out = {
     "resultType": (d.get("toolResult") or {}).get("resultType"),
 }
 
-with open("logs/tools.jsonl", "a") as f:
-    f.write(json.dumps(out, separators=(",", ":")) + "\n")
+hook_utils.append_log("tools.jsonl", out)
