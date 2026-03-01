@@ -3,8 +3,8 @@ import hashlib, json, os, sys, tempfile, unittest
 from pathlib import Path
 from unittest.mock import patch
 
-# Add scripts dir to path so hook_utils can be imported
-sys.path.insert(0, str(Path(__file__).parent.parent))
+SCRIPTS_DIR = Path(__file__).resolve().parent.parent / "my-copilot" / ".github" / "scripts"
+sys.path.insert(0, str(SCRIPTS_DIR))
 
 import hook_utils
 

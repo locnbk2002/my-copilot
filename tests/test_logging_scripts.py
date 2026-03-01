@@ -2,8 +2,7 @@
 import json, os, sys, tempfile, unittest
 from pathlib import Path
 
-# Add scripts dir to path
-scripts_dir = Path(__file__).parent.parent
+scripts_dir = Path(__file__).resolve().parent.parent / "my-copilot" / ".github" / "scripts"
 sys.path.insert(0, str(scripts_dir))
 import hook_utils
 
