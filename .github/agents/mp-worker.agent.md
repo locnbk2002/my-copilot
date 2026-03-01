@@ -61,53 +61,86 @@ For unknown/custom categories: default to `model: claude-sonnet-4.6`, `agent_typ
 3. Build resolved category map (project overrides user overrides defaults)
 ```
 
-### Step 3: Determine Execution Order
+### Step 3: Wave Execution
 
+Build dependency graph from plan.md and execute in dependency-ordered waves.
+
+**Build dependency graph:**
+1. For each phase in plan.md Phases table, read the "Depends On" column
+2. Also query SQL: `SELECT todo_id, depends_on FROM todo_deps`
+3. Build adjacency list: phase → [dependencies]
+
+**Compute waves:**
+- Wave 1: phases with no dependencies (or all deps have Status = "Done")
+- Wave 2: phases whose ONLY pending deps are in Wave 1
+- Wave N+1: phases whose only remaining pending deps are in Wave 1..N
+
+Validate: if circular dependency detected → report error, do NOT execute.
+
+**Execute per wave:**
+1. Dispatch ALL phases in current wave simultaneously (ALL task calls in ONE response)
+2. Wait for all to complete (mode: sync or collect background agent results)
+3. Update SQL status for each completed/blocked phase
+4. Proceed to next wave only after current wave fully completes
+
+**Wave execution report:**
 ```
-1. Query SQL todo_deps for phase dependencies
-2. Build execution groups:
-   - Group A: phases with no pending deps → can run in parallel
-   - Group B: phases that depend on Group A → run after Group A completes
-   - ...continue until all phases placed
+### Wave Execution Summary
+Wave 1 ─── Phase 1 ✅ (quick → haiku) ─┐
+       ├── Phase 2 ✅ (general → sonnet) ─┤
+       └── Phase 3 ✅ (general → sonnet) ─┘ → Wave 2
+Wave 2 ─── Phase 4 ✅ (complex → opus) ──→ Wave 3  
+Wave 3 ─── Phase 5 ✅ (quick → haiku) ──→ Done
 ```
 
-### Step 4: Execute Phase Groups
+### Step 4: Execute Phases (Fresh Context Per Phase)
 
-For each execution group:
+Each sub-agent gets a **self-contained prompt** with no context from other phases.
 
-**If group has 1 phase:** Execute sequentially.
+For each phase in the current wave:
 
-**If group has 2+ independent phases:** Dispatch all in a single response (parallel).
-
-For each phase in the group:
 ```
 1. sql: UPDATE todos SET status = 'in_progress' WHERE id = '<phase-todo-id>'
 2. Resolve: category → model + agent_type from config map
-3. Read: phase-XX-*.md content
-4. Dispatch: task(
+3. Read: phase-XX-*.md full content
+4. Read project standards (if exist, first 50 lines only):
+   - /home/locbt/code/my-copilot/docs/code-standards.md
+   - /home/locbt/code/my-copilot/docs/system-architecture.md
+5. Dispatch: task(
      agent_type = resolved_agent_type,
      model = resolved_model,
      description = "Execute phase: <phase name>",
      prompt = """
        Execute this implementation phase exactly as described.
 
-       Work context: <plan_directory_parent>
+       Work context: <project_root>
        Reports: <plan_directory>/reports/
        Plans: <plan_directory>/
 
-       Phase file: <phase_file_path>
+       ## Phase Details
+       <full phase-XX.md content>
 
-       <full phase file content>
+       ## Project Standards
+       <code-standards.md first 50 lines if file exists>
 
-       After completing all tasks in this phase, report:
-       - Files created/modified
-       - Any issues encountered
-       - Verification status
+       ## Instructions
+       - Implement ALL tasks listed in the phase
+       - Follow project code standards and file naming conventions
+       - After completing, report:
+         * Files created/modified (with full paths)
+         * Any issues encountered
+         * Verification status
      """
    )
-5. On completion: sql: UPDATE todos SET status = 'done' WHERE id = '<phase-todo-id>'
-6. On failure: retry once; if still failing → sql: UPDATE todos SET status = 'blocked' WHERE id = '<phase-todo-id>'
+6. On completion: sql: UPDATE todos SET status = 'done' WHERE id = '<phase-todo-id>'
+7. On failure: retry once with same prompt; if still failing → sql: UPDATE todos SET status = 'blocked'
 ```
+
+**NEVER include in sub-agent prompts:**
+- Results or output from previous phases
+- Status of other phases
+- Accumulated conversation history from orchestrator
+- Anything beyond what's in the phase file + project standards
 
 ### Step 5: Report
 
@@ -122,6 +155,15 @@ After all phases complete (or blocked):
 
 ### Blocked Phases
 - Phase N (category → model): ❌ Blocked — <reason>
+
+### Wave Execution Visualization
+```
+Wave 1 ─── Phase X ✅ ─┐
+       ├── Phase Y ✅ ─┤ (parallel)
+       └── Phase Z ✅ ─┘
+                       ▼
+Wave 2 ─── Phase A ✅ ──→ Done
+```
 
 ### Config Used
 - Project config: .github/my-copilot.jsonc ✅ / not found

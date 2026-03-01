@@ -107,6 +107,13 @@
         "powershell": "python .github/scripts/context-recovery.py",
         "cwd": ".",
         "timeoutSec": 10
+      },
+      {
+        "type": "command",
+        "bash": "python3 .github/scripts/model-fallback.py",
+        "powershell": "python .github/scripts/model-fallback.py",
+        "cwd": ".",
+        "timeoutSec": 10
       }
     ]
   }

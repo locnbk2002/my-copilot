@@ -1,7 +1,7 @@
 ---
 name: mp-plan
 description: "Plan implementations, design architectures, create technical roadmaps with detailed phases. Use for feature planning, system design, solution architecture, implementation strategy, phase documentation."
-argument-hint: "[task] OR archive|red-team|validate"
+argument-hint: "[task] [--auto|--fast|--hard|--parallel|--two] [--discuss] [--no-tasks] [--validate auto|prompt|off] OR archive|red-team|validate"
 license: MIT
 ---
 
@@ -33,6 +33,9 @@ Default: `--auto` (analyze task complexity and auto-pick mode).
 | `--hard` | Hard | 2 researchers | Yes | Optional |
 | `--parallel` | Parallel | 2 researchers | Yes | Optional |
 | `--two` | Two approaches | 2+ researchers | After selection | After selection |
+| `--discuss` | Modifier | — | — | — |
+
+`--discuss`: Interview user for preferences before research; saves to `preferences.md`; combinable with any mode.
 
 Add `--no-tasks` to skip todo creation in any mode.
 
@@ -75,9 +78,11 @@ Auto-tag each phase with a category based on phase content and intent (see `outp
 ## Workflow Process
 
 1. **Mode Detection** → Auto-detect or use explicit flag (see `workflow-modes.md`)
+1.5. **Discuss Phase (if --discuss)** → Load `references/discuss-workflow.md`. Interview user, save preferences to `{plan-dir}/preferences.md`, include preference summary in researcher prompts.
 2. **Research Phase** → Spawn researcher agents (skip in fast mode)
 3. **Codebase Analysis** → Read docs, explore codebase if needed
 4. **Plan Documentation** → Write comprehensive plan via general-purpose subagent
+4.5. **Paralysis Check** (skip in --fast) → If thresholds exceeded, run Analysis Paralysis Guard
 5. **Red Team Review** → Invoke `mp-plan:red-team` subskill (hard/parallel/two modes)
 6. **Post-Plan Validation** → Invoke `mp-plan:validate` subskill (hard/parallel/two modes)
 7. **Hydrate Todos** → Create SQL todos from phases (default on, `--no-tasks` to skip)
@@ -90,6 +95,27 @@ Auto-tag each phase with a category based on phase content and intent (see `outp
 - Ensure self-contained plans with necessary context
 - Include code snippets/pseudocode when clarifying
 - Fully respect the project's `./docs/development-rules.md` file if present
+
+## Analysis Paralysis Guard
+
+After research phase and during plan creation, check for over-planning. Skip in `--fast` mode.
+
+| Trigger | Threshold | Signal |
+|---------|-----------|--------|
+| Research rounds | > 2 | 3+ researcher agents spawned |
+| Phase count | > 10 | Plan has many phases |
+| Approach comparisons | > 3 | In `--two` mode with many options |
+| Plan size | > 150 lines | plan.md getting too large |
+
+**When triggered:** Use `ask_user` with message:
+> "⚠️ Plan complexity detected ({trigger reason}). What would you like to do?"
+
+Options:
+1. "Start executing now (Recommended)" → Stop planning, output plan path, ready for mp-execute
+2. "Continue planning" → Proceed, add `<!-- ⚠️ Complexity warning acknowledged -->` note in plan.md
+3. "Simplify the plan" → Suggest merging phases with similar scope, removing P3 phases
+
+**Check timing:** After research, before finalizing phase list (step 4.5 in workflow).
 
 ## Task Management
 

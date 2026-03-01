@@ -1,7 +1,7 @@
 ---
 name: mp-git
 description: "Git operations with conventional commits, security scanning, and PR creation. Use for committing, pushing, creating PRs, git status."
-argument-hint: "[cm|cp|pr|status]"
+argument-hint: "[cm|cp|pr|status] [--atomic]"
 license: MIT
 ---
 
@@ -44,9 +44,27 @@ Load: `references/security-scan.md` for pre-commit security checks.
    - `docs:` — documentation changes
    - `test:` — adding/updating tests
    - `chore:` — maintenance, dependencies
-5. **Split decision** — If changes span multiple concerns:
-   - Ask user: "Split into multiple commits?" via `ask_user`
+5. **Split decision:**
+   - If `--atomic` flag set OR invoked from mp-execute: auto-split without asking user (see Atomic Split below)
+   - Otherwise: ask user "Split into multiple commits?" via `ask_user`
    - If yes: guide through selective staging (`git add -p` or specific files)
+
+### Atomic Split (--atomic mode)
+
+When `--atomic` is set:
+a. Get staged files: `git diff --cached --name-only`
+b. Phase-aware grouping (try first):
+   - Find most recent plan in `plans/` directory
+   - Read each `phase-XX-*.md`, extract file paths from "Related Code Files" table
+   - Match staged files to phases → one commit per phase
+c. Directory-based fallback (if no plan found):
+   - Group by top 2 path segments (e.g., `.github/scripts/` → one group, `.github/skills/mp-plan/` → one group)
+d. For each group (in sequence):
+   - `git reset HEAD -- .` (unstage all)
+   - `git add <group-files>` (stage only this group's files)
+   - Generate conventional commit: `feat(phase-N): <description>` or `feat(<dir>): <description>`
+   - `git commit -m "<message>\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>"`
+e. Fallback: if grouping fails or errors, stage all and make single commit
 6. **Commit message** — Generate conventional format:
    ```
    <type>(<scope>): <description>
@@ -79,6 +97,8 @@ Load: `references/security-scan.md` for pre-commit security checks.
 - ALWAYS run security scan before committing
 - Never commit .env files, secrets, or API keys
 - Prefer atomic commits (one concern per commit)
+- When `--atomic`: never ask user for split confirmation, auto-split by phase or directory
+- When invoked from mp-execute post-execution: auto-enable `--atomic`
 
 ## Related Skills
 - `mp-code-review` — Run review before committing

@@ -6,19 +6,21 @@
 - Extract: objectives, tasks, acceptance criteria, estimated complexity
 - If the phase file contains code snippets/pseudocode, use them as implementation guidance
 
-### Step 2: Complexity Assessment / Category Check
+### Step 2: Dispatch Strategy
 
-**If phase has `Category` field AND `--direct` not set:**
-- Skip Steps 2-3 below
-- Dispatch `task(agent_type="mp-worker")` with plan directory path and work context
-- mp-worker handles config resolution and sub-agent delegation
-- Resume at Step 4 (Verification Gate) when mp-worker returns
+**Default (recommended) — Category-aware dispatch:**
+- Check if phase has `Category` field in its Overview section
+- If yes: Dispatch `task(agent_type="mp-worker")` with plan directory path and work context
+  - mp-worker handles: config resolution, category→agent mapping, wave execution, fresh context
+  - Main session does NOT edit any files — delegates entirely to mp-worker
+- If no Category field OR `--direct` flag: fall through to Legacy Direct Mode below
 
-**If no Category field OR `--direct` flag — use complexity-based approach:**
-
-- **Simple** (< 3 files, straightforward changes): Execute directly
+**Legacy Direct Mode (`--direct` or no Category):**
+- **Simple** (< 3 files, straightforward): Execute directly with edit/create tools
 - **Medium** (3-10 files, requires analysis): Dispatch explore subagents first, then implement
-- **Complex** (10+ files, architectural changes): Break into sub-tasks, dispatch parallel subagents
+- **Complex** (10+ files, architectural): Break into sub-tasks, dispatch parallel general-purpose subagents
+
+**Rule:** Default (non-direct) path NEVER edits files in main session context. All editing happens in sub-agents.
 
 ### Step 3: Implementation Pattern
 
@@ -28,6 +30,17 @@ For each task in the phase:
 2. Plan the change (mentally or via mp-sequential-thinking)
 3. Make the change (edit/create)
 4. Verify the change (run affected tests)
+
+### Step 3.5: State Sync
+
+After mp-worker returns (or after direct mode implementation):
+
+1. Read mp-worker report → extract per-phase completion status
+2. For each completed phase:
+   - Edit `plan.md`: find phase row in Phases table, update Status column from `Pending` to `Done`
+   - Edit `phase-XX-*.md`: find each todo checkbox in Todo List, mark `- [ ]` → `- [x]`
+3. For blocked phases: update Status to `Blocked` in plan.md, note reason in phase file
+4. State sync is idempotent — safe to run multiple times
 
 ### Step 4: Verification Gate
 

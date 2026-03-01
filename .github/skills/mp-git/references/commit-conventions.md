@@ -61,3 +61,31 @@ If staged changes touch multiple concerns, suggest splitting:
 - Mix of src + test = OK (same concern)
 - Mix of feat + fix = suggest splitting
 - Mix of docs + code = suggest splitting
+
+## Phase Commit Pattern (--atomic)
+
+When `--atomic` is set and plan phases are detected:
+
+```
+feat(phase-1): implement model fallback hook
+feat(phase-2): add --discuss mode to mp-plan
+docs(phase-7): update execution workflow docs
+```
+
+Scope uses `phase-N` when matched to a plan phase.
+When no plan match, use directory/module name:
+
+```
+feat(scripts): add model-fallback hook
+feat(mp-plan): add discuss workflow and modes
+chore(config): update hooks.json for new hooks
+```
+
+## Auto-Grouping Heuristics (--atomic)
+
+Priority order:
+1. **Plan phase file paths** — match staged files to phase "Related Code Files"
+2. **Directory prefix** — group by first 2 path segments
+3. **File type** — separate: scripts/, skills/, agents/, config files
+
+Each group → one commit. All commits get Co-authored-by trailer.

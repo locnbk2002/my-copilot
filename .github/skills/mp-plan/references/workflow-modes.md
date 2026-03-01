@@ -123,8 +123,41 @@ After plan creation, MUST output:
 **Why absolute path?** Ensures the plan can be located in a new session.
 This reminder is **NON-NEGOTIABLE** — always output after presenting the plan.
 
+## Discuss Mode (`--discuss`)
+
+Modifier flag — combine with any planning mode. Runs preference interview *before* research.
+
+**Sequence:**
+1. Run discuss workflow (`references/discuss-workflow.md`)
+2. Save preferences to `{plan-dir}/preferences.md`
+3. Feed preference summary into all researcher agent prompts
+4. Continue with selected mode (fast/hard/parallel/two)
+
+**Combinable:** `--discuss --hard`, `--discuss --fast`, `--discuss --two`, `--discuss --parallel`
+
+**Skip if:** User answers fewer than 2 questions (not enough signal).
+
 ## Pre-Creation Check
 
 Before creating a new plan, use `ask_user` to confirm:
 - "Continue with existing plan?" if one is detected in the plans directory
 - "Create new plan or activate existing?" if multiple plans exist
+
+## Analysis Paralysis Guard
+
+**Applies to:** hard, parallel, two modes. **Skipped in:** fast mode (no research → can't over-plan).
+
+### Trigger Conditions
+
+| Signal | Threshold | Message to User |
+|--------|-----------|-----------------|
+| Research rounds | 3+ researcher agents spawned | "Multiple research rounds detected — returning diminishing value" |
+| Phase count | 10+ phases in plan | "Plan has {N} phases — consider consolidating related phases" |
+| Approach comparisons | 3+ approaches compared | "Many approaches compared — time to commit to one" |
+| Plan size | plan.md > 150 lines | "Plan is very detailed — may be over-specified for first iteration" |
+
+### Response Actions
+
+- **Execute now:** Output absolute plan path, summarize phases, remind to use `mp-execute`
+- **Continue:** Add `<!-- ⚠️ Complexity warning acknowledged -->` at top of plan.md, proceed
+- **Simplify:** Identify phases with P3 priority or smallest effort/value ratio → suggest merging or removing
