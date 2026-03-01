@@ -22,8 +22,8 @@ copilot plugin install ./my-copilot
 
 | Skill | Description |
 |-------|-------------|
-| `mp-plan` | Plan implementations with research, red-team, and validation phases |
-| `mp-execute` | Execute plans phase-by-phase with test/review gates |
+| `mp-plan` | Plan implementations with auto-brainstorm, research, red-team, and validation phases (`--skip-brainstorm` to skip brainstorm) |
+| `mp-execute` | Execute plans phase-by-phase with auto post-execution chain: test → fix → review → docs → commit (`--skip-post` to skip chain) |
 | `mp-test` | Auto-detect and run tests with structured reporting |
 | `mp-fix` | Diagnose and fix bugs with root cause analysis |
 | `mp-code-review` | Structured scout→review→fix pipeline |
@@ -68,8 +68,14 @@ Customize via `.github/my-copilot.jsonc` (project) or `~/.copilot/my-copilot.jso
 
 ## Workflow
 
+Two-step automated workflow:
+
 ```
-mp-brainstorm → mp-plan → mp-execute → mp-worker → [sub-agents by category] → mp-test → mp-fix → mp-code-review → mp-docs → mp-git
+User → mp-plan   (auto: brainstorm → research → plan → validate)
+         └── opt-out: --skip-brainstorm to skip brainstorm step
+
+User → mp-execute (auto: implement → test → fix → review → docs → commit)
+         └── opt-out: --skip-post to skip post-execution chain
 ```
 
 ## MCP Setup (Context7)

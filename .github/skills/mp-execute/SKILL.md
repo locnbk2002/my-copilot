@@ -1,7 +1,7 @@
 ---
 name: mp-execute
 description: "Execute implementation plans phase-by-phase with test/review gates. Use for plan execution, phased implementation, automated workflow with verification steps."
-argument-hint: "[plan-path] [--phase N] [--skip-tests] [--skip-review] [--direct]"
+argument-hint: "[plan-path] [--phase N] [--skip-tests] [--skip-review] [--skip-post] [--direct]"
 license: MIT
 ---
 
@@ -12,12 +12,13 @@ Execute implementation plans phase-by-phase with automated test and review gates
 ## Invocation
 
 ```
-mp-execute [plan-path] [--phase N] [--skip-tests] [--skip-review] [--direct]
+mp-execute [plan-path] [--phase N] [--skip-tests] [--skip-review] [--skip-post] [--direct]
 
 Default: Execute all phases with category-aware delegation via mp-worker
 --phase N:      Execute only phase N
 --skip-tests:   Skip test verification
 --skip-review:  Skip code review gate
+--skip-post:    Skip entire post-execution chain (test, fix, review, docs, git)
 --direct:       Legacy mode — skip mp-worker, execute phases directly (for plans without Category tags)
 ```
 
@@ -98,16 +99,23 @@ If user starts a fresh session mid-execution:
 2. User runs `mp-execute {plan-path}` in new session
 3. mp-execute reads plan.md, skips phases with Status = "Done", resumes from next "Pending"
 
-## Post-Execution
+## Post-Execution (Auto Chain — Default ON)
 
-Load: `references/post-execution.md` for the checklist.
+Load: `references/post-execution.md` for the detailed algorithm.
 
-After all phases complete:
+After all phases complete, automatically run in sequence:
 
-1. **Documentation** — Invoke `mp-docs` skill if implementation changed APIs or behavior
-2. **Git Commit** — Invoke `mp-git` skill for conventional commit
-3. **Plan Status** — Update plan.md frontmatter: `status: completed`
-4. **Summary Report** — Output: phases completed, files modified/created, test status, known issues, context budget status (✅/⚠️/🔴) with tool call count
+1. **Test** — Invoke `mp-test` skill; skip if `--skip-tests` or `--skip-post`
+2. **Fix** — If tests fail, invoke `mp-fix` skill; max 2 attempts then log warning and continue; skip if `--skip-tests` or `--skip-post`
+3. **Review** — Dispatch `task(agent_type="mp-code-reviewer")` on all changed files; skip if `--skip-review` or `--skip-post`
+4. **Docs** — Invoke `mp-docs` skill if implementation changed APIs/behavior; skip if `--skip-post`
+5. **Git** — Invoke `mp-git cm --atomic` for conventional commit; skip if `--skip-post`
+6. **Plan Status** — Update plan.md: `status: completed`
+7. **Summary Report** — Output: phases completed, files modified/created, test status (pass/fail/skipped), review findings, post-execution status per step (✅/⚠️/❌)
+
+**Opt-out:** `--skip-post` skips steps 1-5 entirely (manual post-execution).
+**Fault tolerance:** Each step runs independently; failure logs warning but does NOT block subsequent steps.
+**Flag interaction:** `--skip-tests` skips steps 1-2; `--skip-review` skips step 3; `--skip-post` skips steps 1-5.
 
 ## Complexity Assessment (Direct Mode Only — Legacy)
 
@@ -134,4 +142,6 @@ After all phases complete:
 - Each phase MUST complete fully before moving to the next
 - If a phase fails verification 3 times, mark it `blocked` and report to user
 - Always update SQL todo status (source of truth for progress)
+- Post-execution chain is fault-tolerant: log failures, continue to next step
+- `--skip-post` takes precedence over all other post-execution flags
 - For parallel subagent dispatch, ensure no file conflicts between agents

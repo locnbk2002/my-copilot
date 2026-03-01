@@ -28,6 +28,7 @@ No research. Analyze → Plan → Hydrate Todos.
 
 Research → Scout → Plan → Red Team → Validate → Hydrate Todos.
 
+0.5. **Pre-Research Brainstorm** (skip if `--skip-brainstorm` or explicit approach provided) — generate 2-3 approaches inline, ask user to pick, feed into research context
 1. Spawn max 2 `explore` agents in parallel (different aspects, max 5 searches each)
 2. Read codebase docs; run explore agents to search codebase if docs are stale/missing
 3. Gather research + scout findings → pass to `general-purpose` subagent for plan creation
@@ -41,6 +42,7 @@ Research → Scout → Plan → Red Team → Validate → Hydrate Todos.
 
 Research → Scout → Plan with file ownership → Red Team → Validate → Hydrate Todos with dependency graph.
 
+0.5. **Pre-Research Brainstorm** (skip if `--skip-brainstorm` or explicit approach provided) — generate 2-3 approaches inline, ask user to pick, feed into research context
 1. Same as Hard mode steps 1-3
 2. Planner creates phases with:
    - **Exclusive file ownership** per phase (no overlap)
@@ -122,6 +124,25 @@ After plan creation, MUST output:
 
 **Why absolute path?** Ensures the plan can be located in a new session.
 This reminder is **NON-NEGOTIABLE** — always output after presenting the plan.
+
+## Pre-Research Brainstorm (Default ON)
+
+Runs before research when user doesn't provide an explicit approach. Skip in `--fast`, `--two`, or with `--skip-brainstorm`.
+
+| Mode | Brainstorm Behavior |
+|------|-------------------|
+| `--fast` | ❌ Skip (no research overhead) |
+| `--hard` | ✅ Run before research |
+| `--parallel` | ✅ Run before research |
+| `--two` | ❌ Skip (inherently multi-approach) |
+| `--auto` | Follows detected mode |
+| `--skip-brainstorm` | ❌ Skip regardless of mode |
+
+**Ambiguity detection:** Skip brainstorm if user message contains solution-specific language (e.g., "use Redis for caching", "implement with JWT", "approach: microservices"). Otherwise, generate 2-3 inline approaches.
+
+**With `--discuss`:** Discuss → Brainstorm → Research. Preferences from discuss phase inform approach generation.
+
+**Format:** Generate approach table (approach | effort | risk | recommendation), then `ask_user` with choices. Feed chosen approach as context into research + plan creation.
 
 ## Discuss Mode (`--discuss`)
 

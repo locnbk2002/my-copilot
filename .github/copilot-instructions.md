@@ -60,8 +60,8 @@ Invoke via the `skill` tool:
 
 | Skill | Purpose |
 |-------|---------|
-| `mp-plan` | Implementation planning, task breakdown |
-| `mp-execute` | Execute plans phase-by-phase with test/review gates |
+| `mp-plan` | Implementation planning with auto-brainstorm + research + validation (`--skip-brainstorm` to skip brainstorm) |
+| `mp-execute` | Execute plans phase-by-phase; auto-chains test/fix/review/docs/git after execution (`--skip-post` to skip) |
 | `mp-test` | Auto-detect and run tests with structured reporting |
 | `mp-fix` | Diagnose and fix bugs with root cause analysis |
 | `mp-code-review` | Structured scout→review→fix pipeline |
@@ -77,14 +77,8 @@ Invoke via the `skill` tool:
 
 | Step | Skill/Agent | Purpose |
 |------|-------------|---------|
-| 1. Brainstorm (optional) | `mp-brainstorm` | Explore approaches before planning |
-| 2. Plan | `mp-plan` | Create implementation plan with phases |
-| 3. Execute | `mp-execute` | Execute plan phases with test/review gates |
-| 4. Test | `mp-test` | Run and verify tests |
-| 5. Fix (if needed) | `mp-fix` | Debug and fix failures |
-| 6. Review | `mp-code-review` | Structured code review |
-| 7. Docs | `mp-docs` | Update documentation |
-| 8. Commit | `mp-git` | Conventional commit with security scan |
+| 1. Plan | `mp-plan` | Auto-brainstorm → research → plan → validate (use `--skip-brainstorm` to skip brainstorm) |
+| 2. Execute | `mp-execute` | Execute plan phases; auto-chains test → fix → review → docs → commit (use `--skip-post` to skip chain) |
 
 ## Sub-Agent Teams
 

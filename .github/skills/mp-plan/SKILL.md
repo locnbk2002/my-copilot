@@ -1,7 +1,7 @@
 ---
 name: mp-plan
 description: "Plan implementations, design architectures, create technical roadmaps with detailed phases. Use for feature planning, system design, solution architecture, implementation strategy, phase documentation."
-argument-hint: "[task] [--auto|--fast|--hard|--parallel|--two] [--discuss] [--no-tasks] [--validate auto|prompt|off] OR archive|red-team|validate"
+argument-hint: "[task] [--auto|--fast|--hard|--parallel|--two] [--discuss] [--skip-brainstorm] [--no-tasks] [--validate auto|prompt|off] OR archive|red-team|validate"
 license: MIT
 ---
 
@@ -34,8 +34,10 @@ Default: `--auto` (analyze task complexity and auto-pick mode).
 | `--parallel` | Parallel | 2 researchers | Yes | Optional |
 | `--two` | Two approaches | 2+ researchers | After selection | After selection |
 | `--discuss` | Modifier | — | — | — |
+| `--skip-brainstorm` | Modifier | — | — | — |
 
 `--discuss`: Interview user for preferences before research; saves to `preferences.md`; combinable with any mode.
+`--skip-brainstorm`: Skip pre-research brainstorm; go straight to research.
 
 Add `--no-tasks` to skip todo creation in any mode.
 
@@ -53,6 +55,10 @@ Load: `references/workflow-modes.md` for auto-detection logic, per-mode workflow
 
 Always honoring **YAGNI**, **KISS**, and **DRY** principles.
 **Be honest, be brutal, straight to the point, and be concise.**
+
+### 0. Pre-Research Brainstorm
+Load: inline (no reference file)
+**Skip if:** `--fast`, `--two`, `--skip-brainstorm`, or user provided explicit approach
 
 ### 1. Research & Analysis
 Load: `references/research-phase.md`
@@ -77,8 +83,10 @@ Auto-tag each phase with a category based on phase content and intent (see `outp
 
 ## Workflow Process
 
+0. **Pre-Research Brainstorm (default ON, skip in --fast/--two/--skip-brainstorm)** → If user didn't provide explicit approach: generate 2-3 lightweight approaches inline (table: approach | effort | risk | recommendation), ask user to pick via `ask_user`, feed chosen approach as context for research. See Pre-Research Brainstorm section below.
 1. **Mode Detection** → Auto-detect or use explicit flag (see `workflow-modes.md`)
 1.5. **Discuss Phase (if --discuss)** → Load `references/discuss-workflow.md`. Interview user, save preferences to `{plan-dir}/preferences.md`, include preference summary in researcher prompts.
+1.75. **Post-Discuss Brainstorm (if --discuss + brainstorm not skipped)** → After discuss, run brainstorm with user preferences as context for approach generation.
 2. **Research Phase** → Spawn researcher agents (skip in fast mode)
 3. **Codebase Analysis** → Read docs, explore codebase if needed
 4. **Plan Documentation** → Write comprehensive plan via general-purpose subagent
@@ -149,3 +157,48 @@ Load: `references/task-management.md` for hydration pattern and todo tracking.
 - Validate against existing codebase patterns
 
 **Remember:** Plan quality determines implementation success. Be comprehensive and consider all solution aspects.
+
+## Pre-Research Brainstorm
+
+Auto-runs before research when no explicit approach is provided. Skip in `--fast`, `--two`, or `--skip-brainstorm`.
+
+### Ambiguity Detection
+
+Skip brainstorm if user message contains solution-specific language such as:
+- "use X for Y" (e.g., "use Redis for caching")
+- "implement with Z" (e.g., "implement with JWT")
+- "approach: ..." or "solution: ..."
+- "via X", "using X", "with X architecture"
+
+If ambiguity detected (no explicit approach): run brainstorm inline.
+
+### Brainstorm Format
+
+Generate 2-3 approaches inline using this table format:
+
+| # | Approach | Effort | Risk | Recommendation |
+|---|---------|--------|------|---------------|
+| 1 | {name} ⭐ | Low | Low | Recommended |
+| 2 | {name} | Medium | Medium | Alternative |
+| 3 | {name} | High | Low | Over-engineered |
+
+Then ask user:
+```
+ask_user(
+  question="Which approach should the plan be based on?",
+  choices=["1: {approach 1 name} (Recommended)", "2: {approach 2 name}", "3: {approach 3 name}"]
+)
+```
+
+Feed chosen approach as context into research and plan creation steps.
+
+### Mode Behavior
+
+| Mode | Brainstorm |
+|------|-----------|
+| `--fast` | ❌ Skip |
+| `--two` | ❌ Skip (inherently multi-approach) |
+| `--hard` | ✅ Run (before research) |
+| `--parallel` | ✅ Run (before research) |
+| `--discuss` modifier | ✅ Run after discuss (step 1.75) |
+| `--skip-brainstorm` | ❌ Skip |
