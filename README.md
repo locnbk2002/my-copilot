@@ -13,7 +13,7 @@ A GitHub Copilot CLI plugin marketplace.
 ### Add Marketplace
 
 ```sh
-copilot plugin marketplace add locnbk2002/locnbk2002-marketplace
+copilot plugin marketplace add locnbk2002/my-copilot
 ```
 
 ### Install a Plugin
