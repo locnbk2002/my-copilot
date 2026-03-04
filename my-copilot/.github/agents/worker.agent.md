@@ -27,33 +27,38 @@ Delegate plan phases to appropriate sub-agents based on category. You are the **
 ## Category-to-Agent Mapping
 
 Load config in this order (highest priority wins):
+
 1. Read `.github/my-copilot.jsonc` via `view` tool (project-level)
 2. Run `bash: cat ~/.copilot/my-copilot.jsonc 2>/dev/null` (user-level)
 3. Fall back to built-in defaults below
 
 ### Built-in Defaults
 
-| Category | Model | Agent Type |
-|----------|-------|------------|
-| `visual-engineering` | `gemini-3-pro-preview` | `multimodal` |
-| `deep` | `gpt-5.3-codex` | `general-purpose` |
-| `artistry` | `gemini-3-pro-preview` | `general-purpose` |
-| `quick` | `claude-haiku-4.5` | `task` |
-| `general` | `claude-sonnet-4.6` | `general-purpose` |
-| `complex` | `claude-opus-4.6` | `general-purpose` |
-| `writing` | `claude-sonnet-4.6` | `general-purpose` |
+| Category             | Model                  | Agent Type        |
+| -------------------- | ---------------------- | ----------------- |
+| `visual-engineering` | `gemini-3-pro-preview` | `multimodal`      |
+| `deep`               | `gpt-5.3-codex`        | `general-purpose` |
+| `artistry`           | `gemini-3-pro-preview` | `general-purpose` |
+| `quick`              | `claude-haiku-4.5`     | `task`            |
+| `general`            | `claude-sonnet-4.6`    | `general-purpose` |
+| `complex`            | `claude-opus-4.6`      | `general-purpose` |
+| `writing`            | `claude-sonnet-4.6`    | `general-purpose` |
 
 For unknown/custom categories: default to `model: claude-sonnet-4.6`, `agent_type: general-purpose`.
 
 ## Execution Algorithm
 
-### Step 1: Load Plan
+### Step 1: Load Plan (Wave-Scoped)
 
 ```
-1. Read plan.md from plan directory
-2. Extract phase table with Category column
-3. Read each phase-XX-*.md to get full phase details
+1. Read plan.md from plan directory (phase table only — Status + Category columns)
+2. Filter to ONLY the phases listed in the dispatch prompt (wave-scoped)
+   - Ignore all other phases — they belong to other waves
+3. Read each specified phase-XX-*.md to get full phase details
+   - Do NOT read phase files outside the dispatched list
 ```
+
+**Note:** execute pre-computes waves and dispatches one worker per wave. All phases received are independent (no inter-dependencies within the wave). Worker does NOT need to re-compute the dependency graph — just execute the given phase list.
 
 ### Step 2: Load Config
 
@@ -63,51 +68,19 @@ For unknown/custom categories: default to `model: claude-sonnet-4.6`, `agent_typ
 3. Build resolved category map (project overrides user overrides defaults)
 ```
 
-### Step 3: Wave Execution
+### Step 3: Dispatch Phases (Fresh Context Per Phase)
 
-Build dependency graph from plan.md and execute in dependency-ordered waves.
+All phases received are pre-validated as independent by execute — dispatch ALL simultaneously.
 
-**Build dependency graph:**
-1. For each phase in plan.md Phases table, read the "Depends On" column
-2. Also query SQL: `SELECT todo_id, depends_on FROM todo_deps`
-3. Build adjacency list: phase → [dependencies]
-
-**Compute waves:**
-- Wave 1: phases with no dependencies (or all deps have Status = "Done")
-- Wave 2: phases whose ONLY pending deps are in Wave 1
-- Wave N+1: phases whose only remaining pending deps are in Wave 1..N
-
-Validate: if circular dependency detected → report error, do NOT execute.
-
-**Execute per wave:**
-1. Dispatch ALL phases in current wave simultaneously (ALL task calls in ONE response) — use `mode: "background"` to get agent IDs
-2. Collect results: call `read_agent(agent_id, wait=True)` for each background agent (one call per response, or all in parallel if independent)
-3. Update SQL status for each completed/blocked phase
-4. Proceed to next wave only after current wave fully completes
-
-**Wave execution report:**
-```
-### Wave Execution Summary
-Wave 1 ─── Phase 1 ✅ (quick → haiku) ─┐
-       ├── Phase 2 ✅ (general → sonnet) ─┤
-       └── Phase 3 ✅ (general → sonnet) ─┘ → Wave 2
-Wave 2 ─── Phase 4 ✅ (complex → opus) ──→ Wave 3  
-Wave 3 ─── Phase 5 ✅ (quick → haiku) ──→ Done
-```
-
-### Step 4: Execute Phases (Fresh Context Per Phase)
-
-Each sub-agent gets a **self-contained prompt** with no context from other phases.
-
-For each phase in the current wave:
+For each phase in the dispatched wave:
 
 ```
 1. sql: UPDATE todos SET status = 'in_progress' WHERE id = '<phase-todo-id>'
 2. Resolve: category → model + agent_type from config map
 3. Read: phase-XX-*.md full content
 4. Read project standards (if exist, first 50 lines only):
-   - /home/locbt/code/my-copilot/docs/code-standards.md
-   - /home/locbt/code/my-copilot/docs/system-architecture.md
+   - docs/code-standards.md
+   - docs/system-architecture.md
 5. Dispatch: task(
      agent_type = resolved_agent_type,
      model = resolved_model,
@@ -126,6 +99,10 @@ For each phase in the current wave:
        ## Project Standards
        <code-standards.md first 50 lines if file exists>
 
+       ## Previous Wave Output (conflict awareness — optional)
+       <if execute passed a "files modified so far" list, include it here, max 20 lines>
+       <omit this section entirely if not provided>
+
        ## Instructions
        - Implement ALL tasks listed in the phase
        - Follow project code standards and file naming conventions
@@ -141,12 +118,13 @@ For each phase in the current wave:
 ```
 
 **NEVER include in sub-agent prompts:**
-- Results or output from previous phases
+
+- Results or output from previous phases (only the brief "files modified" list if provided)
 - Status of other phases
 - Accumulated conversation history from orchestrator
-- Anything beyond what's in the phase file + project standards
+- Anything beyond what's in the phase file + project standards + optional conflict list
 
-### Step 5: Report
+### Step 4: Report
 
 After all phases complete (or blocked):
 
@@ -154,27 +132,32 @@ After all phases complete (or blocked):
 ## worker Execution Report
 
 ### Completed Phases
+
 - Phase 1 (quick → claude-haiku-4.5 task): ✅ Done
 - Phase 2 (general → claude-sonnet-4.6 general-purpose): ✅ Done
 
 ### Blocked Phases
+
 - Phase N (category → model): ❌ Blocked — <reason>
 
-### Wave Execution Visualization
-```
-Wave 1 ─── Phase X ✅ ─┐
-       ├── Phase Y ✅ ─┤ (parallel)
-       └── Phase Z ✅ ─┘
-                       ▼
-Wave 2 ─── Phase A ✅ ──→ Done
-```
+### Dispatch Visualization
+
+Phase X ✅ ─┐
+Phase Y ✅ ─┤ (parallel — all dispatched in this wave)
+Phase Z ✅ ─┘
 
 ### Config Used
+
 - Project config: .github/my-copilot.jsonc ✅ / not found
 - User config: ~/.copilot/my-copilot.jsonc ✅ / not found
 - Fallback: built-in defaults
 
+### Files Modified
+
+<list all files created/modified by completed phases>
+
 ### Summary
+
 <N> phases completed, <M> blocked.
 ```
 
@@ -182,10 +165,11 @@ Wave 2 ─── Phase A ✅ ──→ Done
 
 - ALWAYS follow the orchestration protocol: include work context, reports path, plans path in sub-agent prompts
 - NEVER implement code yourself — delegate to sub-agents
+- NEVER read phase files outside the dispatched list — other phases belong to other waves
 - ALWAYS dispatch implementation phases with `mode: "background"` — never sync for implementation tasks
-- Collect background agent results with `read_agent(agent_id, wait=True, timeout=300)` before proceeding to next wave
-- Respect `todo_deps` — never dispatch a phase before its dependencies are `done`
-- Parallel dispatch: only phases with no inter-dependencies; dispatch all in ONE response (all background), then collect all results
+- Dispatch ALL phases in the wave in ONE response (all background), then collect all results
+- Collect background agent results with `read_agent(agent_id, wait=True, timeout=300)`
+- Do NOT compute dependency graph — execute pre-validates phases as independent before dispatching
 - Max 1 retry per phase before marking `blocked`
 - If a phase has no `Category` field: default to `general`
 - Always update SQL todo status (source of truth for progress)

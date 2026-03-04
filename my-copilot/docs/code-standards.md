@@ -21,6 +21,7 @@ Follow **YAGNI · KISS · DRY** on all changes.
 ### How to Count LOC
 
 **Count** (actual logic):
+
 - Import statements
 - Variable/constant declarations
 - Function/class/type definitions
@@ -30,6 +31,7 @@ Follow **YAGNI · KISS · DRY** on all changes.
 - Closing braces/brackets that belong to logic blocks
 
 **Exclude** (not logic):
+
 - Blank lines
 - Comment-only lines (`#`, `//`, `/* */`)
 - Docstring body lines (count opening/closing `"""` as 1 each)

@@ -1,65 +1,148 @@
-## Phase Execution Algorithm
+## Phase Execution Algorithm (Wave-Based)
 
-### Step 1: Load Phase
+Main execute session reads only plan.md phase table — never full phase file content.
+Each wave dispatches a fresh worker sub-agent with only that wave's phases.
 
-- Read the phase file (e.g., `phase-01-setup.md`)
-- Extract: objectives, tasks, acceptance criteria, estimated complexity
-- If the phase file contains code snippets/pseudocode, use them as implementation guidance
+---
 
-### Step 2: Dispatch Strategy
+### Step 1: Load Plan & Compute Waves
 
-**Default (recommended) — Category-aware dispatch:**
-- Check if phase has `Category` field in its Overview section
-- If yes: Dispatch `task(agent_type="worker", mode="background")` with plan directory path and work context → get `agent_id`, then `read_agent(agent_id, wait=True, timeout=300)`
-  - worker handles: config resolution, category→agent mapping, wave execution, fresh context
-  - Main session does NOT edit any files — delegates entirely to worker
-- If no Category field OR `--direct` flag: fall through to Legacy Direct Mode below
+```
+1. Read plan.md Phases table ONLY (Status + Depends On columns)
+   - Do NOT read individual phase-XX-*.md files in main session
+2. Skip phases with Status = "Done"
+3. Build dependency graph:
+   - From plan.md "Depends On" column
+   - Also: SELECT todo_id, depends_on FROM todo_deps (if SQL available)
+   - Build adjacency list: phase → [dependency phases]
+4. Compute waves:
+   - Wave 1: phases with no pending dependencies (or all deps Done)
+   - Wave N+1: phases whose only remaining pending deps are in Waves 1..N
+5. Validate: if circular dependency detected → report error, STOP execution
+```
 
-**Legacy Direct Mode (`--direct` or no Category):**
-- **Simple** (< 3 files, straightforward): Execute directly with edit/create tools
-- **Medium** (3-10 files, requires analysis): Dispatch explore subagents first, then implement
-- **Complex** (10+ files, architectural): Break into sub-tasks, dispatch parallel general-purpose subagents
+**Output:** ordered list of waves, e.g. `[[1,2,3], [4,5], [6]]`
 
-**Rule:** Default (non-direct) path NEVER edits files in main session context. All editing happens in sub-agents.
+---
 
-### Step 3: Implementation Pattern
+### Step 2: Dispatch Wave
 
-For each task in the phase:
+For each wave (execute waves in order; never skip ahead):
 
-1. Read relevant source files
-2. Plan the change (mentally or via sequential-thinking)
-3. Make the change (edit/create)
-4. Verify the change (run affected tests)
+```
+1. For each phase in wave:
+   sql: UPDATE todos SET status = 'in_progress' WHERE id = 'phase-XX'
 
-### Step 3.5: State Sync
+2. If wave size > 5 phases: split into sub-waves of max 5; dispatch sub-waves sequentially
 
-After worker returns (or after direct mode implementation):
+3. Dispatch: task(
+     agent_type = "worker",
+     mode = "background",
+     description = "Execute wave: phases {N,M,...}",
+     prompt = """
+       Execute these plan phases. Each phase is independent within this wave.
 
-1. Read worker report → extract per-phase completion status
+       Plan directory: <plan_dir>
+       Work context: <project_root>
+       Reports: <plan_dir>/reports/
+       Phases to execute (this wave only): <comma-separated phase numbers>
+
+       ## Dispatch Instructions
+       - Read only the listed phase-XX-*.md files from the plan directory
+       - Dispatch each phase as a fresh background sub-agent (no shared context between phases)
+       - Do NOT read or reference phases outside this list
+       - Report completion status per phase
+
+       ## Previous Wave Output (optional — pass only if >0 waves completed)
+       Files modified in prior waves (for conflict awareness, max 20 lines):
+       <brief list of files modified so far, if any>
+     """
+   ) → returns agent_id
+
+4. Collect result: read_agent(agent_id, wait=True, timeout=300)
+```
+
+**`--phase N` flag:** skip wave computation; dispatch single worker with `phases: N` only.
+
+**Legacy `--direct` mode:** skip worker; use complexity-based direct execution (see SKILL.md Complexity Assessment).
+
+---
+
+### Step 3: State Sync (After Each Wave)
+
+After worker returns for a wave:
+
+```
+1. Parse worker execution report → extract per-phase completion status
+
 2. For each completed phase:
-   - Edit `plan.md`: find phase row in Phases table, update Status column from `Pending` to `Done`
-   - Edit `phase-XX-*.md`: find each todo checkbox in Todo List, mark `- [ ]` → `- [x]`
-3. For blocked phases: update Status to `Blocked` in plan.md, note reason in phase file
-4. State sync is idempotent — safe to run multiple times
+   - Edit plan.md: find phase row in Phases table, change Status Pending → Done
+     (use exact string match on the phase row)
+   - Edit phase-XX-*.md: mark todo checkboxes - [ ] → - [x]
+   - sql: UPDATE todos SET status = 'done' WHERE id = 'phase-XX'
 
-### Step 4: Verification Gate
+3. For blocked phases:
+   - Edit plan.md: update Status to Blocked
+   - sql: UPDATE todos SET status = 'blocked' WHERE id = 'phase-XX'
+   - Note reason in phase file if available
 
-After all tasks complete:
+4. Track: append completed phase numbers to "files modified so far" list
+   (to pass as optional context to next wave dispatch — max 20 lines)
+```
 
-- Run project test suite via `bash` tool
-- Run linter/typecheck if configured
-- Check for regressions
-- If any fail → debug with debugger agent or fix skill
-- Max 3 retry attempts before marking phase as blocked
+State sync is idempotent — safe to run multiple times.
 
-### Step 5: Review Gate (optional)
+---
 
-- Dispatch `task(agent_type="code-reviewer")` on `git diff`
-- Address Critical/High severity findings
-- Skip Medium/Low unless user requests or `--strict` is set
+### Step 4: Budget Check (Every 3 Phases)
 
-### Step 6: Finalization
+After syncing state, if `completed_count % 3 == 0`:
 
-- Update SQL todo status to 'done'
-- Log completion summary
-- Move to next phase or report completion
+```
+1. bash: wc -l < logs/tools.jsonl 2>/dev/null || echo 0
+2. Evaluate:
+   - < 200 tool calls  → ✅ Healthy, continue
+   - 200–400 tool calls → ⚠️ Heavy — output warning, continue
+   - > 400 tool calls  → 🔴 Critical — ask_user: recommend fresh session
+3. If > 400 and remaining phases ≤ 2: suggest finishing current session
+4. If > 400 and remaining phases > 2: strongly recommend fresh session + state sync ensures resume works
+```
+
+---
+
+### Step 5: Next Wave or Post-Chain
+
+```
+If more waves remain AND no blocking errors:
+  → Go to Step 2 with next wave
+
+If all waves complete:
+  → Load references/post-execution.md and run post-execution chain
+
+If a wave is fully blocked (all phases blocked):
+  → Report to user, stop execution
+```
+
+---
+
+### Verification Gate (Per Wave)
+
+After state sync (Step 3), before proceeding to next wave:
+
+```
+1. Run project test suite: bash (project test command)
+2. Run linter/typecheck if configured
+3. If any fail → invoke fix skill or debugger agent
+4. Max 3 retry attempts before marking phase as blocked
+5. Skip if --skip-tests flag set
+```
+
+---
+
+### Resume Support
+
+If starting a fresh session mid-execution:
+1. Read plan.md Phases table — phases with Status = "Done" are already complete
+2. Re-compute waves from remaining Pending/Blocked phases
+3. Resume from Wave 1 of remaining phases
+4. State sync-back (Step 3) ensures plan.md is always current

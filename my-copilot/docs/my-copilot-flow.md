@@ -29,13 +29,13 @@ flowchart TD
         SS5[brainstorm]
     end
 
-    %% execute delegates to worker when phases have Category tags
-    WF3 -->|"task · agent_type=worker\n(phases with Category field)"| WORKER
+    %% execute dispatches one worker per wave (wave-scoped phases)
+    WF3 -->|"task · agent_type=worker\nper-wave dispatch\n(fresh sub-agent per wave)"| WORKER
 
-    subgraph WORKER["🔄 worker — Category Orchestrator"]
+    subgraph WORKER["🔄 worker — Wave Orchestrator"]
         direction TB
-        CFG["⚙️ Config Resolution\n.github/my-copilot.jsonc\n~/.copilot/my-copilot.jsonc"]
-        CFG --> CAT{Phase Category?}
+        CFG["⚙️ Config Resolution\n.github/my-copilot.jsonc\n~/.copilot/my-copilot.jsonc\nPhase Category → Model+Agent"]
+        CFG --> CAT{Per-Phase Category?}
 
         CAT -->|visual-engineering| C1["multimodal\nGemini 3 Pro"]
         CAT -->|deep| C2["general-purpose\ngpt-5.3-codex"]

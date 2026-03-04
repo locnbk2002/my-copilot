@@ -11,7 +11,7 @@
 ### Option 1: Marketplace (recommended)
 
 ```bash
-copilot plugin marketplace add locnbk2002/locnbk2002-marketplace
+copilot plugin marketplace add locnbk2002/my-copilot
 copilot plugin install locnbk2002-marketplace@my-copilot
 ```
 
@@ -33,7 +33,7 @@ copilot plugin install ./my-copilot
 
 Context7 enables the `docs-seeker` skill to look up library/framework documentation.
 
-1. Get an API key from https://context7.com
+1. Get an API key from <https://context7.com>
 2. Find the installed plugin directory: `copilot plugin list`
 3. Edit `.mcp.json` and replace `YOUR_CONTEXT7_API_KEY` with your key
 
@@ -62,7 +62,16 @@ Agents are invoked automatically by skills, or directly via the `task` tool in c
 
 Hooks run automatically on tool use and session events. No configuration needed — `hooks.json` is loaded by the plugin. Hook scripts require Python 3 on `PATH`.
 
-## Category Configuration
+## Execution & Wave-Based Dispatch
+
+When running `execute`:
+
+1. **Waves** — Phases are executed in dependency-sorted waves (parallel-safe groups)
+2. **Fresh Worker per Wave** — Each wave dispatches a fresh `worker` sub-agent with only that wave's phases
+3. **Per-Phase Delegation** — Worker dispatches fresh sub-agent per phase based on phase category
+4. **Auto Post-Chain** — After all phases complete: test, fix (if needed), review, docs update, git commit (default ON; use `--skip-post` to opt-out)
+
+### Category Configuration
 
 Plan phases are tagged with work categories. `worker` resolves each category to an optimized model and agent type. You can override the defaults via config files.
 
@@ -81,25 +90,25 @@ Project config takes precedence over user config; user config takes precedence o
     // Override the 'quick' category to use a faster model
     "quick": {
       "model": "gpt-5-mini",
-      "agent_type": "task"
+      "agent_type": "task",
     },
     // Override 'complex' to use a premium model
     "complex": {
       "model": "claude-opus-4.6",
-      "agent_type": "general-purpose"
-    }
-  }
+      "agent_type": "general-purpose",
+    },
+  },
 }
 ```
 
 ### Built-in Category Defaults
 
-| Category | Model | Agent | When to Use |
-|----------|-------|-------|-------------|
-| `visual-engineering` | `gemini-3-pro-preview` | `multimodal` | Frontend, UI/UX, design |
-| `deep` | `gpt-5.3-codex` | `general-purpose` | Autonomous problem-solving |
-| `artistry` | `gemini-3-pro-preview` | `general-purpose` | Creative solutions |
-| `quick` | `claude-haiku-4.5` | `task` | Trivial, single-file changes |
-| `general` | `claude-sonnet-4.6` | `general-purpose` | Standard work |
-| `complex` | `claude-opus-4.6` | `general-purpose` | Multi-system coordination |
-| `writing` | `claude-sonnet-4.6` | `general-purpose` | Documentation, prose |
+| Category             | Model                  | Agent             | When to Use                  |
+| -------------------- | ---------------------- | ----------------- | ---------------------------- |
+| `visual-engineering` | `gemini-3-pro-preview` | `multimodal`      | Frontend, UI/UX, design      |
+| `deep`               | `gpt-5.3-codex`        | `general-purpose` | Autonomous problem-solving   |
+| `artistry`           | `gemini-3-pro-preview` | `general-purpose` | Creative solutions           |
+| `quick`              | `claude-haiku-4.5`     | `task`            | Trivial, single-file changes |
+| `general`            | `claude-sonnet-4.6`    | `general-purpose` | Standard work                |
+| `complex`            | `claude-opus-4.6`      | `general-purpose` | Multi-system coordination    |
+| `writing`            | `claude-sonnet-4.6`    | `general-purpose` | Documentation, prose         |

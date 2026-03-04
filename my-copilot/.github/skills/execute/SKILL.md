@@ -1,7 +1,7 @@
 ---
 name: execute
 description: "Execute implementation plans phase-by-phase with test/review gates. Use for plan execution, phased implementation, automated workflow with verification steps."
-argument-hint: "[plan-path] [--phase N] [--skip-tests] [--skip-review] [--skip-post] [--direct]"
+argument-hint: "[plan-path] [--phase N] [--skip-tests] [--skip-review] [--skip-commit] [--skip-post] [--direct]"
 license: MIT
 ---
 
@@ -12,13 +12,14 @@ Execute implementation plans phase-by-phase with automated test and review gates
 ## Invocation
 
 ```
-execute [plan-path] [--phase N] [--skip-tests] [--skip-review] [--skip-post] [--direct]
+execute [plan-path] [--phase N] [--skip-tests] [--skip-review] [--skip-commit] [--skip-post] [--direct]
 
 Default: Execute all phases with category-aware delegation via worker
 --phase N:      Execute only phase N
 --skip-tests:   Skip test verification
 --skip-review:  Skip code review gate
---skip-post:    Skip entire post-execution chain (test, fix, review, docs, git)
+--skip-commit:  Skip only git commit step (runs test, fix, review, docs)
+--skip-post:    Skip entire post-execution chain (requires confirmation via ask_user)
 --direct:       Legacy mode — skip worker, execute phases directly (for plans without Category tags)
 ```
 
@@ -28,29 +29,44 @@ Default: Execute all phases with category-aware delegation via worker
 - To systematically execute phased implementation
 - For complex features requiring multiple steps with verification
 
-## Core Workflow (Per Phase)
+## Core Workflow (Wave-Based Dispatch)
 
-execute is a **thin orchestrator** — it reads, dispatches, and tracks. It NEVER edits files or writes implementations in main context.
+execute is a **thin orchestrator** — it reads plan.md, computes waves, dispatches per-wave, and tracks status. It NEVER edits files or reads full phase content in main context.
 
-Load: `references/execution-workflow.md` for the detailed per-phase algorithm.
+Load: `references/execution-workflow.md` for the detailed wave-dispatch algorithm.
+
+**Main session context budget: aim for <20% usage throughout. Never accumulate phase file content.**
 
 ### Phase Execution Steps
 
-1. **Load Plan** — Read `plan.md` phase table and specific `phase-XX-*.md` file
-2. **Check Dependencies** — Query SQL `todo_deps` or plan.md "Depends On" column; skip phases with Status = "Done"
-3. **Mark In Progress** — `UPDATE todos SET status = 'in_progress' WHERE id = 'phase-XX'`
-4. **Dispatch** — `task(agent_type="worker", mode="background")` with plan path, phase range, and work context paths → returns `agent_id`
-   - worker handles: config resolution, category-to-agent mapping, wave execution, fresh context per phase
+1. **Load Plan** — Read ONLY `plan.md` phase table (Status + Depends On columns). Do NOT read individual phase-XX-*.md files.
+2. **Compute Waves** — Build dependency graph from plan.md Phases table:
+   - Wave 1: phases with no dependencies (or all deps Status = "Done")
+   - Wave N+1: phases whose only pending deps are in Waves 1..N
+   - Skip phases with Status = "Done"; validate: circular deps → error and stop
+3. **Dispatch Wave** — For each wave (in dependency order):
+   - Mark each phase in wave: `UPDATE todos SET status = 'in_progress' WHERE id = 'phase-XX'`
+   - Dispatch ONE `task(agent_type="worker", mode="background")` per wave with:
+     - `plan_dir`: path to plan directory
+     - `phases`: comma-separated phase numbers for THIS WAVE ONLY
+     - `work_context`: project root path
+   - If wave has >5 phases: split into sub-waves of max 5 phases each
    - Collect result: `read_agent(agent_id, wait=True, timeout=300)`
-   - **Legacy `--direct` mode**: Skip worker; use complexity-based approach (see Complexity Assessment below)
-5. **Sync Status** — Update plan.md phase Status column and phase-XX.md checkboxes (see State Sync-Back)
-6. **Verify** — Run existing tests via `bash`; if `test` skill available, invoke it; if tests fail → invoke `fix` or `debugger`
-7. **Review** (skip if `--skip-review`) — Dispatch `task(agent_type="code-reviewer")` on changed files
-8. **Mark Done** — `UPDATE todos SET status = 'done' WHERE id = 'phase-XX'`
-8.5. **Budget Check** (every 3 phases) — If `completed_count % 3 == 0`: run Context Budget Monitoring check (see Context Budget Monitoring)
-9. **Next Phase** — Query next ready todo and continue
+   - **`--phase N` flag**: dispatch single worker for phase N only (skip wave computation)
+   - **Legacy `--direct` mode**: skip worker; use complexity-based approach (see Complexity Assessment below)
+4. **Sync Status** — After each wave completes, update plan.md Status column and phase-XX.md checkboxes (see State Sync-Back)
+5. **Budget Check** (every 3 phases) — If `completed_count % 3 == 0`: run Context Budget Monitoring check
+6. **Next Wave** — Proceed to next wave only after current wave fully completes and status is synced
+7. **Post-Execution** — After all waves done: invoke post-execution chain (see Post-Execution section)
 
-**RULE:** Steps 1–3, 5–9 happen in main context (reads, SQL updates, syncs). Step 4 (ALL implementation) happens in sub-agent context ONLY.
+**RULE:** Steps 1–2, 4–7 happen in main context (reads plan.md ONLY, SQL updates, syncs). Step 3 (ALL implementation) happens in worker/sub-agent context ONLY.
+
+## Dispatch Granularity
+
+- Default: one worker per wave (worker handles parallelism within wave via fresh sub-agents per phase)
+- If wave has >5 phases: split into sub-waves of 3-5 phases, dispatch sequentially
+- `--phase N`: dispatch single worker for single phase N (skips wave computation)
+- Worker receives ONLY its wave's phases — never the full plan or prior wave content
 
 ## State Sync-Back
 
@@ -103,19 +119,23 @@ If user starts a fresh session mid-execution:
 
 Load: `references/post-execution.md` for the detailed algorithm.
 
-After all phases complete, automatically run in sequence:
+After all phases complete, automatically run in sequence (each step dispatched as a fresh sub-agent via `task` tool to keep main session context lean):
 
-1. **Test** — Invoke `test` skill; skip if `--skip-tests` or `--skip-post`
-2. **Fix** — If tests fail, invoke `fix` skill; max 2 attempts then log warning and continue; skip if `--skip-tests` or `--skip-post`
+1. **Test** — Dispatch fresh sub-agent; skip if `--skip-tests` or `--skip-post`
+2. **Fix** — If tests fail, dispatch fresh sub-agent; max 2 attempts then log warning and continue; skip if `--skip-tests` or `--skip-post`
 3. **Review** — Dispatch `task(agent_type="code-reviewer")` on all changed files; skip if `--skip-review` or `--skip-post`
-4. **Docs** — Invoke `docs` skill if implementation changed APIs/behavior; skip if `--skip-post`
-5. **Git** — Invoke `git cm --atomic` for conventional commit; skip if `--skip-post`
-6. **Plan Status** — Update plan.md: `status: completed`
+4. **Docs** — Dispatch fresh sub-agent if implementation changed APIs/behavior; skip if `--skip-post`
+5. **Git** — Ask user "Commit changes?" before dispatching; if yes, dispatch fresh sub-agent for `git cm --atomic`; skip (no prompt) if `--skip-commit` or `--skip-post`
+6. **Plan Status** — Update plan.md: `status: completed` (runs in main session — trivial edit)
 7. **Summary Report** — Output: phases completed, files modified/created, test status (pass/fail/skipped), review findings, post-execution status per step (✅/⚠️/❌)
 
-**Opt-out:** `--skip-post` skips steps 1-5 entirely (manual post-execution).
+**Opt-out:** `--skip-post` skips steps 1-5 entirely — requires confirmation via `ask_user`:
+> "Skipping post-chain (test, fix, review, docs, commit). No automated verification. Continue?"
+> Options: ["Yes, skip post-chain", "No, run post-chain"]
+If user selects "No", run post-chain normally.
+
 **Fault tolerance:** Each step runs independently; failure logs warning but does NOT block subsequent steps.
-**Flag interaction:** `--skip-tests` skips steps 1-2; `--skip-review` skips step 3; `--skip-post` skips steps 1-5.
+**Flag interaction:** `--skip-tests` skips steps 1-2; `--skip-review` skips step 3; `--skip-commit` skips step 5; `--skip-post` skips steps 1-5 (with confirmation).
 
 ## Complexity Assessment (Direct Mode Only — Legacy)
 
@@ -138,11 +158,16 @@ After all phases complete, automatically run in sequence:
 
 ## Rules
 
+- NEVER read full phase-XX.md content in main session — only plan.md phase table
+- NEVER dispatch one worker for ALL phases — dispatch per-wave only
+- Main session context budget: aim for <20% usage throughout
 - NEVER skip the verification gate unless `--skip-tests` is explicitly set
-- Each phase MUST complete fully before moving to the next
+- Each wave MUST complete fully before moving to the next wave
 - ALWAYS dispatch `worker` (and all implementation sub-agents) with `mode: "background"`; collect results via `read_agent(agent_id, wait=True, timeout=300)`
 - If a phase fails verification 3 times, mark it `blocked` and report to user
 - Always update SQL todo status (source of truth for progress)
 - Post-execution chain is fault-tolerant: log failures, continue to next step
-- `--skip-post` takes precedence over all other post-execution flags
+- `--skip-post` requires confirmation via `ask_user` before skipping; if user declines, run chain normally
+- `--skip-post` takes precedence over all other post-execution flags (after confirmation)
+- `--skip-commit` skips only git step; all other post-chain steps still run
 - For parallel subagent dispatch, ensure no file conflicts between agents

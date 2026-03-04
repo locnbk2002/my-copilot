@@ -1,7 +1,7 @@
 ---
 name: code-reviewer
 description: "Use this agent after implementing features, before PRs, for quality assessment, security audits, or performance optimization."
-model: claude-sonnet-4.6
+model: gpt-5.3-codex
 infer: true
 tools:
   - glob
@@ -36,6 +36,7 @@ git diff --staged --name-only  # staged changes
 ### 2. Scout Edge Cases (Do First)
 
 Before reviewing, search for edge cases the diff doesn't show:
+
 - Affected dependents of changed files
 - Data flow risks and boundary conditions
 - Async races, state mutations
@@ -44,13 +45,13 @@ Use `grep` to find callers of changed functions/modules.
 
 ### 3. Systematic Review
 
-| Area | Focus |
-|------|-------|
-| Structure | Organization, modularity |
-| Logic | Correctness, edge cases |
-| Types | Safety, error handling |
-| Performance | Bottlenecks, inefficiencies |
-| Security | Vulnerabilities, data exposure |
+| Area        | Focus                          |
+| ----------- | ------------------------------ |
+| Structure   | Organization, modularity       |
+| Logic       | Correctness, edge cases        |
+| Types       | Safety, error handling         |
+| Performance | Bottlenecks, inefficiencies    |
+| Security    | Vulnerabilities, data exposure |
 
 ### 4. Prioritization
 
@@ -62,6 +63,7 @@ Use `grep` to find callers of changed functions/modules.
 ### 5. Recommendations
 
 For each issue:
+
 - Explain problem and impact
 - Provide specific fix example
 - Suggest alternatives if applicable
@@ -72,34 +74,44 @@ For each issue:
 ## Code Review Summary
 
 ### Scope
+
 - Files: [list]
 - Focus: [recent changes / specific files / full review]
 
 ### Overall Assessment
+
 [Brief quality overview — 2-3 sentences]
 
 ### Critical Issues
+
 [Security, breaking changes — if none, omit section]
 
 ### High Priority
+
 [Performance, type safety, missing error handling]
 
 ### Medium Priority
+
 [Code quality, maintainability]
 
 ### Low Priority
+
 [Style, minor opts — keep brief]
 
 ### Edge Cases Found
+
 [Issues discovered during scouting phase]
 
 ### Positive Observations
+
 [Good practices noted]
 
 ### Recommended Actions
+
 1. [Prioritized fixes]
 
 ### Unresolved Questions
+
 [If any]
 ```
 

@@ -95,6 +95,7 @@ Auto-tag each phase with a category based on phase content and intent (see `outp
 6. **Post-Plan Validation** → Invoke `plan:validate` subskill (hard/parallel/two modes)
 7. **Hydrate Todos** → Create SQL todos from phases (default on, `--no-tasks` to skip)
 8. **Summary** → Output plan file path and next steps
+9. **Execute Prompt** (MANDATORY — never skip) → After todos hydrated, ask user via `ask_user`: "Plan ready at {plan-dir}. Execute now?" Options: ["Yes, execute now", "No, I'll run it later"]. If yes: invoke `execute {plan-dir}` immediately. If no: output reference command `execute {plan-dir}` and stop.
 
 ## Output Requirements
 
@@ -158,9 +159,29 @@ Load: `references/task-management.md` for hydration pattern and todo tracking.
 
 **Remember:** Plan quality determines implementation success. Be comprehensive and consider all solution aspects.
 
+## Execute Handoff
+
+After plan creation completes (Step 9 — MANDATORY, never skip):
+
+```
+ask_user(
+  question="Plan ready at {plan-dir}. Execute now?",
+  choices=["Yes, execute now", "No, I'll run it later"]
+)
+```
+
+- **If "Yes"**: invoke `execute {plan-dir}` immediately in the same session
+- **If "No"**: output: `Run when ready: execute {plan-dir}` and stop
+
+**Skip if:** User already provided explicit follow-up instruction (e.g. "just plan, don't execute").
+
+---
+
 ## Pre-Research Brainstorm
 
 Auto-runs before research when no explicit approach is provided. Skip in `--fast`, `--two`, or `--skip-brainstorm`.
+
+For deeper exploration before planning, use the standalone `brainstorm` skill.
 
 ### Ambiguity Detection
 
@@ -176,11 +197,19 @@ If ambiguity detected (no explicit approach): run brainstorm inline.
 
 Generate 2-3 approaches inline using this table format:
 
-| # | Approach | Effort | Risk | Recommendation |
-|---|---------|--------|------|---------------|
-| 1 | {name} ⭐ | Low | Low | Recommended |
-| 2 | {name} | Medium | Medium | Alternative |
-| 3 | {name} | High | Low | Over-engineered |
+| # | Approach | Effort | Risk | Challenge | Recommendation |
+|---|---------|--------|------|-----------|---------------|
+| 1 | {name} ⭐ | Low | Low | {1-line devil's advocate risk} | Recommended |
+| 2 | {name} | Medium | Medium | {1-line devil's advocate risk} | Alternative |
+| 3 | {name} | High | Low | {1-line devil's advocate risk} | Over-engineered |
+
+After the table, add a brief description per approach:
+
+```
+**1. {name}:** {what it does}. {key tradeoff}.
+**2. {name}:** {what it does}. {key tradeoff}.
+**3. {name}:** {what it does}. {key tradeoff}.
+```
 
 Then ask user:
 ```
@@ -190,7 +219,12 @@ ask_user(
 )
 ```
 
-Feed chosen approach as context into research and plan creation steps.
+After user picks, inject into each researcher agent's prompt:
+```
+## Chosen Approach
+{approach name}: {approach description}
+Key challenge: {challenge from table}
+```
 
 ### Mode Behavior
 
