@@ -12,7 +12,7 @@
 
 ```bash
 copilot plugin marketplace add locnbk2002/my-copilot
-copilot plugin install locnbk2002-marketplace@my-copilot
+copilot plugin install my-copilot@my-copilot
 ```
 
 ### Option 2: Direct GitHub
