@@ -18,8 +18,8 @@
     "multi-agent",
     "orchestration"
   ],
-  "agents": ".github/agents/",
-  "skills": ".github/skills/",
+  "agents": "agents/",
+  "skills": "skills/",
   "hooks": "hooks.json",
   "mcpServers": ".mcp.json"
 }

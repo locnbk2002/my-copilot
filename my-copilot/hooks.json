@@ -4,36 +4,36 @@
     "preToolUse": [
       {
         "type": "command",
-        "bash": "python3 .github/scripts/scout-block.py",
-        "powershell": "python .github/scripts/scout-block.py",
+        "bash": "python3 scripts/scout-block.py",
+        "powershell": "python scripts/scout-block.py",
         "cwd": ".",
         "timeoutSec": 5
       },
       {
         "type": "command",
-        "bash": "python3 .github/scripts/privacy-block.py",
-        "powershell": "python .github/scripts/privacy-block.py",
+        "bash": "python3 scripts/privacy-block.py",
+        "powershell": "python scripts/privacy-block.py",
         "cwd": ".",
         "timeoutSec": 5
       },
       {
         "type": "command",
-        "bash": "python3 .github/scripts/log-subagent-launch.py",
-        "powershell": "python .github/scripts/log-subagent-launch.py",
+        "bash": "python3 scripts/log-subagent-launch.py",
+        "powershell": "python scripts/log-subagent-launch.py",
         "cwd": ".",
         "timeoutSec": 5
       },
       {
         "type": "command",
-        "bash": "python3 .github/scripts/comment-checker.py",
-        "powershell": "python .github/scripts/comment-checker.py",
+        "bash": "python3 scripts/comment-checker.py",
+        "powershell": "python scripts/comment-checker.py",
         "cwd": ".",
         "timeoutSec": 5
       },
       {
         "type": "command",
-        "bash": "python3 .github/scripts/todo-enforcer.py",
-        "powershell": "python .github/scripts/todo-enforcer.py",
+        "bash": "python3 scripts/todo-enforcer.py",
+        "powershell": "python scripts/todo-enforcer.py",
         "cwd": ".",
         "timeoutSec": 5
       }
@@ -41,36 +41,36 @@
     "postToolUse": [
       {
         "type": "command",
-        "bash": "python3 .github/scripts/tool-tracker.py",
-        "powershell": "python .github/scripts/tool-tracker.py",
+        "bash": "python3 scripts/tool-tracker.py",
+        "powershell": "python scripts/tool-tracker.py",
         "cwd": ".",
         "timeoutSec": 5
       },
       {
         "type": "command",
-        "bash": "python3 .github/scripts/log-subagent-complete.py",
-        "powershell": "python .github/scripts/log-subagent-complete.py",
+        "bash": "python3 scripts/log-subagent-complete.py",
+        "powershell": "python scripts/log-subagent-complete.py",
         "cwd": ".",
         "timeoutSec": 5
       },
       {
         "type": "command",
-        "bash": "python3 .github/scripts/edit-validator.py",
-        "powershell": "python .github/scripts/edit-validator.py",
+        "bash": "python3 scripts/edit-validator.py",
+        "powershell": "python scripts/edit-validator.py",
         "cwd": ".",
         "timeoutSec": 5
       },
       {
         "type": "command",
-        "bash": "python3 .github/scripts/agent-babysitter.py",
-        "powershell": "python .github/scripts/agent-babysitter.py",
+        "bash": "python3 scripts/agent-babysitter.py",
+        "powershell": "python scripts/agent-babysitter.py",
         "cwd": ".",
         "timeoutSec": 5
       },
       {
         "type": "command",
-        "bash": "python3 .github/scripts/auto-compact-reminder.py",
-        "powershell": "python .github/scripts/auto-compact-reminder.py",
+        "bash": "python3 scripts/auto-compact-reminder.py",
+        "powershell": "python scripts/auto-compact-reminder.py",
         "cwd": ".",
         "timeoutSec": 5
       }
@@ -78,8 +78,8 @@
     "sessionStart": [
       {
         "type": "command",
-        "bash": "python3 .github/scripts/session-logger.py",
-        "powershell": "python .github/scripts/session-logger.py",
+        "bash": "python3 scripts/session-logger.py",
+        "powershell": "python scripts/session-logger.py",
         "cwd": ".",
         "timeoutSec": 5
       }
@@ -87,8 +87,8 @@
     "sessionEnd": [
       {
         "type": "command",
-        "bash": "python3 .github/scripts/session-logger.py",
-        "powershell": "python .github/scripts/session-logger.py",
+        "bash": "python3 scripts/session-logger.py",
+        "powershell": "python scripts/session-logger.py",
         "cwd": ".",
         "timeoutSec": 5
       }
@@ -96,22 +96,22 @@
     "errorOccurred": [
       {
         "type": "command",
-        "bash": "python3 .github/scripts/error-logger.py",
-        "powershell": "python .github/scripts/error-logger.py",
+        "bash": "python3 scripts/error-logger.py",
+        "powershell": "python scripts/error-logger.py",
         "cwd": ".",
         "timeoutSec": 10
       },
       {
         "type": "command",
-        "bash": "python3 .github/scripts/context-recovery.py",
-        "powershell": "python .github/scripts/context-recovery.py",
+        "bash": "python3 scripts/context-recovery.py",
+        "powershell": "python scripts/context-recovery.py",
         "cwd": ".",
         "timeoutSec": 10
       },
       {
         "type": "command",
-        "bash": "python3 .github/scripts/model-fallback.py",
-        "powershell": "python .github/scripts/model-fallback.py",
+        "bash": "python3 scripts/model-fallback.py",
+        "powershell": "python scripts/model-fallback.py",
         "cwd": ".",
         "timeoutSec": 10
       }
