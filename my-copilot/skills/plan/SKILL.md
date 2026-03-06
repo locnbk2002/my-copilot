@@ -56,6 +56,29 @@ Load: `references/workflow-modes.md` for auto-detection logic, per-mode workflow
 Always honoring **YAGNI**, **KISS**, and **DRY** principles.
 **Be honest, be brutal, straight to the point, and be concise.**
 
+## Context Engineering
+
+The planner is a **thin orchestrator** — keep main context lean; delegate heavy work to subagents.
+
+**Context budget: aim for <30% usage in main planner context.**
+
+### Principles
+
+1. **Isolate researchers** — each researcher subagent gets a focused, minimal prompt. Never pass full plan context to researchers; pass only the specific question.
+2. **Progressive disclosure** — read only what's needed now. Don't load all reference files upfront; load per-section as workflow progresses.
+3. **Write findings externally** — researchers write reports to `plans/reports/`; planner reads summaries, not full content.
+4. **Compress before chaining** — summarize researcher outputs before passing to next phase agent.
+
+### If `<usage-awareness>` is Injected
+
+Use context % to adapt behavior:
+
+| Context % | Behavior |
+|-----------|----------|
+| <70% | Normal — proceed with full research phase |
+| 70-89% [WARNING] | Skip optional steps (red-team, validate); spawn fewer researchers |
+| ≥90% [CRITICAL] | Fast mode only — skip research, create minimal plan from available context |
+
 ### 0. Pre-Research Brainstorm
 Load: inline (no reference file)
 **Skip if:** `--fast`, `--two`, `--skip-brainstorm`, or user provided explicit approach

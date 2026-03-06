@@ -88,25 +88,38 @@ After every 3 completed phases, check context health before dispatching the next
 
 ### Budget Check Algorithm
 
-1. Count tool calls: `bash: wc -l < logs/tools.jsonl 2>/dev/null || echo 0`
+1. Check for injected awareness data first:
+   - If `<usage-awareness>` present in context → use its percentages
+   - Otherwise: count tool calls from `bash: wc -l < logs/tools.jsonl 2>/dev/null || echo 0`
+
 2. Evaluate threshold:
 
-| Tool Calls | Status | Action |
-|-----------|--------|--------|
-| < 200 | ✅ Healthy | Continue normally |
-| 200–400 | ⚠️ Heavy | Output: "Context is heavy ({N} tool calls). Consider running `/compact`." |
-| > 400 | 🔴 Critical | `ask_user`: "Session has {N} tool calls. Recommend starting a fresh session. Continue?" |
+| Context % (or Tool Calls) | Status | Action |
+|--------------------------|--------|--------|
+| <70% (or <200 calls) | ✅ Healthy | Continue normally |
+| 70-89% (or 200-400 calls) | ⚠️ Warning | Output: "Context at {N}%. Consider `/compact` before next wave." |
+| ≥90% (or >400 calls) | 🔴 Critical | `ask_user`: "Context at {N}%. Recommend fresh session. Continue?" |
 
-3. If > 400 and remaining phases ≤ 2: suggest finishing in current session
-4. If > 400 and remaining phases > 2: strongly recommend fresh session
-5. Log result in execution summary: ✅/⚠️/🔴 with tool call count
+3. If critical and remaining phases ≤ 2: suggest finishing in current session
+4. If critical and remaining phases > 2: strongly recommend fresh session
+5. Log result in execution summary: ✅/⚠️/🔴 with context % or tool call count
 
-### Integration with Existing Hooks
+### Context Engineering — Four-Bucket Strategy
 
-`auto-compact-reminder.py` fires every 100 tool calls at hook level (passive, log only).
-This budget check is workflow-level — active and phase-aware. Both coexist:
-- Hook: fires automatically, writes to `logs/compact-reminders.jsonl`
-- Budget check: runs between phases, prompts user if critical
+When context is heavy, apply these strategies before continuing:
+
+| Strategy | How | When |
+|----------|-----|------|
+| **Write** | Save summaries/findings to files, not in context | After research phase |
+| **Select** | Read only plan.md phase table, not full phase files | Always (already enforced) |
+| **Compress** | Run `/compact` to summarize conversation | At 70-80% |
+| **Isolate** | Delegate to worker sub-agent (already default) | Always (already enforced) |
+
+### Integration with Hooks
+
+- `usage-context-awareness.py` (postToolUse): injects `<usage-awareness>` every 5 min with context % — use as primary signal
+- `auto-compact-reminder.py` (postToolUse): passive log every 100 calls, writes to `logs/compact-reminders.jsonl`
+- This budget check: active, phase-aware, prompts user if critical
 
 ### Fresh Session Resume
 
