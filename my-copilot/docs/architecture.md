@@ -6,9 +6,9 @@
 
 ## Components
 
-### Skills (`.github/skills/`)
+### Skills (`skills/`)
 
-12 reusable workflow modules invoked via the `skill` tool:
+13 reusable workflow modules invoked via the `skill` tool:
 
 | Skill                 | Purpose                                                                                           |
 | --------------------- | ------------------------------------------------------------------------------------------------- |
@@ -24,8 +24,9 @@
 | `scout`               | Parallel codebase exploration                                                                     |
 | `research`            | Technical research & evaluation                                                                   |
 | `sequential-thinking` | Step-by-step complex problem analysis                                                             |
+| `tdd`                 | Red→green→refactor TDD cycle; `execute --tdd` applies per-phase TDD mode                         |
 
-### Agents (`.github/agents/`)
+### Agents (`agents/`)
 
 6 specialized sub-agents launched via the `task` tool:
 

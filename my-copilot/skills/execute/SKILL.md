@@ -1,7 +1,7 @@
 ---
 name: execute
 description: "Execute implementation plans phase-by-phase with test/review gates. Use for plan execution, phased implementation, automated workflow with verification steps."
-argument-hint: "[plan-path] [--phase N] [--skip-tests] [--skip-review] [--skip-commit] [--skip-post] [--direct]"
+argument-hint: "[plan-path] [--phase N] [--tdd] [--skip-tests] [--skip-review] [--skip-commit] [--skip-post] [--direct]"
 license: MIT
 ---
 
@@ -12,10 +12,11 @@ Execute implementation plans phase-by-phase with automated test and review gates
 ## Invocation
 
 ```
-execute [plan-path] [--phase N] [--skip-tests] [--skip-review] [--skip-commit] [--skip-post] [--direct]
+execute [plan-path] [--phase N] [--tdd] [--skip-tests] [--skip-review] [--skip-commit] [--skip-post] [--direct]
 
 Default: Execute all phases with category-aware delegation via worker
 --phase N:      Execute only phase N
+--tdd:          Execute each phase in TDD order: red (write tests) → green (implement) → refactor
 --skip-tests:   Skip test verification
 --skip-review:  Skip code review gate
 --skip-commit:  Skip only git commit step (runs test, fix, review, docs)
@@ -53,6 +54,7 @@ Load: `references/execution-workflow.md` for the detailed wave-dispatch algorith
    - If wave has >5 phases: split into sub-waves of max 5 phases each
    - Collect result: `read_agent(agent_id, wait=True, timeout=300)`
    - **`--phase N` flag**: dispatch single worker for phase N only (skip wave computation)
+   - **`--tdd` flag**: pass `tdd_mode=true` to worker; worker executes each phase in TDD order (red→green→refactor); see `references/tdd-mode.md`
    - **Legacy `--direct` mode**: skip worker; use complexity-based approach (see Complexity Assessment below)
 4. **Sync Status** — After each wave completes, update plan.md Status column and phase-XX.md checkboxes (see State Sync-Back)
 5. **Budget Check** (every 3 phases) — If `completed_count % 3 == 0`: run Context Budget Monitoring check
@@ -149,6 +151,7 @@ If user selects "No", run post-chain normally.
 
 **Fault tolerance:** Each step runs independently; failure logs warning but does NOT block subsequent steps.
 **Flag interaction:** `--skip-tests` skips steps 1-2; `--skip-review` skips step 3; `--skip-commit` skips step 5; `--skip-post` skips steps 1-5 (with confirmation).
+**`--tdd` interactions:** `--tdd + --skip-refactor` skips refactor sub-phase (red→green only per phase); `--tdd + --skip-tests` skips all TDD test gates (red confirmation, pass gates) AND post-chain test step; `--tdd + --phase N` applies TDD mode to single phase only; `--tdd` does NOT affect the post-execution chain.
 
 ## Complexity Assessment (Direct Mode Only — Legacy)
 
@@ -161,6 +164,7 @@ If user selects "No", run post-chain normally.
 ## Related Skills & Agents
 
 - `plan` — Creates the plans this skill executes
+- `tdd` — Standalone TDD cycle skill; `execute --tdd` applies it per phase
 - `worker` agent — Category-aware phase orchestrator (delegates to sub-agents by category)
 - `test` — Verification gate after each phase
 - `code-review` — Review gate after each phase
