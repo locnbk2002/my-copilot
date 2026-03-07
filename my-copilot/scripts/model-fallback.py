@@ -29,7 +29,7 @@ FALLBACK_MAP = {
     "claude-sonnet-4.6": "claude-haiku-4.5",
     "claude-sonnet-4.5": "claude-haiku-4.5",
     "gpt-5.3-codex": "gpt-5.2-codex",
-    "gemini-3.1-pro-preview": "gemini-3-flash-preview",
+    "gemini-3-pro-preview": "gemini-3-flash-preview",
 }
 
 suggestion = FALLBACK_MAP.get(model, "claude-sonnet-4.6")

@@ -55,15 +55,15 @@ All hooks merged in `hooks.json` (security, audit, subagent lifecycle monitoring
 
 Plan phases are tagged with work categories that map to optimized models. `worker` reads the category and dispatches to the right sub-agent automatically.
 
-| Category             | Default Model            | Agent             | Use Case                   |
-| -------------------- | ------------------------ | ----------------- | -------------------------- |
-| `visual-engineering` | `gemini-3.1-pro-preview` | `multimodal`      | Frontend, UI/UX, design    |
-| `deep`               | `gpt-5.3-codex`          | `general-purpose` | Autonomous problem-solving |
-| `artistry`           | `gemini-3.1-pro-preview` | `general-purpose` | Creative solutions         |
-| `quick`              | `claude-haiku-4.5`       | `task`            | Trivial tasks, single-file |
-| `general`            | `claude-sonnet-4.6`      | `general-purpose` | Standard work              |
-| `complex`            | `claude-opus-4.6`        | `general-purpose` | Multi-system coordination  |
-| `writing`            | `claude-sonnet-4.6`      | `general-purpose` | Documentation, prose       |
+| Category             | Default Model          | Agent             | Use Case                   |
+| -------------------- | ---------------------- | ----------------- | -------------------------- |
+| `visual-engineering` | `gemini-3-pro-preview` | `multimodal`      | Frontend, UI/UX, design    |
+| `deep`               | `gpt-5.3-codex`        | `general-purpose` | Autonomous problem-solving |
+| `artistry`           | `gemini-3-pro-preview` | `general-purpose` | Creative solutions         |
+| `quick`              | `claude-haiku-4.5`     | `task`            | Trivial tasks, single-file |
+| `general`            | `claude-sonnet-4.6`    | `general-purpose` | Standard work              |
+| `complex`            | `claude-opus-4.6`      | `general-purpose` | Multi-system coordination  |
+| `writing`            | `claude-sonnet-4.6`    | `general-purpose` | Documentation, prose       |
 
 Customize via `.github/my-copilot.jsonc` (project) or `~/.copilot/my-copilot.jsonc` (global).
 

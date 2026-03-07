@@ -10,7 +10,7 @@
     // Frontend, UI/UX, design, styling, animation
     "visual-engineering": {
       "description": "Frontend, UI/UX, design, styling, animation",
-      "model": "gemini-3.1-pro-preview",
+      "model": "gemini-3-pro-preview",
       "agent_type": "multimodal",
     },
 
@@ -24,7 +24,7 @@
     // Highly creative, unconventional solutions
     "artistry": {
       "description": "Highly creative, unconventional solutions",
-      "model": "gemini-3.1-pro-preview",
+      "model": "gemini-3-pro-preview",
       "agent_type": "general-purpose",
     },
 

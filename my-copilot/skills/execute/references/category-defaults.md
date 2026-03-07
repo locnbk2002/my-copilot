@@ -14,15 +14,15 @@ Built-in defaults (below)     ← fallback
 
 ## Built-in Category Defaults
 
-| Category             | Model                    | Agent Type        | Purpose                                        |
-| -------------------- | ------------------------ | ----------------- | ---------------------------------------------- |
-| `visual-engineering` | `gemini-3.1-pro-preview` | `multimodal`      | Frontend, UI/UX, design, styling, animation    |
-| `deep`               | `gpt-5.3-codex`          | `general-purpose` | Autonomous problem-solving, complex multi-file |
-| `artistry`           | `gemini-3.1-pro-preview` | `general-purpose` | Creative, unconventional solutions             |
-| `quick`              | `claude-haiku-4.5`       | `task`            | Trivial tasks, typos, single-file edits        |
-| `general`            | `claude-sonnet-4.6`      | `general-purpose` | Standard moderate-effort work                  |
-| `complex`            | `claude-opus-4.6`        | `general-purpose` | Multi-system, architecture decisions           |
-| `writing`            | `claude-sonnet-4.6`      | `general-purpose` | Docs, README, prose, technical writing         |
+| Category             | Model                  | Agent Type        | Purpose                                        |
+| -------------------- | ---------------------- | ----------------- | ---------------------------------------------- |
+| `visual-engineering` | `gemini-3-pro-preview` | `multimodal`      | Frontend, UI/UX, design, styling, animation    |
+| `deep`               | `gpt-5.3-codex`        | `general-purpose` | Autonomous problem-solving, complex multi-file |
+| `artistry`           | `gemini-3-pro-preview` | `general-purpose` | Creative, unconventional solutions             |
+| `quick`              | `claude-haiku-4.5`     | `task`            | Trivial tasks, typos, single-file edits        |
+| `general`            | `claude-sonnet-4.6`    | `general-purpose` | Standard moderate-effort work                  |
+| `complex`            | `claude-opus-4.6`      | `general-purpose` | Multi-system, architecture decisions           |
+| `writing`            | `claude-sonnet-4.6`    | `general-purpose` | Docs, README, prose, technical writing         |
 
 ## How worker Resolves Config
 
