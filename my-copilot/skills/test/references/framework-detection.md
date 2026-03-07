@@ -21,14 +21,15 @@
 
 ### Framework Commands
 
-| Framework | Run All | Run Specific | Coverage |
-|-----------|---------|-------------|----------|
-| jest | `npx jest` | `npx jest <path>` | `npx jest --coverage` |
-| vitest | `npx vitest run` | `npx vitest run <path>` | `npx vitest run --coverage` |
-| pytest | `python -m pytest` | `python -m pytest <path>` | `python -m pytest --cov` |
-| go test | `go test ./...` | `go test <pkg>` | `go test -cover ./...` |
-| cargo test | `cargo test` | `cargo test <name>` | `cargo tarpaulin` |
+| Framework  | Run All            | Run Specific              | Coverage                    |
+| ---------- | ------------------ | ------------------------- | --------------------------- |
+| jest       | `npx jest`         | `npx jest <path>`         | `npx jest --coverage`       |
+| vitest     | `npx vitest run`   | `npx vitest run <path>`   | `npx vitest run --coverage` |
+| pytest     | `python -m pytest` | `python -m pytest <path>` | `python -m pytest --cov`    |
+| go test    | `go test ./...`    | `go test <pkg>`           | `go test -cover ./...`      |
+| cargo test | `cargo test`       | `cargo test <name>`       | `cargo tarpaulin`           |
 
 ### Fallback
+
 If no framework detected, check for npm scripts: `npm run test` (most common).
 If nothing found, inform user and ask for test command.

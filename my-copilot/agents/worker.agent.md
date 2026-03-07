@@ -34,15 +34,15 @@ Load config in this order (highest priority wins):
 
 ### Built-in Defaults
 
-| Category             | Model                  | Agent Type        |
-| -------------------- | ---------------------- | ----------------- |
-| `visual-engineering` | `gemini-3-pro-preview` | `multimodal`      |
-| `deep`               | `gpt-5.3-codex`        | `general-purpose` |
-| `artistry`           | `gemini-3-pro-preview` | `general-purpose` |
-| `quick`              | `claude-haiku-4.5`     | `task`            |
-| `general`            | `claude-sonnet-4.6`    | `general-purpose` |
-| `complex`            | `claude-opus-4.6`      | `general-purpose` |
-| `writing`            | `claude-sonnet-4.6`    | `general-purpose` |
+| Category             | Model                    | Agent Type        |
+| -------------------- | ------------------------ | ----------------- |
+| `visual-engineering` | `gemini-3.1-pro-preview` | `multimodal`      |
+| `deep`               | `gpt-5.3-codex`          | `general-purpose` |
+| `artistry`           | `gemini-3.1-pro-preview` | `general-purpose` |
+| `quick`              | `claude-haiku-4.5`       | `task`            |
+| `general`            | `claude-sonnet-4.6`      | `general-purpose` |
+| `complex`            | `claude-opus-4.6`        | `general-purpose` |
+| `writing`            | `claude-sonnet-4.6`      | `general-purpose` |
 
 For unknown/custom categories: default to `model: claude-sonnet-4.6`, `agent_type: general-purpose`.
 

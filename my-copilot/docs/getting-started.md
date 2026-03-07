@@ -41,9 +41,9 @@ Context7 enables the `docs-seeker` skill to look up library/framework documentat
 
 After installing, confirm skills and agents are available:
 
-```bash
-copilot skill list        # Should show skills
-copilot agent list        # Should show planner, debugger, etc.
+```
+/skills list
+/agents list
 ```
 
 ## Using Skills
@@ -103,12 +103,12 @@ Project config takes precedence over user config; user config takes precedence o
 
 ### Built-in Category Defaults
 
-| Category             | Model                  | Agent             | When to Use                  |
-| -------------------- | ---------------------- | ----------------- | ---------------------------- |
-| `visual-engineering` | `gemini-3-pro-preview` | `multimodal`      | Frontend, UI/UX, design      |
-| `deep`               | `gpt-5.3-codex`        | `general-purpose` | Autonomous problem-solving   |
-| `artistry`           | `gemini-3-pro-preview` | `general-purpose` | Creative solutions           |
-| `quick`              | `claude-haiku-4.5`     | `task`            | Trivial, single-file changes |
-| `general`            | `claude-sonnet-4.6`    | `general-purpose` | Standard work                |
-| `complex`            | `claude-opus-4.6`      | `general-purpose` | Multi-system coordination    |
-| `writing`            | `claude-sonnet-4.6`    | `general-purpose` | Documentation, prose         |
+| Category             | Model                    | Agent             | When to Use                  |
+| -------------------- | ------------------------ | ----------------- | ---------------------------- |
+| `visual-engineering` | `gemini-3.1-pro-preview` | `multimodal`      | Frontend, UI/UX, design      |
+| `deep`               | `gpt-5.3-codex`          | `general-purpose` | Autonomous problem-solving   |
+| `artistry`           | `gemini-3.1-pro-preview` | `general-purpose` | Creative solutions           |
+| `quick`              | `claude-haiku-4.5`       | `task`            | Trivial, single-file changes |
+| `general`            | `claude-sonnet-4.6`      | `general-purpose` | Standard work                |
+| `complex`            | `claude-opus-4.6`        | `general-purpose` | Multi-system coordination    |
+| `writing`            | `claude-sonnet-4.6`      | `general-purpose` | Documentation, prose         |

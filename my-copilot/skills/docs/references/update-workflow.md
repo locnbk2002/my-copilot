@@ -3,6 +3,7 @@
 ### Change Detection
 
 1. **Get changed files:**
+
    ```bash
    git diff --name-only main..HEAD
    # or for recent changes:

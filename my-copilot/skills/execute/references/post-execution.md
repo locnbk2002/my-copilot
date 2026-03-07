@@ -6,6 +6,7 @@ Each step dispatches as a fresh sub-agent via `task` tool — keeps main session
 ### --skip-post Confirmation
 
 Before skipping, prompt user via `ask_user`:
+
 > "Skipping post-chain (test, fix, review, docs, commit). No automated verification. Continue?"
 > Options: ["Yes, skip post-chain", "No, run post-chain"]
 
@@ -14,6 +15,7 @@ If user selects "No": run chain normally. Only skip if user explicitly confirms.
 ### Step 0: Collect Changed Files + Final State Sync
 
 Before dispatching chain:
+
 - Gather changed files: `bash: git diff --name-only HEAD~{N}` (N = commits in this execution) OR aggregate "files modified" from worker reports
 - Store as `changed_files` list (passed to each sub-agent as context)
 - Update plan.md frontmatter: `status: completed` if all phases done, `status: in-progress` if any blocked
@@ -26,9 +28,11 @@ Before dispatching chain:
 **Skip if:** `--skip-tests` or `--skip-post`
 
 Dispatch:
+
 ```
 task(prompt="Run test suite. Work context: {project_root}. Changed files: {changed_files}. Do not stage or commit anything.", mode="background")
 ```
+
 Collect: `read_agent(agent_id, wait=True, timeout=300)`
 
 **On pass:** skip Step 2, proceed to Step 3
@@ -41,9 +45,11 @@ Only runs if Step 1 found test failures.
 **Skip if:** `--skip-tests` or `--skip-post`
 
 Dispatch:
+
 ```
 task(prompt="Fix failing tests. Failures: {test_output}. Work context: {project_root}. Do not commit.", mode="background")
 ```
+
 Collect: `read_agent(agent_id, wait=True, timeout=300)`
 
 - Max 2 attempts; after each fix re-dispatch a test sub-agent (Step 1 pattern)
@@ -54,9 +60,11 @@ Collect: `read_agent(agent_id, wait=True, timeout=300)`
 **Skip if:** `--skip-review` or `--skip-post`
 
 Dispatch:
+
 ```
 task(agent_type="code-reviewer", prompt="Review changed files: {changed_files}. Work context: {project_root}.", mode="background")
 ```
+
 Collect: `read_agent(agent_id, wait=True, timeout=300)`
 
 **On failure:** log warning, continue to Step 4
@@ -66,9 +74,11 @@ Collect: `read_agent(agent_id, wait=True, timeout=300)`
 **Skip if:** `--skip-post`
 
 Dispatch:
+
 ```
 task(prompt="Update docs if APIs/interfaces/public behavior changed. Changed files: {changed_files}. Work context: {project_root}.", mode="background")
 ```
+
 Collect: `read_agent(agent_id, wait=True, timeout=300)`
 
 **On failure:** log warning, continue to Step 5
@@ -78,18 +88,21 @@ Collect: `read_agent(agent_id, wait=True, timeout=300)`
 **Skip if:** `--skip-commit` or `--skip-post`
 
 Before dispatching, ask user:
+
 ```
 ask_user(
   question="Execution complete. Commit changes?",
   choices=["Yes, commit now", "No, skip commit"]
 )
 ```
-- If "No": log "⚠️ Commit skipped — run `git cm` manually to commit", continue to Step 6
+
+- If "No": log "⚠️ Commit skipped — run `git commit` manually to commit", continue to Step 6
 - If "Yes": dispatch:
 
 ```
 task(prompt="Create atomic conventional commit for changes in {project_root}. Do NOT stage .env, credentials, or secret files.", mode="background")
 ```
+
 Collect: `read_agent(agent_id, wait=True, timeout=300)`
 
 **On failure:** log warning, continue to Step 6

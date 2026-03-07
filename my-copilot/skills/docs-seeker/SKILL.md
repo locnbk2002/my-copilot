@@ -9,6 +9,7 @@ argument-hint: "[library-name] [topic]"
 ## Overview
 
 Documentation discovery using the built-in Context7 MCP tools:
+
 - `context7-resolve-library-id` — find the library ID from a name
 - `context7-query-docs` — fetch targeted documentation with a topic query
 
@@ -28,6 +29,7 @@ context7-resolve-library-id(
 ```
 
 Returns a list of matching libraries with IDs like `/vercel/next.js`. Select the best match based on:
+
 - Name similarity to query
 - Source reputation (High > Medium > Low)
 - Code snippet count (more = better coverage)
@@ -54,7 +56,9 @@ Load: `references/repo-analysis.md`
 ## Query Types
 
 ### Topic-Specific (Fastest)
+
 User asks about specific feature/component:
+
 ```
 "How do I use date picker in shadcn?"
 → resolve: "shadcn/ui"
@@ -62,7 +66,9 @@ User asks about specific feature/component:
 ```
 
 ### General Library
+
 User asks for broad documentation:
+
 ```
 "Documentation for Astro"
 → resolve: "astro"
@@ -70,7 +76,9 @@ User asks for broad documentation:
 ```
 
 ### Parallel Multi-Library
+
 When comparing or integrating multiple libraries, call both tools in parallel:
+
 ```
 Resolve "react-query" + resolve "swr" simultaneously
 Then query both in parallel

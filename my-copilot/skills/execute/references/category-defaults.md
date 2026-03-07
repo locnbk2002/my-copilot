@@ -14,15 +14,15 @@ Built-in defaults (below)     ← fallback
 
 ## Built-in Category Defaults
 
-| Category | Model | Agent Type | Purpose |
-|----------|-------|------------|---------|
-| `visual-engineering` | `gemini-3-pro-preview` | `multimodal` | Frontend, UI/UX, design, styling, animation |
-| `deep` | `gpt-5.3-codex` | `general-purpose` | Autonomous problem-solving, complex multi-file |
-| `artistry` | `gemini-3-pro-preview` | `general-purpose` | Creative, unconventional solutions |
-| `quick` | `claude-haiku-4.5` | `task` | Trivial tasks, typos, single-file edits |
-| `general` | `claude-sonnet-4.6` | `general-purpose` | Standard moderate-effort work |
-| `complex` | `claude-opus-4.6` | `general-purpose` | Multi-system, architecture decisions |
-| `writing` | `claude-sonnet-4.6` | `general-purpose` | Docs, README, prose, technical writing |
+| Category             | Model                    | Agent Type        | Purpose                                        |
+| -------------------- | ------------------------ | ----------------- | ---------------------------------------------- |
+| `visual-engineering` | `gemini-3.1-pro-preview` | `multimodal`      | Frontend, UI/UX, design, styling, animation    |
+| `deep`               | `gpt-5.3-codex`          | `general-purpose` | Autonomous problem-solving, complex multi-file |
+| `artistry`           | `gemini-3.1-pro-preview` | `general-purpose` | Creative, unconventional solutions             |
+| `quick`              | `claude-haiku-4.5`       | `task`            | Trivial tasks, typos, single-file edits        |
+| `general`            | `claude-sonnet-4.6`      | `general-purpose` | Standard moderate-effort work                  |
+| `complex`            | `claude-opus-4.6`        | `general-purpose` | Multi-system, architecture decisions           |
+| `writing`            | `claude-sonnet-4.6`      | `general-purpose` | Docs, README, prose, technical writing         |
 
 ## How worker Resolves Config
 
@@ -36,16 +36,16 @@ Built-in defaults (below)     ← fallback
 
 When the planner creates phases, auto-select category based on phase content:
 
-| Phase Content Signals | Category |
-|-----------------------|----------|
-| UI, CSS, component, layout, design, frontend, styling | `visual-engineering` |
-| Architecture, system design, multi-file, complex logic | `complex` |
-| Creative, experimental, unconventional | `artistry` |
-| Typo, config, single file, minor fix | `quick` |
-| Test, build, lint, database, API implementation | `general` |
-| Autonomous exploration, goal-driven, open-ended | `deep` |
-| Docs, README, changelog, technical writing, prose | `writing` |
-| Default (no clear signal) | `general` |
+| Phase Content Signals                                  | Category             |
+| ------------------------------------------------------ | -------------------- |
+| UI, CSS, component, layout, design, frontend, styling  | `visual-engineering` |
+| Architecture, system design, multi-file, complex logic | `complex`            |
+| Creative, experimental, unconventional                 | `artistry`           |
+| Typo, config, single file, minor fix                   | `quick`              |
+| Test, build, lint, database, API implementation        | `general`            |
+| Autonomous exploration, goal-driven, open-ended        | `deep`               |
+| Docs, README, changelog, technical writing, prose      | `writing`            |
+| Default (no clear signal)                              | `general`            |
 
 ## Config Schema
 
@@ -53,11 +53,11 @@ When the planner creates phases, auto-select category based on phase content:
 {
   "categories": {
     "<category-name>": {
-      "description": "string (optional)",   // Human-readable purpose
-      "model": "string (required)",          // Model ID
-      "agent_type": "string (optional)"      // Sub-agent type (default: general-purpose)
-    }
-  }
+      "description": "string (optional)", // Human-readable purpose
+      "model": "string (required)", // Model ID
+      "agent_type": "string (optional)", // Sub-agent type (default: general-purpose)
+    },
+  },
 }
 ```
 
@@ -70,9 +70,9 @@ When the planner creates phases, auto-select category based on phase content:
 {
   "categories": {
     "quick": {
-      "model": "claude-sonnet-4.6"   // Use Sonnet instead of Haiku for quick tasks
-    }
-  }
+      "model": "claude-sonnet-4.6", // Use Sonnet instead of Haiku for quick tasks
+    },
+  },
 }
 ```
 
@@ -84,9 +84,9 @@ When the planner creates phases, auto-select category based on phase content:
     "data-engineering": {
       "description": "ETL pipelines, data modeling, SQL optimization",
       "model": "gpt-5.3-codex",
-      "agent_type": "general-purpose"
-    }
-  }
+      "agent_type": "general-purpose",
+    },
+  },
 }
 ```
 

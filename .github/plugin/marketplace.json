@@ -5,13 +5,13 @@
   },
   "metadata": {
     "description": "A complete AI engineering workflow for GitHub Copilot CLI",
-    "version": "0.0.2"
+    "version": "0.0.3"
   },
   "plugins": [
     {
       "name": "my-copilot",
       "description": "A complete AI engineering workflow for GitHub Copilot CLI — 12 skills covering plan, execute, test, fix, review, docs, git, research, and more.",
-      "version": "0.0.2",
+      "version": "0.0.3",
       "source": "my-copilot"
     }
   ]

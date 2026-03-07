@@ -16,33 +16,44 @@
 ## Workflow
 
 ### 1. Find Repository
+
 ```
 web_search: "[library] github repository site:github.com"
 ```
+
 Verify: official org, active maintenance, has docs/ or README.
 
 ### 2. Fetch README and Docs
+
 ```
 web_fetch: "https://raw.githubusercontent.com/{org}/{repo}/main/README.md"
 web_fetch: "https://raw.githubusercontent.com/{org}/{repo}/main/docs/index.md"
 ```
+
 Try both `main` and `master` branches.
 
 ### 3. Explore Documentation Structure
+
 Use `web_fetch` on the GitHub API to list docs:
+
 ```
 web_fetch: "https://api.github.com/repos/{org}/{repo}/contents/docs"
 ```
+
 Then fetch key files in parallel.
 
 ### 4. Pack with Repomix (for deep analysis)
+
 If available in the environment:
+
 ```bash
 repomix --remote https://github.com/{org}/{repo} --output /tmp/repomix-output.xml
 ```
+
 Then `view` the output file to extract documentation sections.
 
 ### 5. Present Findings
+
 - Source: Repository analysis (not official docs)
 - Include: Repository health (stars, last commit)
 - Extract: Installation, usage, API, examples

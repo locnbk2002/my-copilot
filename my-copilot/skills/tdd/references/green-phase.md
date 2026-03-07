@@ -18,20 +18,25 @@ The goal: make ALL failing tests pass with the least code possible.
 ## Step 2: Implementation Strategies (in order)
 
 ### Fake it till you make it
+
 Start with hardcoded return values if tests only check one case:
+
 ```python
 def get_user(id):
     return {"id": 1, "name": "Alice"}  # make the first test pass
 ```
 
 ### Obvious implementation
+
 When the correct solution is clear, just write it:
+
 ```python
 def get_user(id):
     return db.query("SELECT * FROM users WHERE id = ?", id)
 ```
 
 ### Triangulation
+
 When multiple test cases force generalization — let the tests drive the generality.
 Add implementation complexity only when a new failing test requires it.
 
@@ -45,22 +50,25 @@ test [test-file-path] --type unit
 
 ### Pass gate logic
 
-| Test result | Action |
-|-------------|--------|
-| All tests PASS | ✅ Proceed to refactor phase |
-| Some tests FAIL | ❌ Invoke `fix` skill — analyze failure, apply minimal fix |
-| Fix attempt 1 fails | ❌ Try again (max 3 total attempts) |
-| Still failing after 3 | 🛑 Report to user with failure details, stop |
+| Test result           | Action                                                     |
+| --------------------- | ---------------------------------------------------------- |
+| All tests PASS        | ✅ Proceed to refactor phase                               |
+| Some tests FAIL       | ❌ Invoke `fix` skill — analyze failure, apply minimal fix |
+| Fix attempt 1 fails   | ❌ Try again (max 3 total attempts)                        |
+| Still failing after 3 | 🛑 Report to user with failure details, stop               |
 
 ### fix skill invocation
+
 ```
 fix "[failing test name]: [error message]"
 ```
+
 Pass the exact test output so `fix` has context.
 
 ## Step 4: Scope Check Before Stopping
 
 Before declaring green phase done, verify:
+
 - [ ] All tests in the red phase test file(s) pass
 - [ ] No previously passing tests are now broken (no regressions)
 - [ ] Implementation is in the right file/module (not test file)

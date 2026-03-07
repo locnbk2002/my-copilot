@@ -9,6 +9,7 @@ argument-hint: "[search-target] [ext]"
 Fast, token-efficient codebase scouting using parallel agents to find files needed for tasks.
 
 ## Arguments
+
 - Default: Scout using built-in `explore` subagents in parallel (`./references/internal-scouting.md`)
 - `ext`: Scout using specific models with large context windows (Gemini/Grok-code) (`./references/external-scouting.md`)
 
@@ -30,27 +31,33 @@ Fast, token-efficient codebase scouting using parallel agents to find files need
 ## Workflow
 
 ### 1. Analyze Task
+
 - Parse user prompt for search targets
 - Identify key directories, patterns, file types, lines of code
 - Determine optimal SCALE value (number of subagents to spawn)
 
 ### 2. Divide and Conquer
+
 - Split codebase into logical segments per agent
 - Assign each agent specific directories or patterns
 - Ensure no overlap, maximize coverage
 
 ### 3. Register Scout Todos
+
 - **Skip if:** Agent count ≤ 2 (overhead exceeds benefit)
 - Check existing todos in session SQL database first
 - If not found, INSERT a todo per agent with scope metadata
 - See `references/task-management-scouting.md` for SQL patterns
 
 ### 4. Spawn Parallel Agents
+
 Load appropriate reference based on decision tree:
+
 - **Internal (Default):** `references/internal-scouting.md` (explore subagents via `task` tool)
 - **External:** `references/external-scouting.md` (Gemini / Grok-code via `task` tool with model parameter)
 
 **Notes:**
+
 - Update todo status to `in_progress` before spawning each agent
 - Give each subagent detailed instructions with exact directories or files to search
 - Each subagent has limited context — keep scope focused
@@ -58,6 +65,7 @@ Load appropriate reference based on decision tree:
 - Each subagent must return a detailed summary report
 
 ### 5. Collect Results
+
 - Timeout: 3 minutes per agent (skip non-responders)
 - Mark completed todos `done`; log timed-out agents in report
 - Aggregate findings into single report
@@ -69,10 +77,12 @@ Load appropriate reference based on decision tree:
 # Scout Report
 
 ## Relevant Files
+
 - `path/to/file.ts` - Brief description
 - ...
 
 ## Unresolved Questions
+
 - Any gaps in findings
 ```
 

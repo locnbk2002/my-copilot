@@ -40,7 +40,7 @@ Load: `references/execution-workflow.md` for the detailed wave-dispatch algorith
 
 ### Phase Execution Steps
 
-1. **Load Plan** — Read ONLY `plan.md` phase table (Status + Depends On columns). Do NOT read individual phase-XX-*.md files.
+1. **Load Plan** — Read ONLY `plan.md` phase table (Status + Depends On columns). Do NOT read individual phase-XX-\*.md files.
 2. **Compute Waves** — Build dependency graph from plan.md Phases table:
    - Wave 1: phases with no dependencies (or all deps Status = "Done")
    - Wave N+1: phases whose only pending deps are in Waves 1..N
@@ -96,11 +96,11 @@ After every 3 completed phases, check context health before dispatching the next
 
 2. Evaluate threshold:
 
-| Context % (or Tool Calls) | Status | Action |
-|--------------------------|--------|--------|
-| <70% (or <200 calls) | ✅ Healthy | Continue normally |
-| 70-89% (or 200-400 calls) | ⚠️ Warning | Output: "Context at {N}%. Consider `/compact` before next wave." |
-| ≥90% (or >400 calls) | 🔴 Critical | `ask_user`: "Context at {N}%. Recommend fresh session. Continue?" |
+| Context % (or Tool Calls) | Status      | Action                                                            |
+| ------------------------- | ----------- | ----------------------------------------------------------------- |
+| <70% (or <200 calls)      | ✅ Healthy  | Continue normally                                                 |
+| 70-89% (or 200-400 calls) | ⚠️ Warning  | Output: "Context at {N}%. Consider `/compact` before next wave."  |
+| ≥90% (or >400 calls)      | 🔴 Critical | `ask_user`: "Context at {N}%. Recommend fresh session. Continue?" |
 
 3. If critical and remaining phases ≤ 2: suggest finishing in current session
 4. If critical and remaining phases > 2: strongly recommend fresh session
@@ -110,12 +110,12 @@ After every 3 completed phases, check context health before dispatching the next
 
 When context is heavy, apply these strategies before continuing:
 
-| Strategy | How | When |
-|----------|-----|------|
-| **Write** | Save summaries/findings to files, not in context | After research phase |
-| **Select** | Read only plan.md phase table, not full phase files | Always (already enforced) |
-| **Compress** | Run `/compact` to summarize conversation | At 70-80% |
-| **Isolate** | Delegate to worker sub-agent (already default) | Always (already enforced) |
+| Strategy     | How                                                 | When                      |
+| ------------ | --------------------------------------------------- | ------------------------- |
+| **Write**    | Save summaries/findings to files, not in context    | After research phase      |
+| **Select**   | Read only plan.md phase table, not full phase files | Always (already enforced) |
+| **Compress** | Run `/compact` to summarize conversation            | At 70-80%                 |
+| **Isolate**  | Delegate to worker sub-agent (already default)      | Always (already enforced) |
 
 ### Integration with Hooks
 
@@ -126,6 +126,7 @@ When context is heavy, apply these strategies before continuing:
 ### Fresh Session Resume
 
 If user starts a fresh session mid-execution:
+
 1. State sync-back (from Core Workflow step 5) keeps plan.md updated with "Done" statuses
 2. User runs `execute {plan-path}` in new session
 3. execute reads plan.md, skips phases with Status = "Done", resumes from next "Pending"
@@ -140,14 +141,15 @@ After all phases complete, automatically run in sequence (each step dispatched a
 2. **Fix** — If tests fail, dispatch fresh sub-agent; max 2 attempts then log warning and continue; skip if `--skip-tests` or `--skip-post`
 3. **Review** — Dispatch `task(agent_type="code-reviewer")` on all changed files; skip if `--skip-review` or `--skip-post`
 4. **Docs** — Dispatch fresh sub-agent if implementation changed APIs/behavior; skip if `--skip-post`
-5. **Git** — Ask user "Commit changes?" before dispatching; if yes, dispatch fresh sub-agent for `git cm --atomic`; skip (no prompt) if `--skip-commit` or `--skip-post`
+5. **Git** — Ask user "Commit changes?" before dispatching; if yes, dispatch fresh sub-agent for `git commit --atomic`; skip (no prompt) if `--skip-commit` or `--skip-post`
 6. **Plan Status** — Update plan.md: `status: completed` (runs in main session — trivial edit)
 7. **Summary Report** — Output: phases completed, files modified/created, test status (pass/fail/skipped), review findings, post-execution status per step (✅/⚠️/❌)
 
 **Opt-out:** `--skip-post` skips steps 1-5 entirely — requires confirmation via `ask_user`:
+
 > "Skipping post-chain (test, fix, review, docs, commit). No automated verification. Continue?"
 > Options: ["Yes, skip post-chain", "No, run post-chain"]
-If user selects "No", run post-chain normally.
+> If user selects "No", run post-chain normally.
 
 **Fault tolerance:** Each step runs independently; failure logs warning but does NOT block subsequent steps.
 **Flag interaction:** `--skip-tests` skips steps 1-2; `--skip-review` skips step 3; `--skip-commit` skips step 5; `--skip-post` skips steps 1-5 (with confirmation).
@@ -155,11 +157,11 @@ If user selects "No", run post-chain normally.
 
 ## Complexity Assessment (Direct Mode Only — Legacy)
 
-| Complexity | Criteria | Strategy |
-|-----------|----------|----------|
-| Simple | < 3 files, straightforward | Execute directly |
-| Medium | 3-10 files, requires analysis | Explore subagents first, then implement |
-| Complex | 10+ files, architectural | Break into sub-tasks, parallel subagents |
+| Complexity | Criteria                      | Strategy                                 |
+| ---------- | ----------------------------- | ---------------------------------------- |
+| Simple     | < 3 files, straightforward    | Execute directly                         |
+| Medium     | 3-10 files, requires analysis | Explore subagents first, then implement  |
+| Complex    | 10+ files, architectural      | Break into sub-tasks, parallel subagents |
 
 ## Related Skills & Agents
 

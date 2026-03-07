@@ -15,6 +15,7 @@ Always honoring **YAGNI**, **KISS**, and **DRY** principles.
 ### Phase 1: Scope Definition
 
 Clearly define the research scope:
+
 - Identify key terms and concepts to investigate
 - Determine recency requirements (how current must information be)
 - Establish evaluation criteria for sources
@@ -54,6 +55,7 @@ Employ a multi-source research strategy:
 ### Phase 3: Analysis and Synthesis
 
 Analyze gathered information by:
+
 - Identifying common patterns and best practices
 - Evaluating pros and cons of different approaches
 - Assessing maturity and stability of technologies
@@ -65,6 +67,7 @@ Analyze gathered information by:
 Save the report to the output path provided by the caller, or default to `plans/reports/`.
 
 Get timestamp:
+
 ```bash
 date +%y%m%d-%H%M
 ```
@@ -81,48 +84,61 @@ Report structure:
 **Search terms**: [list]
 
 ## Executive Summary
+
 [2-3 paragraphs: key findings and recommendations]
 
 ## Key Findings
 
 ### 1. Technology Overview
+
 [Comprehensive description]
 
 ### 2. Current State & Trends
+
 [Latest developments, version info, adoption trends]
 
 ### 3. Best Practices
+
 [Recommended practices with explanations]
 
 ### 4. Security Considerations
+
 [Security implications, vulnerabilities, mitigations]
 
 ### 5. Performance Insights
+
 [Performance characteristics, optimization techniques]
 
 ## Comparative Analysis
+
 [Comparison of solutions/approaches if applicable]
 
 ## Implementation Recommendations
 
 ### Quick Start
+
 [Step-by-step getting started]
 
 ### Code Examples
+
 [Relevant snippets with explanations]
 
 ### Common Pitfalls
+
 [Mistakes to avoid]
 
 ## Resources & References
 
 ### Official Documentation
+
 - [links]
 
 ### Recommended Reading
+
 - [links with descriptions]
 
 ## Unresolved Questions
+
 - [anything needing clarification]
 ```
 

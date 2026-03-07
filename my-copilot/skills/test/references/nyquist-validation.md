@@ -17,6 +17,7 @@ Runs when `--nyquist` flag is set. Runs before test execution (or standalone if 
 ### Step 2: Extract Requirements
 
 For each `phase-XX-*.md` in the plan directory:
+
 1. Extract **Success Criteria** section — each bullet = one requirement
 2. Extract **Requirements > Functional** section — each item = one requirement
 3. Extract unchecked todo items `- [ ] ...` — each = one requirement
@@ -26,12 +27,14 @@ Normalize: lowercase, strip markdown, tokenize into keywords (filter stop words)
 ### Step 3: Scan Test Files
 
 Use glob patterns to find test files in project:
+
 - `**/*.test.ts`, `**/*.test.js`, `**/*.test.tsx`
 - `**/*.spec.ts`, `**/*.spec.js`
 - `**/test_*.py`, `**/*_test.py`
 - `**/*_test.go`, `**/*Test.java`
 
 For each test file:
+
 1. Read first 100 lines (test names are at top level)
 2. Extract test names: `describe(`, `it(`, `test(`, `def test_`, `func Test`
 3. Tokenize test names + file path → keywords
@@ -39,6 +42,7 @@ For each test file:
 ### Step 4: Map Requirements to Tests
 
 For each requirement:
+
 1. Get requirement keywords (nouns, verbs — ignore: the, a, is, are, for, to, with)
 2. Score each test file: count keyword overlaps between requirement and test keywords
 3. If score ≥ 2: mark requirement as covered by that test file (best score wins)
@@ -55,16 +59,19 @@ Output structured markdown:
 **Coverage:** {tested}/{total} requirements ({percentage}%)
 
 ### ✅ Covered Requirements ({N})
-| Requirement | Test File | Confidence |
-|-------------|-----------|------------|
+
+| Requirement                 | Test File            | Confidence  |
+| --------------------------- | -------------------- | ----------- |
 | {req summary, max 60 chars} | {relative test path} | High/Medium |
 
 ### ❌ Uncovered Requirements ({N})
-| Requirement | Source Phase | Suggested Test Name |
-|-------------|-------------|---------------------|
-| {req summary} | phase-0N | test_{snake_case_req_name} |
+
+| Requirement   | Source Phase | Suggested Test Name         |
+| ------------- | ------------ | --------------------------- |
+| {req summary} | phase-0N     | test\_{snake_case_req_name} |
 
 ### ⚠️ Orphan Tests ({N})
+
 Tests found but not matched to any plan requirement:
 | Test File | Inferred Purpose |
 |-----------|-----------------|

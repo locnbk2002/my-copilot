@@ -23,6 +23,7 @@ Default: Review unstaged changes
 ```
 
 ## When to Use
+
 - After implementing changes, before committing
 - As part of execute review gate
 - Before creating a pull request
@@ -33,41 +34,51 @@ Default: Review unstaged changes
 Load: `references/review-workflow.md` for detailed workflow.
 
 ### 1. Scope Detection
+
 - Get diff: `git diff` (unstaged) or `git diff --staged` or `git diff main..HEAD`
 - If no diff found: ask user what to review via `ask_user`
 
 ### 2. Scout Phase (pre-review)
+
 Dispatch `task(agent_type="explore")` to scan for:
+
 - Missing error handling in changed code
 - Edge cases not covered by tests
 - Security concerns (exposed secrets, injection vectors)
 - Callers/dependents of changed functions
 
 ### 2.5. Visual Review (optional)
+
 If user provides screenshots or mentions UI/visual changes:
+
 - Dispatch `task(agent_type="multimodal")` with the screenshot(s) + relevant component paths
 - Feed visual findings into Review Phase as additional context
 
 ### 3. Review Phase
+
 Dispatch `task(agent_type="code-reviewer")` with:
+
 - The diff
 - Scout findings as context
 - Project conventions (from `.github/copilot-instructions.md`)
 
 ### 4. Issue Classification
-| Severity | Examples | Action |
-|----------|----------|--------|
-| **Critical** | Security vuln, data loss, breaking change | Must fix |
-| **High** | Logic error, missing error handling, perf issue | Should fix |
-| **Medium** | Code smell, missing docs, maintainability | Consider fixing |
-| **Low** | Style, naming, minor optimization | Optional |
+
+| Severity     | Examples                                        | Action          |
+| ------------ | ----------------------------------------------- | --------------- |
+| **Critical** | Security vuln, data loss, breaking change       | Must fix        |
+| **High**     | Logic error, missing error handling, perf issue | Should fix      |
+| **Medium**   | Code smell, missing docs, maintainability       | Consider fixing |
+| **Low**      | Style, naming, minor optimization               | Optional        |
 
 ### 5. Fix Loop (if `--strict` or Critical issues)
+
 - Invoke `fix` skill for each Critical/High issue
 - Re-run review on fixed code
 - Max 2 fix-review iterations
 
 ### 6. Verdict
+
 ```
 ## Review Result: ✅ PASS (or ❌ NEEDS WORK)
 - Files reviewed: N
@@ -76,12 +87,14 @@ Dispatch `task(agent_type="code-reviewer")` with:
 ```
 
 ## Rules
+
 - Always run scout phase before review — context improves review quality
 - Critical issues ALWAYS block the review (even without `--strict`)
 - Don't nitpick style or formatting — focus on bugs, security, logic
 - Include positive observations alongside issues
 
 ## Related Skills & Agents
+
 - `code-reviewer` agent — Performs the actual code review
 - `multimodal` agent — UI/screenshot analysis for visual review
 - `fix` — Fixes Critical/High issues found during review

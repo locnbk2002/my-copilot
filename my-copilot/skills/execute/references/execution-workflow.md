@@ -142,6 +142,7 @@ After state sync (Step 3), before proceeding to next wave:
 ### Resume Support
 
 If starting a fresh session mid-execution:
+
 1. Read plan.md Phases table — phases with Status = "Done" are already complete
 2. Re-compute waves from remaining Pending/Blocked phases
 3. Resume from Wave 1 of remaining phases

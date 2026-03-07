@@ -20,6 +20,7 @@ summarize: Generate project summary/README
 ```
 
 ## When to Use
+
 - After implementing features (update docs)
 - Starting a new project (init docs structure)
 - Before release (summarize project)

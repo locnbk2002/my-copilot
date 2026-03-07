@@ -21,6 +21,7 @@ status: Show git status summary
 ```
 
 ## When to Use
+
 - After implementing and reviewing changes
 - As part of execute post-execution workflow
 - To create conventional commits with security checks
@@ -28,7 +29,7 @@ status: Show git status summary
 
 ## Subcommands
 
-### `git cm` (commit)
+### `git commit` (commit)
 
 Load: `references/commit-conventions.md` for conventional commit format.
 Load: `references/security-scan.md` for pre-commit security checks.
@@ -54,33 +55,39 @@ Load: `references/security-scan.md` for pre-commit security checks.
 When `--atomic` is set:
 a. Get staged files: `git diff --cached --name-only`
 b. Phase-aware grouping (try first):
-   - Find most recent plan in `plans/` directory
-   - Read each `phase-XX-*.md`, extract file paths from "Related Code Files" table
-   - Match staged files to phases → one commit per phase
-c. Directory-based fallback (if no plan found):
-   - Group by top 2 path segments (e.g., `.github/scripts/` → one group, `.github/skills/plan/` → one group)
-d. For each group (in sequence):
-   - `git reset HEAD -- .` (unstage all)
-   - `git add <group-files>` (stage only this group's files)
-   - Generate conventional commit: `feat(phase-N): <description>` or `feat(<dir>): <description>`
-   - `git commit -m "<message>\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>"`
-e. Fallback: if grouping fails or errors, stage all and make single commit
+
+- Find most recent plan in `plans/` directory
+- Read each `phase-XX-*.md`, extract file paths from "Related Code Files" table
+- Match staged files to phases → one commit per phase
+  c. Directory-based fallback (if no plan found):
+- Group by top 2 path segments (e.g., `.github/scripts/` → one group, `.github/skills/plan/` → one group)
+  d. For each group (in sequence):
+- `git reset HEAD -- .` (unstage all)
+- `git add <group-files>` (stage only this group's files)
+- Generate conventional commit: `feat(phase-N): <description>` or `feat(<dir>): <description>`
+- `git commit -m "<message>\n\nCo-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>"`
+  e. Fallback: if grouping fails or errors, stage all and make single commit
+
 6. **Commit message** — Generate conventional format:
+
    ```
    <type>(<scope>): <description>
-   
+
    <body>
-   
+
    Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>
    ```
+
 7. **Execute** — `git commit -m "..."`
 
 ### `git cp` (commit + push)
-1. Run `git cm` workflow
+
+1. Run `git commit` workflow
 2. Push: `git push`
 3. If push fails (no upstream): `git push --set-upstream origin <branch>`
 
 ### `git pr` (pull request)
+
 1. Check `gh` CLI is available
 2. Get current branch name
 3. Analyze changes vs target branch (`git diff main..HEAD`)
@@ -88,11 +95,13 @@ e. Fallback: if grouping fails or errors, stage all and make single commit
 5. Create: `gh pr create --title "..." --body "..."`
 
 ### `git status`
+
 1. Run `git status --short`
 2. Show formatted summary: staged, unstaged, untracked counts
 3. Show recent commits: `git log --oneline -5`
 
 ## Rules
+
 - ALWAYS include `Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>` trailer
 - ALWAYS run security scan before committing
 - Never commit .env files, secrets, or API keys
@@ -101,6 +110,7 @@ e. Fallback: if grouping fails or errors, stage all and make single commit
 - When invoked from execute post-execution: auto-enable `--atomic`
 
 ## Related Skills
+
 - `code-review` — Run review before committing
 - `docs` — Update docs before committing
 - `execute` — Invokes this skill post-execution

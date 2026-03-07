@@ -11,6 +11,7 @@ Use `Plan dir:` from `## Naming` section injected by hooks. This is the full com
 ### File Organization
 
 IN CURRENT WORKING PROJECT DIRECTORY:
+
 ```
 {plan-dir}/                                    # From `Plan dir:` in ## Naming
 ├── research/
@@ -33,6 +34,7 @@ IN CURRENT WORKING PROJECT DIRECTORY:
 ### Todo Hydration
 
 After creating plan.md and phase files, hydrate todos (unless `--no-tasks`):
+
 1. Insert a SQL todo per phase with `todo_deps` dependency chain
 2. Add critical step todos for high-risk items
 3. See `task-management.md` for SQL patterns
@@ -44,6 +46,7 @@ After creating plan.md and phase files, hydrate todos (unless `--no-tasks`):
 **IMPORTANT:** All plan.md files MUST include YAML frontmatter. See `output-standards.md` for schema.
 
 **Example plan.md structure:**
+
 ```markdown
 ---
 title: "Feature Implementation Plan"
@@ -65,11 +68,11 @@ Brief description of what this plan accomplishes.
 
 ## Phases
 
-| # | Phase | Category | Status | Effort | Link |
-|---|-------|----------|--------|--------|------|
-| 1 | Setup | `quick` | Pending | 2h | [phase-01](./phase-01-setup.md) |
-| 2 | Implementation | `general` | Pending | 4h | [phase-02](./phase-02-impl.md) |
-| 3 | Testing | `general` | Pending | 2h | [phase-03](./phase-03-test.md) |
+| #   | Phase          | Category  | Status  | Effort | Link                            |
+| --- | -------------- | --------- | ------- | ------ | ------------------------------- |
+| 1   | Setup          | `quick`   | Pending | 2h     | [phase-01](./phase-01-setup.md) |
+| 2   | Implementation | `general` | Pending | 4h     | [phase-02](./phase-02-impl.md)  |
+| 3   | Testing        | `general` | Pending | 2h     | [phase-03](./phase-03-test.md)  |
 
 ## Dependencies
 
@@ -77,61 +80,75 @@ Brief description of what this plan accomplishes.
 ```
 
 **Guidelines:**
+
 - Keep generic and under 80 lines
 - List each phase with status/progress
 - Link to detailed phase files
 - Key dependencies
 
 ### Phase Files (phase-XX-name.md)
+
 Fully respect the `./docs/development-rules.md` file.
 Each phase file should contain:
 
 **Context Links**
+
 - Links to related reports, files, documentation
 
 **Overview**
+
 - Priority
 - Current status
 - Category (one of: `visual-engineering`, `deep`, `artistry`, `quick`, `general`, `complex`, `writing`)
 - Brief description
 
 **Key Insights**
+
 - Important findings from research
 - Critical considerations
 
 **Requirements**
+
 - Functional requirements
 - Non-functional requirements
 
 **Architecture**
+
 - System design
 - Component interactions
 - Data flow
 
 **Related Code Files**
+
 - List of files to modify
 - List of files to create
 - List of files to delete
 
 **Implementation Steps**
+
 - Detailed, numbered steps
 - Specific instructions
 
 **Todo List**
+
 - Checkbox list for tracking
 
 **Success Criteria**
+
 - Definition of done
 - Validation methods
 
 **Risk Assessment**
+
 - Potential issues
 - Mitigation strategies
 
 **Security Considerations**
+
 - Auth/authorization
 - Data protection
 
 **Next Steps**
+
 - Dependencies
 - Follow-up tasks

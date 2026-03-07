@@ -24,7 +24,7 @@
 | `scout`               | Parallel codebase exploration                                                                     |
 | `research`            | Technical research & evaluation                                                                   |
 | `sequential-thinking` | Step-by-step complex problem analysis                                                             |
-| `tdd`                 | Red→green→refactor TDD cycle; `execute --tdd` applies per-phase TDD mode                         |
+| `tdd`                 | Red→green→refactor TDD cycle; `execute --tdd` applies per-phase TDD mode                          |
 
 ### Agents (`agents/`)
 
@@ -36,10 +36,10 @@
 | `code-reviewer` | GPT 5.3 Codex     | Code review (infer: true)                                                                                       |
 | `debugger`      | GPT 5.3 Codex     | Root cause analysis (infer: true)                                                                               |
 | `researcher`    | Claude Haiku 4.5  | Deep technical research (infer: true)                                                                           |
-| `multimodal`    | Gemini 3 Pro      | UI/screenshot analysis, visual debugging (infer: true)                                                          |
+| `multimodal`    | Gemini 3.1 Pro    | UI/screenshot analysis, visual debugging (infer: true)                                                          |
 | `worker`        | Claude Sonnet 4.6 | Wave-scoped phase orchestrator — receives wave-limited phases, dispatches fresh sub-agent per phase by category |
 
-### Hooks (`.github/scripts/` + `hooks.json`)
+### Hooks (`scripts/` + `hooks.json`)
 
 Python scripts triggered on Copilot CLI lifecycle events:
 

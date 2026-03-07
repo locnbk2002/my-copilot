@@ -20,20 +20,20 @@ copilot plugin install ./my-copilot
 
 ### Skills (13)
 
-| Skill                 | Description                                                                                                                    |
-| --------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
-| `plan`                | Plan implementations with auto-brainstorm, research, red-team, and validation phases (`--skip-brainstorm` to skip brainstorm)  |
-| `execute`             | Execute plans phase-by-phase with auto post-execution chain: test → fix → review → docs → commit (`--skip-post` to skip chain) |
-| `test`                | Auto-detect and run tests with structured reporting                                                                            |
-| `fix`                 | Diagnose and fix bugs with root cause analysis                                                                                 |
-| `code-review`         | Structured scout→review→fix pipeline                                                                                           |
-| `docs`                | Initialize, update, and summarize documentation                                                                                |
-| `docs-seeker`         | Search library/framework documentation via Context7                                                                            |
-| `git`                 | Conventional commits, security scanning, PR creation                                                                           |
-| `brainstorm`          | Structured ideation with approach comparison                                                                                   |
-| `scout`               | Fast codebase exploration using parallel agents                                                                                |
-| `research`            | Comprehensive technical research and evaluation                                                                                |
-| `sequential-thinking` | Step-by-step analysis for complex problems                                                                                     |
+| Skill                 | Description                                                                                                                      |
+| --------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
+| `plan`                | Plan implementations with auto-brainstorm, research, red-team, and validation phases (`--skip-brainstorm` to skip brainstorm)    |
+| `execute`             | Execute plans phase-by-phase with auto post-execution chain: test → fix → review → docs → commit (`--skip-post` to skip chain)   |
+| `test`                | Auto-detect and run tests with structured reporting                                                                              |
+| `fix`                 | Diagnose and fix bugs with root cause analysis                                                                                   |
+| `code-review`         | Structured scout→review→fix pipeline                                                                                             |
+| `docs`                | Initialize, update, and summarize documentation                                                                                  |
+| `docs-seeker`         | Search library/framework documentation via Context7                                                                              |
+| `git`                 | Conventional commits, security scanning, PR creation                                                                             |
+| `brainstorm`          | Structured ideation with approach comparison                                                                                     |
+| `scout`               | Fast codebase exploration using parallel agents                                                                                  |
+| `research`            | Comprehensive technical research and evaluation                                                                                  |
+| `sequential-thinking` | Step-by-step analysis for complex problems                                                                                       |
 | `tdd`                 | Red→green→refactor TDD cycle with failure/pass gates (`--red`, `--green`, `--refactor`, `--skip-refactor`); also `execute --tdd` |
 
 ### Agents (6)
@@ -55,15 +55,15 @@ All hooks merged in `hooks.json` (security, audit, subagent lifecycle monitoring
 
 Plan phases are tagged with work categories that map to optimized models. `worker` reads the category and dispatches to the right sub-agent automatically.
 
-| Category             | Default Model          | Agent             | Use Case                   |
-| -------------------- | ---------------------- | ----------------- | -------------------------- |
-| `visual-engineering` | `gemini-3-pro-preview` | `multimodal`      | Frontend, UI/UX, design    |
-| `deep`               | `gpt-5.3-codex`        | `general-purpose` | Autonomous problem-solving |
-| `artistry`           | `gemini-3-pro-preview` | `general-purpose` | Creative solutions         |
-| `quick`              | `claude-haiku-4.5`     | `task`            | Trivial tasks, single-file |
-| `general`            | `claude-sonnet-4.6`    | `general-purpose` | Standard work              |
-| `complex`            | `claude-opus-4.6`      | `general-purpose` | Multi-system coordination  |
-| `writing`            | `claude-sonnet-4.6`    | `general-purpose` | Documentation, prose       |
+| Category             | Default Model            | Agent             | Use Case                   |
+| -------------------- | ------------------------ | ----------------- | -------------------------- |
+| `visual-engineering` | `gemini-3.1-pro-preview` | `multimodal`      | Frontend, UI/UX, design    |
+| `deep`               | `gpt-5.3-codex`          | `general-purpose` | Autonomous problem-solving |
+| `artistry`           | `gemini-3.1-pro-preview` | `general-purpose` | Creative solutions         |
+| `quick`              | `claude-haiku-4.5`       | `task`            | Trivial tasks, single-file |
+| `general`            | `claude-sonnet-4.6`      | `general-purpose` | Standard work              |
+| `complex`            | `claude-opus-4.6`        | `general-purpose` | Multi-system coordination  |
+| `writing`            | `claude-sonnet-4.6`      | `general-purpose` | Documentation, prose       |
 
 Customize via `.github/my-copilot.jsonc` (project) or `~/.copilot/my-copilot.jsonc` (global).
 

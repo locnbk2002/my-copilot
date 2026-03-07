@@ -29,27 +29,35 @@ Save responses to `{plan-dir}/preferences.md`:
 Captured via `--discuss` mode on {YYYY-MM-DD}.
 
 ## Tech Stack
+
 {answer or "No preference"}
 
 ## Design Patterns
+
 {answer or "No preference"}
 
 ## Error Handling
+
 {answer or "No preference"}
 
 ## Testing
+
 {answer or "No preference"}
 
 ## Code Style
+
 {answer or "No preference"}
 
 ## Constraints
+
 {answer or "No preference"}
 
 ## Performance
+
 {answer or "No preference"}
 
 ## Additional Notes
+
 {answer or "None"}
 ```
 
@@ -67,6 +75,7 @@ When writing plan phase files, add a "## Constraints" or "## Preferences" sectio
 ## Combinability
 
 `--discuss` is a modifier — combine with any mode:
+
 - `--discuss --fast` → interview, then fast plan (no research)
 - `--discuss --hard` → interview, then hard plan (with research)
 - `--discuss --two` → interview, then two-approach plan

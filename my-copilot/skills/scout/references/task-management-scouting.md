@@ -4,10 +4,10 @@ Track parallel scout agent execution via session SQL todos (`todos` and `todo_de
 
 ## When to Create Todos
 
-| Agents | Create Todos? | Rationale |
-|--------|--------------|-----------|
-| ≤ 2    | No           | Overhead exceeds benefit, finishes quickly |
-| ≥ 3    | Yes          | Meaningful coordination, progress monitoring |
+| Agents | Create Todos? | Rationale                                    |
+| ------ | ------------- | -------------------------------------------- |
+| ≤ 2    | No            | Overhead exceeds benefit, finishes quickly   |
+| ≥ 3    | Yes           | Meaningful coordination, progress monitoring |
 
 ## Todo Registration Flow
 
@@ -31,6 +31,7 @@ INSERT INTO todos (id, title, description, status) VALUES
 ### Required Info in Description
 
 Encode agent metadata in the description field:
+
 - `agentType` — `explore` (internal) or `explore+model` (external with specific model)
 - `scope` — Comma-separated directory boundaries for this agent
 - `scale` — Total SCALE value determined in analysis
@@ -41,6 +42,7 @@ Encode agent metadata in the description field:
 ### ID Convention
 
 Use `scout-{agentIndex}-of-{totalAgents}` for easy querying:
+
 - `scout-1-of-6`, `scout-2-of-6`, ..., `scout-6-of-6`
 
 ## Todo Lifecycle

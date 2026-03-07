@@ -56,6 +56,7 @@ Spawn all in a single response for parallel execution.
 User: "Find database migration files" (SCALE=3 → gpt-5.3-codex)
 
 Spawn 3 parallel agents in one response:
+
 ```
 Agent 1: task(agent_type="explore", model="gpt-5.3-codex", prompt="Scout db/, migrations/ for migration files")
 Agent 2: task(agent_type="explore", model="gpt-5.3-codex", prompt="Scout lib/, src/ for database schema files")
@@ -67,15 +68,18 @@ Agent 3: task(agent_type="explore", model="gpt-5.3-codex", prompt="Scout config/
 When needing to read file content, use chunking to stay within context limits (<150K tokens safe zone).
 
 ### Step 1: Get Line Counts
+
 ```bash
 wc -l path/to/file1.ts path/to/file2.ts path/to/file3.ts
 ```
 
 ### Step 2: Calculate Chunks
+
 - **Target:** ~500 lines per chunk (safe for most files)
 - **Max files per agent:** 3-5 small files OR 1 large file chunked
 
 **Chunking formula:**
+
 ```
 chunks = ceil(total_lines / 500)
 lines_per_chunk = ceil(total_lines / chunks)
@@ -84,6 +88,7 @@ lines_per_chunk = ceil(total_lines / chunks)
 ### Step 3: Spawn Parallel Agents with Model
 
 **Small files (<500 lines each):**
+
 ```
 Agent 1: task(agent_type="explore", model="gpt-5.3-codex",
               prompt="Read and summarize file1.ts and file2.ts")
@@ -92,6 +97,7 @@ Agent 2: task(agent_type="explore", model="gpt-5.3-codex",
 ```
 
 **Large file (>500 lines) — use `view` with view_range:**
+
 ```
 Agent 1: task(agent_type="explore", model="gpt-5.3-codex",
               prompt="Read lines 1-500 of large-file.ts using view tool with view_range [1,500]")
@@ -100,6 +106,7 @@ Agent 2: task(agent_type="explore", model="gpt-5.3-codex",
 ```
 
 ### Chunking Decision Tree
+
 ```
 File < 500 lines     → Read entire file
 File 500-1500 lines  → Split into 2-3 chunks

@@ -5,12 +5,14 @@
 ## Core Activities
 
 ### Parallel Explore Agents
+
 - Use `task` tool with `agent_type: "explore"` to search the codebase for relevant files
 - Each agent locates files needed for specific task aspects
 - Wait for all agents to report back before analysis
 - Efficient for finding relevant code across large codebases
 
 ### Essential Documentation Review
+
 ALWAYS read these files first:
 
 1. **`./docs/development-rules.md`** (IMPORTANT)
@@ -36,18 +38,21 @@ ALWAYS read these files first:
    - Component library usage
 
 ### Environment Analysis
+
 - Review development environment setup via `bash` tool
 - Analyze dotenv files and configuration
 - Identify required dependencies (package.json, requirements.txt, etc.)
 - Understand build and deployment processes
 
 ### Pattern Recognition
+
 - Study existing patterns in codebase using `grep` and `glob` tools
 - Identify conventions and architectural decisions
 - Note consistency in implementation approaches
 - Understand error handling patterns
 
 ### Integration Planning
+
 - Identify how new features integrate with existing architecture
 - Map dependencies between components
 - Understand data flow and state management

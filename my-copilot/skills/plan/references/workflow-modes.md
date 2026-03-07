@@ -4,12 +4,12 @@
 
 When no flag specified, analyze task and pick mode:
 
-| Signal | Mode | Rationale |
-|--------|------|-----------|
-| Simple task, clear scope, no unknowns | fast | Skip research overhead |
-| Complex task, unfamiliar domain, new tech | hard | Research needed |
-| 3+ independent features/layers/modules | parallel | Enable concurrent agents |
-| Ambiguous approach, multiple valid paths | two | Compare alternatives |
+| Signal                                    | Mode     | Rationale                |
+| ----------------------------------------- | -------- | ------------------------ |
+| Simple task, clear scope, no unknowns     | fast     | Skip research overhead   |
+| Complex task, unfamiliar domain, new tech | hard     | Research needed          |
+| 3+ independent features/layers/modules    | parallel | Enable concurrent agents |
+| Ambiguous approach, multiple valid paths  | two      | Compare alternatives     |
 
 Use `ask_user` if detection is uncertain.
 
@@ -29,6 +29,7 @@ No research. Analyze → Plan → Hydrate Todos.
 Research → Scout → Plan → Red Team → Validate → Hydrate Todos.
 
 0.5. **Pre-Research Brainstorm** (skip if `--skip-brainstorm` or explicit approach provided) — generate 2-3 approaches inline, ask user to pick, feed into research context
+
 1. Spawn max 2 `explore` agents in parallel (different aspects, max 5 searches each)
 2. Read codebase docs; run explore agents to search codebase if docs are stale/missing
 3. Gather research + scout findings → pass to `general-purpose` subagent for plan creation
@@ -43,6 +44,7 @@ Research → Scout → Plan → Red Team → Validate → Hydrate Todos.
 Research → Scout → Plan with file ownership → Red Team → Validate → Hydrate Todos with dependency graph.
 
 0.5. **Pre-Research Brainstorm** (skip if `--skip-brainstorm` or explicit approach provided) — generate 2-3 approaches inline, ask user to pick, feed into research context
+
 1. Same as Hard mode steps 1-3
 2. Planner creates phases with:
    - **Exclusive file ownership** per phase (no overlap)
@@ -54,6 +56,7 @@ Research → Scout → Plan with file ownership → Red Team → Validate → Hy
 6. Post-plan validation
 
 ### Parallel Phase Requirements
+
 - Each phase self-contained, no runtime deps on other phases
 - Clear file boundaries — each file modified in ONE phase only
 - Group by: architectural layer, feature domain, or technology stack
@@ -74,12 +77,12 @@ Research → Scout → Plan 2 approaches → Compare → Hydrate Todos.
 
 ## Todo Hydration Per Mode
 
-| Mode | Todo Granularity | Dependency Pattern |
-|------|------------------|--------------------|
-| fast | Phase-level only | Sequential chain |
-| hard | Phase + critical steps | Sequential + step deps |
-| parallel | Phase + steps + ownership | Parallel groups + sequential deps |
-| two | After user selects approach | Sequential chain |
+| Mode     | Todo Granularity            | Dependency Pattern                |
+| -------- | --------------------------- | --------------------------------- |
+| fast     | Phase-level only            | Sequential chain                  |
+| hard     | Phase + critical steps      | Sequential + step deps            |
+| parallel | Phase + steps + ownership   | Parallel groups + sequential deps |
+| two      | After user selects approach | Sequential chain                  |
 
 All modes: See `task-management.md` for SQL insert patterns.
 
@@ -90,6 +93,7 @@ Adversarial review that spawns hostile reviewers to find flaws before validation
 **Available in:** hard, parallel, two modes. **Skipped in:** fast mode.
 
 **Invocation:** Use the `skill` tool to invoke `plan:red-team` with the plan directory path:
+
 ```
 skill("plan:red-team")  // then pass plan path as context
 ```
@@ -97,16 +101,17 @@ skill("plan:red-team")  // then pass plan path as context
 Or run inline using `task` tool with `agent_type: "code-review"` to review the plan documents.
 
 **Sequence:** Red team runs BEFORE validation because:
+
 1. Red team may change the plan
 2. Validation should confirm the FINAL plan
 
 ## Post-Plan Validation
 
-| Mode | Behavior |
-|------|----------|
+| Mode     | Behavior                                                                      |
+| -------- | ----------------------------------------------------------------------------- |
 | `prompt` | Use `ask_user`: "Validate this plan with interview?" → Yes (Recommended) / No |
-| `auto` | Automatically invoke `plan:validate` inline |
-| `off` | Skip validation |
+| `auto`   | Automatically invoke `plan:validate` inline                                   |
+| `off`    | Skip validation                                                               |
 
 **Invocation:** Use the `skill` tool to invoke `plan:validate`, or run inline workflow from `references/validate-workflow.md`.
 
@@ -115,6 +120,7 @@ Or run inline using `task` tool with `agent_type: "code-review"` to review the p
 ## Summary Output (MANDATORY)
 
 After plan creation, MUST output:
+
 - Absolute path to plan directory
 - Brief summary of phases
 - Next steps for implementation
@@ -129,14 +135,14 @@ This reminder is **NON-NEGOTIABLE** — always output after presenting the plan.
 
 Runs before research when user doesn't provide an explicit approach. Skip in `--fast`, `--two`, or with `--skip-brainstorm`.
 
-| Mode | Brainstorm Behavior |
-|------|-------------------|
-| `--fast` | ❌ Skip (no research overhead) |
-| `--hard` | ✅ Run before research |
-| `--parallel` | ✅ Run before research |
-| `--two` | ❌ Skip (inherently multi-approach) |
-| `--auto` | Follows detected mode |
-| `--skip-brainstorm` | ❌ Skip regardless of mode |
+| Mode                | Brainstorm Behavior                 |
+| ------------------- | ----------------------------------- |
+| `--fast`            | ❌ Skip (no research overhead)      |
+| `--hard`            | ✅ Run before research              |
+| `--parallel`        | ✅ Run before research              |
+| `--two`             | ❌ Skip (inherently multi-approach) |
+| `--auto`            | Follows detected mode               |
+| `--skip-brainstorm` | ❌ Skip regardless of mode          |
 
 **Ambiguity detection:** Skip brainstorm if user message contains solution-specific language (e.g., "use Redis for caching", "implement with JWT", "approach: microservices"). Otherwise, generate 2-3 inline approaches.
 
@@ -146,9 +152,10 @@ Runs before research when user doesn't provide an explicit approach. Skip in `--
 
 ## Discuss Mode (`--discuss`)
 
-Modifier flag — combine with any planning mode. Runs preference interview *before* research.
+Modifier flag — combine with any planning mode. Runs preference interview _before_ research.
 
 **Sequence:**
+
 1. Run discuss workflow (`references/discuss-workflow.md`)
 2. Save preferences to `{plan-dir}/preferences.md`
 3. Feed preference summary into all researcher agent prompts
@@ -161,6 +168,7 @@ Modifier flag — combine with any planning mode. Runs preference interview *bef
 ## Pre-Creation Check
 
 Before creating a new plan, use `ask_user` to confirm:
+
 - "Continue with existing plan?" if one is detected in the plans directory
 - "Create new plan or activate existing?" if multiple plans exist
 
@@ -170,12 +178,12 @@ Before creating a new plan, use `ask_user` to confirm:
 
 ### Trigger Conditions
 
-| Signal | Threshold | Message to User |
-|--------|-----------|-----------------|
-| Research rounds | 3+ researcher agents spawned | "Multiple research rounds detected — returning diminishing value" |
-| Phase count | 10+ phases in plan | "Plan has {N} phases — consider consolidating related phases" |
-| Approach comparisons | 3+ approaches compared | "Many approaches compared — time to commit to one" |
-| Plan size | plan.md > 150 lines | "Plan is very detailed — may be over-specified for first iteration" |
+| Signal               | Threshold                    | Message to User                                                     |
+| -------------------- | ---------------------------- | ------------------------------------------------------------------- |
+| Research rounds      | 3+ researcher agents spawned | "Multiple research rounds detected — returning diminishing value"   |
+| Phase count          | 10+ phases in plan           | "Plan has {N} phases — consider consolidating related phases"       |
+| Approach comparisons | 3+ approaches compared       | "Many approaches compared — time to commit to one"                  |
+| Plan size            | plan.md > 150 lines          | "Plan is very detailed — may be over-specified for first iteration" |
 
 ### Response Actions
 

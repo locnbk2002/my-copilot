@@ -22,6 +22,7 @@ Default: Auto-detect test framework, run relevant tests
 ```
 
 ## When to Use
+
 - After implementing changes to verify correctness
 - As part of execute verification gate
 - Before committing to ensure no regressions
@@ -33,7 +34,9 @@ Load: `references/framework-detection.md` for auto-detection logic.
 Load: `references/test-execution.md` for execution and reporting.
 
 ### 1. Detect Framework
+
 Auto-detect from project files:
+
 - `package.json` → jest/vitest/mocha/playwright
 - `setup.py`/`pyproject.toml` → pytest/unittest
 - `go.mod` → `go test`
@@ -41,13 +44,17 @@ Auto-detect from project files:
 - `*.test.*`/`*.spec.*` file patterns
 
 ### 2. Scope Analysis
+
 What to test:
+
 - If recent changes exist (`git diff`): test affected modules
 - If scope specified: test that scope
 - If no scope: run full test suite
 
 ### 3. Pre-check
+
 Before running tests:
+
 - Typecheck/lint (if configured): `npm run typecheck`, `tsc --noEmit`
 - Build check: ensure project compiles
 
@@ -64,13 +71,17 @@ Load: `references/nyquist-validation.md` for mapping algorithm.
 If `--nyquist` only (no scope or test type given): report only, do not run tests.
 
 ### 4. Execute Tests
+
 Run via `bash` tool:
+
 - Capture output (stdout + stderr)
 - Parse results (pass/fail counts)
 - If `--coverage`: run with coverage flag
 
 ### 5. Report
+
 Structured output:
+
 ```
 ## Test Results
 - Framework: [detected]
@@ -82,12 +93,14 @@ Structured output:
 ```
 
 ### 6. Auto-fix (if `--fix`)
+
 - Analyze failure messages
 - Invoke `fix` skill or `debugger` agent
 - Re-run affected tests
 - Report fix results
 
 ## Related Skills & Agents
+
 - `fix` — Fix failing tests
 - `debugger` agent — Deep debugging for complex test failures
 - `execute` — Invokes this skill as verification gate

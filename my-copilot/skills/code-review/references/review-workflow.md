@@ -26,6 +26,7 @@ Before sending to the reviewer, gather context:
 4. **Recent changes**: `git log --oneline -5 -- <changed_files>`
 
 Format scout findings as:
+
 ```
 ## Scout Report
 - Functions changed: [list]
@@ -38,6 +39,7 @@ Format scout findings as:
 ### Review Request Format
 
 Send to code-reviewer agent:
+
 ```
 Review these code changes.
 
@@ -64,6 +66,7 @@ Focus on: bugs, security, logic errors. Skip style nitpicks.
 ### Fix Loop Protocol
 
 When issues need fixing:
+
 1. Group issues by file
 2. Fix highest severity first
 3. After fixes, re-run ONLY the review (skip scout — context unchanged)
