@@ -1,29 +1,36 @@
 {
   "name": "my-copilot",
-  "version": "0.0.2",
+  "version": "0.1.0",
+  "private": true,
   "description": "locnbk2002 marketplace — GitHub Copilot CLI plugins",
-  "main": "index.js",
   "directories": {
     "doc": "docs"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "prepare": "husky"
+    "prepare": "husky",
+    "version": "node scripts/sync-plugin-versions.mjs",
+    "changeset:version": "changeset version && npm run version"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/locnbk2002/my-copilot.git"
   },
-  "keywords": [],
-  "author": "locnbk2002",
-  "license": "ISC",
-  "type": "commonjs",
   "bugs": {
     "url": "https://github.com/locnbk2002/my-copilot/issues"
   },
   "homepage": "https://github.com/locnbk2002/my-copilot#readme",
-  "private": "true",
+  "keywords": [],
+  "author": "locnbk2002",
+  "license": "ISC",
+  "workspaces": [
+    "my-copilot",
+    "my-copilot-backend",
+    "my-copilot-frontend",
+    "my-copilot-devops"
+  ],
   "devDependencies": {
+    "@changesets/cli": "^2.27.0",
     "husky": "^9.1.7"
   }
 }

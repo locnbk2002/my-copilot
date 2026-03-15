@@ -1,4 +1,4 @@
-staged=$(git diff --cached --name-only | grep '^plans/')
+staged=$(git diff --cached --name-only | grep '^plans/' || true)
 
 if [ -n "$staged" ]; then
   echo "❌ Commit blocked: plans/ files are staged:"

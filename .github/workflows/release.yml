@@ -1,0 +1,74 @@
+name: Release
+
+on:
+  push:
+    branches:
+      - master
+
+concurrency: ${{ github.workflow }}-${{ github.ref }}
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Create Release Pull Request or Tag
+        id: changesets
+        uses: changesets/action@v1
+        with:
+          version: npm run changeset:version
+          publish: echo "skip-publish"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create scoped tags and GitHub Releases
+        if: steps.changesets.outputs.hasChangesets == 'false'
+        run: |
+          PLUGINS=("my-copilot" "my-copilot-backend" "my-copilot-frontend" "my-copilot-devops")
+
+          for plugin in "${PLUGINS[@]}"; do
+            VERSION=$(node -p "require('./${plugin}/package.json').version")
+            TAG="${plugin}@${VERSION}"
+
+            # Skip if tag already exists
+            if git rev-parse "$TAG" >/dev/null 2>&1; then
+              echo "Tag $TAG already exists, skipping"
+              continue
+            fi
+
+            echo "Creating tag: $TAG"
+            git tag "$TAG"
+            git push origin "$TAG"
+
+            # Extract changelog entry for this version
+            CHANGELOG=""
+            if [ -f "${plugin}/CHANGELOG.md" ]; then
+              CHANGELOG=$(sed -n "/^## ${VERSION}/,/^## /p" "${plugin}/CHANGELOG.md" | sed '1d;$d')
+            fi
+
+            # Create GitHub Release
+            gh release create "$TAG" \
+              --title "${plugin} v${VERSION}" \
+              --notes "${CHANGELOG:-Release ${plugin} v${VERSION}}" \
+              --target master
+
+            echo "Created release: ${plugin} v${VERSION}"
+          done
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
