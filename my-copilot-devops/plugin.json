@@ -1,0 +1,12 @@
+{
+  "name": "my-copilot-devops",
+  "description": "DevOps domain plugin for my-copilot — 2 skills for Docker, Kubernetes, Cloudflare, GCP deployment, CI/CD, and git worktrees.",
+  "version": "0.1.0",
+  "author": { "name": "locnbk2002" },
+  "repository": "https://github.com/locnbk2002/my-copilot",
+  "license": "MIT",
+  "keywords": ["devops", "docker", "kubernetes", "cloudflare", "gcp", "cicd", "worktree"],
+  "agents": "agents/",
+  "skills": "skills/",
+  "hooks": "hooks.json"
+}

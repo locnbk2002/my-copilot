@@ -1,0 +1,101 @@
+// my-copilot.jsonc — project-level category routing config
+// Copy this file to .github/my-copilot.jsonc and customize.
+// Required when using domain plugins (my-copilot-frontend, my-copilot-backend, my-copilot-devops).
+//
+// Install domain plugins first:
+//   copilot plugin install my-copilot@my-copilot-frontend
+//   copilot plugin install my-copilot@my-copilot-backend
+//   copilot plugin install my-copilot@my-copilot-devops
+//
+// Then copy this file:
+//   cp .github/my-copilot.jsonc.example .github/my-copilot.jsonc
+//
+// Note: if this file contains model API keys, add it to .gitignore.
+{
+  "categories": {
+    // ── Base categories (built into my-copilot worker) ──────────────────────
+
+    // Frontend, UI/UX, design, styling, animation
+    "visual-engineering": {
+      "description": "Frontend, UI/UX, design, styling, animation",
+      "model": "gemini-3-pro-preview",
+      "agent_type": "multimodal",
+    },
+
+    // Goal-oriented autonomous problem-solving, complex multi-file work
+    "deep": {
+      "description": "Goal-oriented autonomous problem-solving",
+      "model": "gpt-5.3-codex",
+      "agent_type": "general-purpose",
+    },
+
+    // Highly creative, unconventional solutions
+    "artistry": {
+      "description": "Highly creative, unconventional solutions",
+      "model": "gemini-3-pro-preview",
+      "agent_type": "general-purpose",
+    },
+
+    // Trivial tasks: typo fixes, single-file edits, config tweaks
+    "quick": {
+      "description": "Trivial tasks, typo fixes, single-file changes",
+      "model": "claude-haiku-4.5",
+      "agent_type": "task",
+    },
+
+    // Standard moderate-effort implementation work
+    "general": {
+      "description": "General moderate-effort work",
+      "model": "claude-sonnet-4.6",
+      "agent_type": "general-purpose",
+    },
+
+    // Substantial effort, multi-system coordination, architecture decisions
+    "complex": {
+      "description": "Substantial effort, multi-system coordination",
+      "model": "claude-opus-4.6",
+      "agent_type": "general-purpose",
+    },
+
+    // Documentation, README, prose, technical writing
+    "writing": {
+      "description": "Documentation, prose, technical writing",
+      "model": "claude-sonnet-4.6",
+      "agent_type": "general-purpose",
+    },
+
+    // ── Domain plugin categories (requires domain plugins installed) ────────
+
+    // React/Next.js/TypeScript component and page implementation
+    // Requires: my-copilot-frontend plugin
+    "frontend": {
+      "description": "React/Next.js/TypeScript frontend implementation",
+      "model": "claude-sonnet-4.6",
+      "agent_type": "frontend-developer",
+    },
+
+    // UI/UX design, prototyping, design system audits, component styling
+    // Requires: my-copilot-frontend plugin
+    "ui-design": {
+      "description": "UI/UX design, prototyping, design systems",
+      "model": "gemini-3-pro-preview",
+      "agent_type": "ui-ux-designer",
+    },
+
+    // REST/GraphQL APIs, database schema, auth flows, payment integration
+    // Requires: my-copilot-backend plugin
+    "backend": {
+      "description": "Backend API, database, auth, payments",
+      "model": "claude-sonnet-4.6",
+      "agent_type": "backend-developer",
+    },
+
+    // Docker, Kubernetes, Cloudflare, GCP, CI/CD, git worktrees
+    // Requires: my-copilot-devops plugin
+    "devops": {
+      "description": "Docker, Kubernetes, Cloudflare, GCP, CI/CD",
+      "model": "claude-sonnet-4.6",
+      "agent_type": "general-purpose",
+    },
+  },
+}

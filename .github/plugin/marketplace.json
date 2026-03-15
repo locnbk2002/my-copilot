@@ -5,14 +5,32 @@
   },
   "metadata": {
     "description": "A complete AI engineering workflow for GitHub Copilot CLI",
-    "version": "0.0.3"
+    "version": "0.1.0"
   },
   "plugins": [
     {
       "name": "my-copilot",
-      "description": "A complete AI engineering workflow for GitHub Copilot CLI — 12 skills covering plan, execute, test, fix, review, docs, git, research, and more.",
-      "version": "0.0.3",
+      "description": "A complete AI engineering workflow for GitHub Copilot CLI — 15 skills covering plan, execute, test, fix, review, docs, git, research, and more.",
+      "version": "0.1.0",
       "source": "my-copilot"
+    },
+    {
+      "name": "my-copilot-frontend",
+      "description": "Frontend domain plugin for my-copilot — 8 skills for React, Next.js, UI/UX, Tailwind, TanStack, and web frameworks.",
+      "version": "0.1.0",
+      "source": "my-copilot-frontend"
+    },
+    {
+      "name": "my-copilot-backend",
+      "description": "Backend domain plugin for my-copilot — 4 skills for APIs, databases, authentication, and payment integration.",
+      "version": "0.1.0",
+      "source": "my-copilot-backend"
+    },
+    {
+      "name": "my-copilot-devops",
+      "description": "DevOps domain plugin for my-copilot — 2 skills for Docker, Kubernetes, Cloudflare, GCP deployment, CI/CD, and git worktrees.",
+      "version": "0.1.0",
+      "source": "my-copilot-devops"
     }
   ]
 }

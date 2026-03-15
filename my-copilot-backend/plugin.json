@@ -1,0 +1,12 @@
+{
+  "name": "my-copilot-backend",
+  "description": "Backend domain plugin for my-copilot — 4 skills for APIs, databases, authentication, and payment integration.",
+  "version": "0.1.0",
+  "author": { "name": "locnbk2002" },
+  "repository": "https://github.com/locnbk2002/my-copilot",
+  "license": "MIT",
+  "keywords": ["backend", "api", "database", "auth", "payments", "nodejs", "typescript"],
+  "agents": "agents/",
+  "skills": "skills/",
+  "hooks": "hooks.json"
+}

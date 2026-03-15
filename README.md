@@ -1,12 +1,15 @@
-# locnbk2002-marketplace
+# my-copilot
 
 A GitHub Copilot CLI plugin marketplace.
 
 ## Available Plugins
 
-| Plugin                      | Description                                   | Version |
-| --------------------------- | --------------------------------------------- | ------- |
-| [my-copilot](./my-copilot/) | AI engineering workflow — 12 skills, 6 agents | 0.0.2   |
+| Plugin                                        | Description                                                    | Version |
+| --------------------------------------------- | -------------------------------------------------------------- | ------- |
+| [my-copilot](./my-copilot/)                   | AI engineering workflow — 15 skills, 6 agents                  | 0.1.0   |
+| [my-copilot-frontend](./my-copilot-frontend/) | Frontend domain — 8 skills (React, Next.js, UI/UX, TanStack)   | 0.1.0   |
+| [my-copilot-backend](./my-copilot-backend/)   | Backend domain — 4 skills (APIs, databases, auth, payments)    | 0.1.0   |
+| [my-copilot-devops](./my-copilot-devops/)     | DevOps domain — 2 skills (Docker, K8s, Cloudflare, GCP, CI/CD) | 0.1.0   |
 
 ## Installation
 
@@ -19,7 +22,7 @@ copilot plugin marketplace add locnbk2002/my-copilot
 ### Install a Plugin
 
 ```sh
-copilot plugin install locnbk2002-marketplace@my-copilot
+copilot plugin install my-copilot@my-copilot
 ```
 
 ## Adding a New Plugin

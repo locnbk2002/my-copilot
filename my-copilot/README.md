@@ -1,6 +1,6 @@
 # my-copilot
 
-A complete AI engineering workflow plugin for GitHub Copilot CLI — 13 skills, 6 agents, hooks, and MCP config covering the full development lifecycle from planning to git commit.
+A complete AI engineering workflow plugin for GitHub Copilot CLI — 15 skills, 6 agents, hooks, and MCP config covering the full development lifecycle from planning to git commit.
 
 ## Installation
 
@@ -18,7 +18,7 @@ copilot plugin install ./my-copilot
 
 ## What's Included
 
-### Skills (13)
+### Skills (15)
 
 | Skill                 | Description                                                                                                                      |
 | --------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
@@ -35,6 +35,8 @@ copilot plugin install ./my-copilot
 | `research`            | Comprehensive technical research and evaluation                                                                                  |
 | `sequential-thinking` | Step-by-step analysis for complex problems                                                                                       |
 | `tdd`                 | Red→green→refactor TDD cycle with failure/pass gates (`--red`, `--green`, `--refactor`, `--skip-refactor`); also `execute --tdd` |
+| `mermaidjs-v11`       | Create diagrams with Mermaid.js v11 syntax — flowcharts, sequence, class, ER, Gantt, state, architecture, timelines             |
+| `skill-creator`       | Create or update Claude skills optimized for Skillmark benchmarks — new skills, scripts, references, benchmark optimization      |
 
 ### Agents (6)
 
