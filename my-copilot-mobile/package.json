@@ -1,0 +1,8 @@
+{
+  "name": "my-copilot-mobile",
+  "version": "0.1.0",
+  "description": "Mobile domain plugin for my-copilot",
+  "license": "MIT",
+  "author": "locnbk2002",
+  "private": true
+}

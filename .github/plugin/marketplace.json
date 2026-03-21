@@ -31,6 +31,12 @@
       "description": "DevOps domain plugin for my-copilot — 2 skills for Docker, Kubernetes, Cloudflare, GCP deployment, CI/CD, and git worktrees.",
       "version": "0.1.0",
       "source": "my-copilot-devops"
+    },
+    {
+      "name": "my-copilot-mobile",
+      "description": "Mobile domain plugin for my-copilot -- skills for React Native, Flutter, Swift, Kotlin mobile development.",
+      "version": "0.1.0",
+      "source": "my-copilot-mobile"
     }
   ]
 }
