@@ -39,7 +39,7 @@ jobs:
       - name: Create scoped tags and GitHub Releases
         if: steps.changesets.outputs.hasChangesets == 'false'
         run: |
-          PLUGINS=("my-copilot" "my-copilot-backend" "my-copilot-frontend" "my-copilot-devops")
+          PLUGINS=("my-copilot" "my-copilot-backend" "my-copilot-frontend" "my-copilot-devops" "my-copilot-mobile")
 
           for plugin in "${PLUGINS[@]}"; do
             VERSION=$(node -p "require('./${plugin}/package.json').version")

@@ -27,7 +27,8 @@
     "my-copilot",
     "my-copilot-backend",
     "my-copilot-frontend",
-    "my-copilot-devops"
+    "my-copilot-devops",
+    "my-copilot-mobile"
   ],
   "devDependencies": {
     "@changesets/cli": "^2.27.0",
