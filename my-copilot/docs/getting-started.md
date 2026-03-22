@@ -29,6 +29,58 @@ cd my-copilot
 copilot plugin install ./my-copilot
 ```
 
+## Status Line Setup (optional)
+
+The plugin ships a custom status line script that displays real-time session info:
+
+```
+🌿 main | 🪟 🟢 ████░░░░░░ 42% | ⚡ 5 req | 📝 +10/-3
+```
+
+**What each segment shows:**
+
+| Segment | Description |
+|---------|-------------|
+| `🌿 <branch>` | Current git branch |
+| `🤖 <model>` | Active LLM model |
+| `🪟 🟢/🟡/🔴 <bar> <pct>%` | Context window usage (green < 50%, yellow < 80%, red ≥ 80%) |
+| `⚡ <n> req` | Premium requests used this session |
+| `📝 +<n>/-<n>` | Lines added/removed (hidden when both are 0) |
+
+### Prerequisites
+
+The script requires `jq` for JSON parsing. If `jq` is not on your `PATH`, install it:
+
+```bash
+# Option A: package manager (requires root)
+sudo apt-get install -y jq        # Debian/Ubuntu
+brew install jq                   # macOS
+
+# Option B: single static binary (no root needed)
+mkdir -p ~/.local/bin
+curl -sL https://github.com/jqlang/jq/releases/download/jq-1.7.1/jq-linux-amd64 \
+  -o ~/.local/bin/jq && chmod +x ~/.local/bin/jq
+```
+
+### One-time config
+
+After installing the plugin, add the following to `~/.copilot/config.json`:
+
+```json
+{
+  "status_line": {
+    "type": "command",
+    "command": "~/.copilot/installed-plugins/my-copilot/my-copilot/scripts/status_line.sh"
+  }
+}
+```
+
+> **Note:** The script path matches the default plugin install location. If you installed to a custom path, adjust accordingly.
+
+The script is updated automatically whenever you run `copilot plugin update my-copilot`.
+
+---
+
 ## MCP Setup (Context7 — optional)
 
 Context7 enables the `docs-seeker` skill to look up library/framework documentation.
