@@ -5,19 +5,19 @@
   },
   "metadata": {
     "description": "A complete AI engineering workflow for GitHub Copilot CLI",
-    "version": "0.1.0"
+    "version": "0.2.0"
   },
   "plugins": [
     {
       "name": "my-copilot",
-      "description": "A complete AI engineering workflow for GitHub Copilot CLI — 15 skills covering plan, execute, test, fix, review, docs, git, research, and more.",
-      "version": "0.1.0",
+      "description": "A complete AI engineering workflow for GitHub Copilot CLI — 21 skills covering plan, execute, test, fix, review, docs, git, research, and more.",
+      "version": "0.2.0",
       "source": "my-copilot"
     },
     {
       "name": "my-copilot-frontend",
-      "description": "Frontend domain plugin for my-copilot — 8 skills for React, Next.js, UI/UX, Tailwind, TanStack, and web frameworks.",
-      "version": "0.1.0",
+      "description": "Frontend domain plugin for my-copilot — 9 skills for React, Next.js, UI/UX, Tailwind, TanStack, and web frameworks.",
+      "version": "0.2.0",
       "source": "my-copilot-frontend"
     },
     {
@@ -34,7 +34,7 @@
     },
     {
       "name": "my-copilot-mobile",
-      "description": "Mobile domain plugin for my-copilot -- skills for React Native, Flutter, Swift, Kotlin mobile development.",
+      "description": "Mobile domain plugin for my-copilot — 1 skill for React Native, Flutter, Swift, Kotlin mobile development.",
       "version": "0.1.0",
       "source": "my-copilot-mobile"
     }

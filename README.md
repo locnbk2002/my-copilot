@@ -4,12 +4,13 @@ A GitHub Copilot CLI plugin marketplace.
 
 ## Available Plugins
 
-| Plugin                                        | Description                                                    | Version |
-| --------------------------------------------- | -------------------------------------------------------------- | ------- |
-| [my-copilot](./my-copilot/)                   | AI engineering workflow — 15 skills, 6 agents                  | 0.1.0   |
-| [my-copilot-frontend](./my-copilot-frontend/) | Frontend domain — 8 skills (React, Next.js, UI/UX, TanStack)   | 0.1.0   |
+| Plugin                                        | Description                                                     | Version |
+| --------------------------------------------- | --------------------------------------------------------------- | ------- |
+| [my-copilot](./my-copilot/)                   | AI engineering workflow — 21 skills, 6 agents                   | 0.2.0   |
+| [my-copilot-frontend](./my-copilot-frontend/) | Frontend domain — 9 skills (React, Next.js, UI/UX, TanStack)   | 0.2.0   |
 | [my-copilot-backend](./my-copilot-backend/)   | Backend domain — 4 skills (APIs, databases, auth, payments)    | 0.1.0   |
 | [my-copilot-devops](./my-copilot-devops/)     | DevOps domain — 2 skills (Docker, K8s, Cloudflare, GCP, CI/CD) | 0.1.0   |
+| [my-copilot-mobile](./my-copilot-mobile/)     | Mobile domain — 1 skill (React Native, Flutter, Swift, Kotlin)  | 0.1.0   |
 
 ## Installation
 
