@@ -15,7 +15,7 @@ Domain plugins extend my-copilot with specialized agents and skills for frontend
 
 ### Frontend Plugin
 
-8 skills: React/Next.js, UI/UX design, Tailwind/shadcn, TanStack, web frameworks.
+9 skills: React/Next.js, UI/UX design, Tailwind/shadcn, TanStack, web frameworks, web testing.
 2 agents: `frontend-developer` (claude-sonnet-4.6), `ui-ux-designer` (gemini-3-pro-preview).
 
 ```sh
@@ -40,6 +40,15 @@ No dedicated agent — worker uses `general-purpose` for `Category: devops`.
 copilot plugin install my-copilot@my-copilot-devops
 ```
 
+### Mobile Plugin
+
+1 skill: React Native, Flutter, Swift/SwiftUI, Kotlin/Jetpack Compose for iOS/Android.
+1 agent: `mobile-developer` (claude-sonnet-4.6).
+
+```sh
+copilot plugin install my-copilot@my-copilot-mobile
+```
+
 ## Configure Category Routing
 
 Copy the example config to your project:
@@ -58,6 +67,7 @@ Customize model/agent mappings as needed. The domain categories added by plugins
 | `ui-design` | ui-ux-designer     | gemini-3-pro-preview | my-copilot-frontend |
 | `backend`   | backend-developer  | claude-sonnet-4.6    | my-copilot-backend  |
 | `devops`    | general-purpose    | claude-sonnet-4.6    | my-copilot-devops   |
+| `mobile`    | mobile-developer   | claude-sonnet-4.6    | my-copilot-mobile   |
 
 ## Use in Plans
 

@@ -1,11 +1,12 @@
 // my-copilot.jsonc — project-level category routing config
 // Copy this file to .github/my-copilot.jsonc and customize.
-// Required when using domain plugins (my-copilot-frontend, my-copilot-backend, my-copilot-devops).
+// Required when using domain plugins (my-copilot-frontend, my-copilot-backend, my-copilot-devops, my-copilot-mobile).
 //
 // Install domain plugins first:
 //   copilot plugin install my-copilot@my-copilot-frontend
 //   copilot plugin install my-copilot@my-copilot-backend
 //   copilot plugin install my-copilot@my-copilot-devops
+//   copilot plugin install my-copilot@my-copilot-mobile
 //
 // Then copy this file:
 //   cp .github/my-copilot.jsonc.example .github/my-copilot.jsonc
@@ -96,6 +97,14 @@
       "description": "Docker, Kubernetes, Cloudflare, GCP, CI/CD",
       "model": "claude-sonnet-4.6",
       "agent_type": "general-purpose",
+    },
+
+    // iOS/Android — React Native, Flutter, Swift/SwiftUI, Kotlin/Jetpack Compose
+    // Requires: my-copilot-mobile plugin
+    "mobile": {
+      "description": "Mobile — React Native, Flutter, Swift, Kotlin",
+      "model": "claude-sonnet-4.6",
+      "agent_type": "mobile-developer",
     },
   },
 }
