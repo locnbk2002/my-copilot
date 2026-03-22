@@ -43,6 +43,44 @@ Use `code-review` skill for structured scout→review→fix pipeline, or `code-r
 ### 6. Git & Release
 Use `git` skill for conventional commits with security scanning and PR creation.
 
+### 6.1 Plugin Version Bump
+
+When bumping a plugin version, **always** update ALL of the following in one commit — never partial:
+
+| File | What to update | Auto? |
+|---|---|---|
+| `<plugin>/package.json` | `version` field | via `changeset version` |
+| `<plugin>/plugin.json` | `version` field + skill count in `description` | version: auto via sync script; count: **manual** |
+| `.github/plugin/marketplace.json` | `plugins[].version` for that plugin + `metadata.version` | version: auto via sync script; count: **manual** |
+| `README.md` | version column in Plugins table | auto via sync script |
+
+**Steps to bump a version:**
+
+```sh
+# 1. Describe the change
+npx changeset add
+
+# 2. Apply version bump — auto-runs sync-plugin-versions.mjs
+npm run changeset:version
+
+# 3. If skills were added/removed, manually fix skill counts in:
+#    - <plugin>/plugin.json  (description field)
+#    - .github/plugin/marketplace.json  (plugins[].description field)
+
+# 4. Commit, tag, push
+git add -A
+git commit -m "chore: release <plugin>@<version>"
+git tag <plugin>@<version>
+git push origin master --tags
+```
+
+**Rules Copilot MUST follow:**
+- **NEVER** bump `package.json` alone — always run `npm run changeset:version` or manually sync all 4 files
+- **NEVER** commit with mismatched versions across `plugin.json`, `marketplace.json`, and `README.md`
+- **ALWAYS** update skill counts manually when skills are added or removed
+- **ALWAYS** add new plugins to `scripts/sync-plugin-versions.mjs` and root `package.json` workspaces before tagging
+- Verify sync is clean: `node scripts/sync-plugin-versions.mjs` should print nothing (no drift)
+
 ### 7. Debugging
 When bugs are reported, use `fix` skill or delegate to `debugger` agent. Fix, then re-run tests.
 
