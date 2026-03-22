@@ -119,7 +119,7 @@ When context is heavy, apply these strategies before continuing:
 
 ### Integration with Hooks
 
-- `usage-context-awareness.py` (postToolUse): injects `<usage-awareness>` every 5 min with context % — use as primary signal
+- `context-reporter` extension (postToolUse): injects `<usage-awareness>` every 1 min with real context % from `session.usage_info` — use as primary signal
 - `auto-compact-reminder.py` (postToolUse): passive log every 100 calls, writes to `logs/compact-reminders.jsonl`
 - This budget check: active, phase-aware, prompts user if critical
 

@@ -41,13 +41,6 @@
     "postToolUse": [
       {
         "type": "command",
-        "bash": "python3 scripts/usage-context-awareness.py",
-        "powershell": "python scripts/usage-context-awareness.py",
-        "cwd": ".",
-        "timeoutSec": 5
-      },
-      {
-        "type": "command",
         "bash": "python3 scripts/tool-tracker.py",
         "powershell": "python scripts/tool-tracker.py",
         "cwd": ".",
