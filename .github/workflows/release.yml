@@ -45,15 +45,14 @@ jobs:
             VERSION=$(node -p "require('./${plugin}/package.json').version")
             TAG="${plugin}@${VERSION}"
 
-            # Skip if tag already exists on remote (shallow clone won't have local tags)
+            # Create tag if it doesn't exist on remote (shallow clone won't have local tags)
             if git ls-remote --exit-code origin "refs/tags/$TAG" >/dev/null 2>&1; then
-              echo "Tag $TAG already exists on remote, skipping"
-              continue
+              echo "Tag $TAG already exists on remote, skipping tag creation"
+            else
+              echo "Creating tag: $TAG"
+              git tag "$TAG"
+              git push origin "$TAG"
             fi
-
-            echo "Creating tag: $TAG"
-            git tag "$TAG"
-            git push origin "$TAG"
 
             # Extract changelog entry for this version
             CHANGELOG=""
@@ -61,7 +60,7 @@ jobs:
               CHANGELOG=$(sed -n "/^## ${VERSION}/,/^## /p" "${plugin}/CHANGELOG.md" | sed '1d;$d')
             fi
 
-            # Create GitHub Release (skip if release already exists)
+            # Create GitHub Release if it doesn't exist yet
             if gh release view "$TAG" >/dev/null 2>&1; then
               echo "Release $TAG already exists, skipping"
             else
