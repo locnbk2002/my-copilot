@@ -2,7 +2,6 @@
 name: code-reviewer
 description: "Use this agent after implementing features, before PRs, for quality assessment, security audits, or performance optimization."
 model: gpt-5.3-codex
-infer: true
 tools:
   - glob
   - grep

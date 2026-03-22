@@ -2,7 +2,6 @@
 name: researcher
 description: "Use this agent when you need to conduct comprehensive research on software development topics — investigating new technologies, finding documentation, exploring best practices, or gathering information about plugins, packages, and open source projects. Excels at synthesizing information from multiple sources to produce detailed research reports. Examples: researching React Server Components, finding authentication libraries for Flutter, understanding API security best practices."
 model: claude-haiku-4.5
-infer: true
 tools:
   - glob
   - grep

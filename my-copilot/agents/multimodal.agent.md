@@ -2,7 +2,6 @@
 name: multimodal
 description: "Use this agent when you need to analyze UI screenshots, review design mockups, debug visual issues, or interpret diagrams and wireframes. Invoke when the user provides images, screenshots, or visual references — e.g., reviewing a UI bug report with a screenshot, comparing a design mockup to an implementation, or analyzing an architecture diagram."
 model: gemini-3-pro-preview
-infer: true
 tools:
   - glob
   - grep

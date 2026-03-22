@@ -2,7 +2,6 @@
 name: debugger
 description: "Use this agent when you need to investigate errors, diagnose performance issues, analyze CI/CD failures, trace bugs to root cause, or examine system behavior anomalies."
 model: gpt-5.3-codex
-infer: true
 tools:
   - glob
   - grep
