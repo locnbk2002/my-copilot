@@ -1,7 +1,7 @@
 {
   "name": "my-copilot-frontend",
-  "description": "Frontend domain plugin for my-copilot — 8 skills for React, Next.js, UI/UX, Tailwind, TanStack, and web frameworks.",
-  "version": "0.1.0",
+  "description": "Frontend domain plugin for my-copilot — 9 skills for React, Next.js, UI/UX, Tailwind, TanStack, and web frameworks.",
+  "version": "0.2.0",
   "author": { "name": "locnbk2002" },
   "repository": "https://github.com/locnbk2002/my-copilot",
   "license": "MIT",
